@@ -558,7 +558,6 @@ Route::group(['prefix'=>'admin', 'middleware' => ['auth', 'verified','timezone']
 
     });
 
-
     Route::prefix('my-leave')->group(function () {
         Route::get('/', [MyLeaveController::class, 'index'])->name('app.my.leave');
         Route::get('/apply', [MyLeaveController::class, 'apply'])->name('app.my.leave.apply');
