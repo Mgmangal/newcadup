@@ -97,16 +97,16 @@
                                 <i data-feather="message-square"></i>Statistic</a>
                         </li>
                         <li class="nav-sub-item">
-                            <a href="{{route('user.flying.statistics')}}" class="nav-sub-link">
+                            <a href="{{route('user.flying.myStatistics')}}" class="nav-sub-link">
                                 <i data-feather="message-square"></i>My Statistic</a>
                         </li>
                         <li class="nav-sub-item">
-                            <a href="{{route('user.voilations')}}" class="nav-sub-link">
-                                <i data-feather="message-square"></i>Voilation</a>
+                            <a href="{{route('user.fdtl.voilations')}}" class="nav-sub-link">
+                                <i data-feather="message-square"></i>Voilations</a>
                         </li>
                         <li class="nav-sub-item">
-                            <a href="{{route('user.voilations')}}" class="nav-sub-link">
-                                <i data-feather="message-square"></i>My Voilation</a>
+                            <a href="{{route('user.fdtl.MyVoilations')}}" class="nav-sub-link">
+                                <i data-feather="message-square"></i>My Voilations</a>
                         </li>
                     </ul>
                 </li>
@@ -116,12 +116,20 @@
                     </a>
                     <ul class="navbar-menu-sub">
                         <li class="nav-sub-item">
-                            <a href="{{route('user.sfa.generate')}}" class="nav-sub-link">
-                                <i data-feather="calendar"></i>Generate</a>
+                            <a href="{{route('user.sfa.sfaGenerate')}}" class="nav-sub-link">
+                                <i data-feather="calendar"></i>SFA Generate</a>
                         </li>
                         <li class="nav-sub-item">
-                            <a href="{{route('user.sfa.list')}}" class="nav-sub-link">
-                                <i data-feather="message-square"></i>List</a>
+                            <a href="{{route('user.sfa.mySfaGenerate')}}" class="nav-sub-link">
+                                <i data-feather="calendar"></i>My SFA Generate</a>
+                        </li>
+                        <li class="nav-sub-item">
+                            <a href="{{route('user.sfa.sfaList')}}" class="nav-sub-link">
+                                <i data-feather="message-square"></i>SFA List</a>
+                        </li>
+                        <li class="nav-sub-item">
+                            <a href="{{route('user.sfa.mySfaList')}}" class="nav-sub-link">
+                                <i data-feather="message-square"></i>My SFA List</a>
                         </li>
                     </ul>
                 </li>

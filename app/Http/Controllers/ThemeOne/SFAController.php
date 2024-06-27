@@ -16,78 +16,54 @@ use App\Models\PilotLog;
 use Illuminate\Support\Facades\DB;
 class SFAController extends Controller
 {
-
-    public function index()
+    public function sfaList()
     {
-        if(getUserType() == 'user')
-        {
-            return view('theme-one.sfa.index');
-        }else{
-            $pilots = User::where('designation', '1')->where('status', 'active')->get();
-            return view('sfa.index', compact('pilots'));
-        }
+        $sub_title = "SFA List";
+        $pilots = User::with('designation')->where('is_delete','0')->where('status','active')->get();
+        return view('theme-one.sfa.index', compact('pilots','sub_title'));
     }
-    public function list(Request $request)
+    public function mySfaList()
     {
-        $column = ['id', 'departure_time', 'user_id', 'aircraft_id', 'fron_sector', 'to_sector', 'id', 'user_role', 'flying_type', 'id'];
-        $users = PilotLog::with(['pilot', 'aircraft'])->where('id', '>', '0');
-        $total_row = $users->get()->count();
-        if(empty($_POST['from_date'])||empty($_POST['to_date']))
-        {
-            $output = array(
-                "draw"       =>  intval($_POST["draw"]),
-                "recordsTotal"   =>  $total_row,
-                "recordsFiltered"  =>  0,
-                "data"       =>  array(),
-                "total_payable_amount"=>round(0,2),
-                "total_time"=>round(0,2),
-                "certified_that"=>is_setting('certified_that')
-            );
-            echo json_encode($output);
-            die;
-        }
+        $sub_title = "My SFA List";
+        $user = User::with('designation')->where('id', Auth()->user()->id)->where('is_delete', '0')->where('status', 'active')->first();
+        $pilots = collect([$user]);
+        return view('theme-one.sfa.index', compact('pilots','sub_title'));
+    }
+    public function getSfaList(Request $request)
+    {
+        $column = ['id', 'user_id','from_date', 'to_date', 'amount', 'status', 'id'];
+        $users = PilotSfa::where('id', '>', 0);
 
+        if(!empty($_POST['pilot'])){
+            $users->where('user_id', '=', $_POST['pilot']);
+        }
+        $total_row = $users->get()->count();
         if(!empty($_POST['from_date'])&&empty($_POST['to_date']))
         {
             $from=$_POST['from_date'];
-            $users->where('date','>=',date('Y-m-d',strtotime($from)));
+            $users->where('from_date','>=',date('Y-m-d',strtotime($from)));
         }
         if(empty($_POST['from_date'])&&!empty($_POST['to_date']))
         {
             $to=$_POST['to_date'];
-            $users->where('date','<=',date('Y-m-d',strtotime($to)));
+            $users->where('from_date','<=',date('Y-m-d',strtotime($to)));
         }
         if(!empty($_POST['from_date'])&&!empty($_POST['to_date']))
         {
             $from=$_POST['from_date'];
             $to=$_POST['to_date'];
             $users->where(function($q) use($from, $to){
-                $q->whereBetween('date', [date('Y-m-d',strtotime($from)), date('Y-m-d',strtotime($to))]);
+                $q->whereBetween('from_date', [date('Y-m-d',strtotime($from)), date('Y-m-d',strtotime($to))]);
             });
-        }
-
-        if(!empty($_POST['aircraft']))
-        {
-          $users->where('aircraft_id',$_POST['aircraft']);
-        }
-        $pilot=$_POST['pilot'];
-        if(!empty($pilot))
-        {
-            $users->where('user_id', $pilot);
-        }
-        if(!empty($_POST['flying_type']))
-        {
-          $users->where('flying_type', $_POST['flying_type']);
         }
 
         if (isset($_POST['search'])&&!empty($_POST['search']['value'])) {
             $users->where('fron_sector', 'LIKE', '%' . $_POST['search']['value'] . '%');
         }
-        $users->orderBy('departure_time', 'asc');
         if (isset($_POST['order'])) {
             $users->orderBy($column[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
         } else {
-            $users->orderBy('departure_time', 'asc');
+            $users->orderBy('id', 'asc');
         }
         $filter_row = $users->get()->count();
         if (isset($_POST["length"]) && $_POST["length"] != -1) {
@@ -95,63 +71,43 @@ class SFAController extends Controller
         }
         $result = $users->get();
         $data = array();
-        $times=array();
-        $gtotal='00';
         foreach ($result as $key => $value) {
             $sub_array = array();
-            $sub_array[] = ++$key;
-            $sub_array[] = is_get_date_format($value->date);
-            $sub_array[] = @$value->aircraft->call_sign;
-            $sub_array[] = @$value->aircraft->aircraft_cateogry;
-            $sub_array[] = $value->fron_sector.'/'.date('H:i',strtotime($value->departure_time));
-            $sub_array[] = $value->to_sector.'/'.date('H:i',strtotime($value->arrival_time));
-            $sub_array[] = is_time_defrence($value->departure_time, $value->arrival_time);
-
-            $check  = DB::table('sfa_flying_logs') ->join('pilot_sfas', 'sfa_flying_logs.pilot_sfa_id', '=', 'pilot_sfas.id')->where('pilot_sfas.user_id', $pilot)->where('sfa_flying_logs.flying_log_id',$value->flying_log_id)->count();
-            if($check==0)
+            $action ='';
+            if(getUserType() == 'user')
             {
-                $mint=minutes(is_time_defrence($value->departure_time, $value->arrival_time));
-                $times[]=is_time_defrence($value->departure_time, $value->arrival_time);
-                $givenDate =  $value->date; // This should be securely validated and sanitized
-                $query = "SELECT * FROM sfa_rates WHERE ? BETWEEN apply_date AND end_date";
-                $wing_rate = DB::select($query, [$givenDate]);
-                if(empty($wing_rate))
+                $action .='<a href="' . route('user.sfa.view',encrypter('encrypt', $value->id)) . '" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></a>';
+                if($value->status=='Generated')
                 {
-                    $wing_rate=SfaRate::orderBy('id', 'desc')->first();
-                }else{
-                    $wing_rate=$wing_rate[0];
+                    $action .=' <a href="' . route('user.sfa.deleted',encrypter('encrypt', $value->id)) . '" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>';
                 }
-                //$wing_rate= SfaRate::where('apply_date', '<=', $value->date)->where('end_date', ' >=', $value->date)->where('is_delete', '0')->first();
-                $hours=$mint/60;
-                if($value->aircraft->aircraft_cateogry=='Roator Wing')
+                if($value->user_id==auth()->user()->id && $value->status=='Generated')
                 {
-                    $wing_rate=$wing_rate->roator_wing_rate;
+                    $action .=' <a href="' . route('user.sfa.verify',encrypter('encrypt', $value->id)) . '" class="btn btn-success btn-sm"><i class="fa fa-check"></i></a>';
                 }else{
-                    $wing_rate=$wing_rate->fixed_wing_rate;
+                    $action .=' <a href="' . route('user.sfa.approved',encrypter('encrypt', $value->id)) . '" class="btn btn-success btn-sm"><i class="far fa-check-circle"></i></a>';
                 }
-                $paybilAmount=round(($hours*$wing_rate),2);
-                $gtotal+=$paybilAmount;
+            }else{
+                $action .='<a href="' . route('app.sfa.view',encrypter('encrypt', $value->id)) . '" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></a>';
+                $action .=' <a href="' . route('app.sfa.deleted',encrypter('encrypt', $value->id)) . '" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>';
             }
-            $sub_array[] = $this->getMasterName($value->user_role,'pilot_role');
-            $sub_array[] = $check==0?'<input type="number" required="" form="sfa-form" name="rate_per_unit[]" class="form-control rate_per_unit" onchange="calPrice(this)" id="" value="'.($wing_rate).'" style=" border-radius: 5px !important;" placeholder="Enter Rate/Hours" readonly>':'-';
-            $sub_array[] = $check==0?'<input type="number" form="sfa-form" name="amount[]" readonly="" class="form-control amount" id="" value="'.$paybilAmount.'" style=" border-radius: 5px !important;" placeholder="Total Amount" readonly>':'-';
-            $sub_array[] = $check==0?'<input type="text" value="'.$this->getMasterName($value->flying_type,'flying_type').'" form="sfa-form" name="remark[]" maxlength="20" class="form-control remark" id="" style="border-radius: 5px !important;" placeholder="Enter Remarks"><input type="hidden" value="'.$value->flying_log_id.'" form="sfa-form" name="flying_id[]" class=" flying_id" >':'Already SFA Generated';
+            $sub_array[] = ++$key;
+            $sub_array[] = getEmpFullName($value->user_id);
+            $sub_array[] = is_get_date_format($value->from_date);
+            $sub_array[] = is_get_date_format($value->to_date);
+            $sub_array[] = $value->amount;
+            $sub_array[] = $value->status;
+            $sub_array[] = $action;
             $data[] = $sub_array;
         }
-        $total_time=AddPlayTime($times);
         $output = array(
             "draw"       =>  intval($_POST["draw"]),
             "recordsTotal"   =>  $total_row,
             "recordsFiltered"  =>  $filter_row,
             "data"       =>  $data,
-            "total_payable_amount"=>round($gtotal,2),
-            "total_time"=>$total_time,
-            "certified_that"=>is_setting('certified_that')
         );
         echo json_encode($output);
     }
-
-
     public function previewSfaReport(Request $request)
 	{
 	    $pilots= $pilots=$request->pilots;
@@ -301,104 +257,20 @@ class SFAController extends Controller
         $mpdf->Output('SAF-Report.pdf','D'); // opens in browser $mpdf->Output('arjun.pdf','D');
 
 	}
-
-    public function getMasterName($id,$type)
+    public function sfaGenerate()
     {
-        $data=Master::where('id',$id)->where('type',$type)->first();
-        return !empty($data)?$data->name:'';
+        $sub_title = "SFA Generate";
+        $pilots = User::with('designation')->where('is_delete','0')->where('status','active')->get();
+        return view('theme-one.sfa.generate', compact('pilots','sub_title'));
     }
-
-    public function getUserSfaList(Request $request)
+    public function mySfaGenerate()
     {
-        $column = ['id', 'user_id','from_date', 'to_date', 'amount', 'status', 'id'];
-        $users = PilotSfa::where('id', '>', 0);
-
-        if(!empty($_POST['pilot'])){
-            $users->where('user_id', '=', $_POST['pilot']);
-        }
-        $total_row = $users->get()->count();
-        if(!empty($_POST['from_date'])&&empty($_POST['to_date']))
-        {
-            $from=$_POST['from_date'];
-            $users->where('from_date','>=',date('Y-m-d',strtotime($from)));
-        }
-        if(empty($_POST['from_date'])&&!empty($_POST['to_date']))
-        {
-            $to=$_POST['to_date'];
-            $users->where('from_date','<=',date('Y-m-d',strtotime($to)));
-        }
-        if(!empty($_POST['from_date'])&&!empty($_POST['to_date']))
-        {
-            $from=$_POST['from_date'];
-            $to=$_POST['to_date'];
-            $users->where(function($q) use($from, $to){
-                $q->whereBetween('from_date', [date('Y-m-d',strtotime($from)), date('Y-m-d',strtotime($to))]);
-            });
-        }
-
-        if (isset($_POST['search'])&&!empty($_POST['search']['value'])) {
-            $users->where('fron_sector', 'LIKE', '%' . $_POST['search']['value'] . '%');
-        }
-        if (isset($_POST['order'])) {
-            $users->orderBy($column[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
-        } else {
-            $users->orderBy('id', 'asc');
-        }
-        $filter_row = $users->get()->count();
-        if (isset($_POST["length"]) && $_POST["length"] != -1) {
-            $users->skip($_POST["start"])->take($_POST["length"]);
-        }
-        $result = $users->get();
-        $data = array();
-        foreach ($result as $key => $value) {
-            $sub_array = array();
-            $action ='';
-            if(getUserType() == 'user')
-            {
-                $action .='<a href="' . route('user.sfa.view',encrypter('encrypt', $value->id)) . '" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></a>';
-                if($value->status=='Generated')
-                {
-                    $action .=' <a href="' . route('user.sfa.deleted',encrypter('encrypt', $value->id)) . '" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>';
-                }
-                if($value->user_id==auth()->user()->id && $value->status=='Generated')
-                {
-                    $action .=' <a href="' . route('user.sfa.verify',encrypter('encrypt', $value->id)) . '" class="btn btn-success btn-sm"><i class="fa fa-check"></i></a>';
-                }else{
-                    $action .=' <a href="' . route('user.sfa.approved',encrypter('encrypt', $value->id)) . '" class="btn btn-success btn-sm"><i class="far fa-check-circle"></i></a>';
-                }
-            }else{
-                $action .='<a href="' . route('app.sfa.view',encrypter('encrypt', $value->id)) . '" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></a>';
-                $action .=' <a href="' . route('app.sfa.deleted',encrypter('encrypt', $value->id)) . '" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>';
-            }
-            $sub_array[] = ++$key;
-            $sub_array[] = getEmpFullName($value->user_id);
-            $sub_array[] = is_get_date_format($value->from_date);
-            $sub_array[] = is_get_date_format($value->to_date);
-            $sub_array[] = $value->amount;
-            $sub_array[] = $value->status;
-            $sub_array[] = $action;
-            $data[] = $sub_array;
-        }
-        $output = array(
-            "draw"       =>  intval($_POST["draw"]),
-            "recordsTotal"   =>  $total_row,
-            "recordsFiltered"  =>  $filter_row,
-            "data"       =>  $data,
-        );
-        echo json_encode($output);
+        $sub_title = "My SFA Generate";
+        $user = User::with('designation')->where('id', Auth()->user()->id)->where('is_delete', '0')->where('status', 'active')->first();
+        $pilots = collect([$user]);
+        return view('theme-one.sfa.generate', compact('pilots','sub_title'));
     }
-    public function generate()
-    {
-        $pilots = User::where('designation', '1')->where('status', 'active')->get();
-        if(getUserType() == 'user')
-        {
-            return view('theme-one.sfa.generate', compact('pilots'));
-        }else{
-            return view('sfa.generate', compact('pilots'));
-        }
-    }
-
-    public function generateSfa(Request $request)
+    public function sfaStore(Request $request)
     {
         $pilot = $request->pilots;
         $from = $request->from_date;
@@ -417,7 +289,6 @@ class SFAController extends Controller
         $sfa->amount = $total_price;
         $sfa->certify_that = $certified_that;
         $sfa->status = 'Generated';
-        $sfa->save();
         $last_id=$sfa->id;
         foreach($flying_id as $key => $value){
             $rate = new SfaFlyingLog();
@@ -429,13 +300,137 @@ class SFAController extends Controller
             $rate->remark = $remark[$key];
             $rate->save();
         }
-        if(getUserType() == 'user')
-        {
-            return redirect(route('user.sfa.list'))->with('success', 'SFA Generated Successfully.');
+        $sfa->save();
+        if($pilot == Auth()->user()->id){
+            return redirect(route('user.sfa.mySfaList'))->with('success', 'SFA Generated Successfully.');
         }else{
-            return redirect(route('app.sfa'))->with('success', 'SFA Generated Successfully.');
+            return redirect(route('user.sfa.sfaList'))->with('success', 'SFA Generated Successfully.');
         }
     }
+    public function list(Request $request)
+    {
+        $column = ['id', 'departure_time', 'user_id', 'aircraft_id', 'fron_sector', 'to_sector', 'id', 'user_role', 'flying_type', 'id'];
+        $users = PilotLog::with(['pilot', 'aircraft'])->where('id', '>', '0');
+        $total_row = $users->get()->count();
+        if(empty($_POST['from_date'])||empty($_POST['to_date']))
+        {
+            $output = array(
+                "draw"       =>  intval($_POST["draw"]),
+                "recordsTotal"   =>  $total_row,
+                "recordsFiltered"  =>  0,
+                "data"       =>  array(),
+                "total_payable_amount"=>round(0,2),
+                "total_time"=>round(0,2),
+                "certified_that"=>is_setting('certified_that')
+            );
+            echo json_encode($output);
+            die;
+        }
+
+        if(!empty($_POST['from_date'])&&empty($_POST['to_date']))
+        {
+            $from=$_POST['from_date'];
+            $users->where('date','>=',date('Y-m-d',strtotime($from)));
+        }
+        if(empty($_POST['from_date'])&&!empty($_POST['to_date']))
+        {
+            $to=$_POST['to_date'];
+            $users->where('date','<=',date('Y-m-d',strtotime($to)));
+        }
+        if(!empty($_POST['from_date'])&&!empty($_POST['to_date']))
+        {
+            $from=$_POST['from_date'];
+            $to=$_POST['to_date'];
+            $users->where(function($q) use($from, $to){
+                $q->whereBetween('date', [date('Y-m-d',strtotime($from)), date('Y-m-d',strtotime($to))]);
+            });
+        }
+
+        if(!empty($_POST['aircraft']))
+        {
+          $users->where('aircraft_id',$_POST['aircraft']);
+        }
+        $pilot=$_POST['pilot'];
+        if(!empty($pilot))
+        {
+            $users->where('user_id', $pilot);
+        }
+        if(!empty($_POST['flying_type']))
+        {
+          $users->where('flying_type', $_POST['flying_type']);
+        }
+
+        if (isset($_POST['search'])&&!empty($_POST['search']['value'])) {
+            $users->where('fron_sector', 'LIKE', '%' . $_POST['search']['value'] . '%');
+        }
+        $users->orderBy('departure_time', 'asc');
+        if (isset($_POST['order'])) {
+            $users->orderBy($column[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
+        } else {
+            $users->orderBy('departure_time', 'asc');
+        }
+        $filter_row = $users->get()->count();
+        if (isset($_POST["length"]) && $_POST["length"] != -1) {
+            $users->skip($_POST["start"])->take($_POST["length"]);
+        }
+        $result = $users->get();
+        $data = array();
+        $times=array();
+        $gtotal='00';
+        foreach ($result as $key => $value) {
+            $sub_array = array();
+            $sub_array[] = ++$key;
+            $sub_array[] = is_get_date_format($value->date);
+            $sub_array[] = @$value->aircraft->call_sign;
+            $sub_array[] = @$value->aircraft->aircraft_cateogry;
+            $sub_array[] = $value->fron_sector.'/'.date('H:i',strtotime($value->departure_time));
+            $sub_array[] = $value->to_sector.'/'.date('H:i',strtotime($value->arrival_time));
+            $sub_array[] = is_time_defrence($value->departure_time, $value->arrival_time);
+
+            $check  = DB::table('sfa_flying_logs') ->join('pilot_sfas', 'sfa_flying_logs.pilot_sfa_id', '=', 'pilot_sfas.id')->where('pilot_sfas.user_id', $pilot)->where('sfa_flying_logs.flying_log_id',$value->flying_log_id)->count();
+            if($check==0)
+            {
+                $mint=minutes(is_time_defrence($value->departure_time, $value->arrival_time));
+                $times[]=is_time_defrence($value->departure_time, $value->arrival_time);
+                $givenDate =  $value->date; // This should be securely validated and sanitized
+                $query = "SELECT * FROM sfa_rates WHERE ? BETWEEN apply_date AND end_date";
+                $wing_rate = DB::select($query, [$givenDate]);
+                if(empty($wing_rate))
+                {
+                    $wing_rate=SfaRate::orderBy('id', 'desc')->first();
+                }else{
+                    $wing_rate=$wing_rate[0];
+                }
+                //$wing_rate= SfaRate::where('apply_date', '<=', $value->date)->where('end_date', ' >=', $value->date)->where('is_delete', '0')->first();
+                $hours=$mint/60;
+                if($value->aircraft->aircraft_cateogry=='Roator Wing')
+                {
+                    $wing_rate=$wing_rate->roator_wing_rate;
+                }else{
+                    $wing_rate=$wing_rate->fixed_wing_rate;
+                }
+                $paybilAmount=round(($hours*$wing_rate),2);
+                $gtotal+=$paybilAmount;
+            }
+            $sub_array[] = getMasterName($value->user_role,'pilot_role');
+            $sub_array[] = $check==0?'<input type="number" required="" form="sfa-form" name="rate_per_unit[]" class="form-control rate_per_unit" onchange="calPrice(this)" id="" value="'.($wing_rate).'" style=" border-radius: 5px !important;" placeholder="Enter Rate/Hours" readonly>':'-';
+            $sub_array[] = $check==0?'<input type="number" form="sfa-form" name="amount[]" readonly="" class="form-control amount" id="" value="'.$paybilAmount.'" style=" border-radius: 5px !important;" placeholder="Total Amount" readonly>':'-';
+            $sub_array[] = $check==0?'<input type="text" value="'.getMasterName($value->flying_type,'flying_type').'" form="sfa-form" name="remark[]" maxlength="20" class="form-control remark" id="" style="border-radius: 5px !important;" placeholder="Enter Remarks"><input type="hidden" value="'.$value->flying_log_id.'" form="sfa-form" name="flying_id[]" class=" flying_id" >':'Already SFA Generated';
+            $data[] = $sub_array;
+        }
+        $total_time=AddPlayTime($times);
+        $output = array(
+            "draw"       =>  intval($_POST["draw"]),
+            "recordsTotal"   =>  $total_row,
+            "recordsFiltered"  =>  $filter_row,
+            "data"       =>  $data,
+            "total_payable_amount"=>round($gtotal,2),
+            "total_time"=>$total_time,
+            "certified_that"=>is_setting('certified_that')
+        );
+        echo json_encode($output);
+    }
+
 
     public function sfaView($id)
     {
@@ -468,7 +463,7 @@ class SFAController extends Controller
             $sub_array[] = $value->to_sector.'/'.date('H:i',strtotime($value->arrival_time));
             $sub_array[] = is_time_defrence($value->departure_time, $value->arrival_time);
 
-            $sub_array[] = $this->getMasterName($value->user_role,'pilot_role');
+            $sub_array[] = getMasterName($value->user_role,'pilot_role');
             $sub_array[] = $value->rate_per_hour;
             $sub_array[] = $value->amount;
             $sub_array[] = $value->remark;
@@ -515,7 +510,7 @@ class SFAController extends Controller
             $sub_array[] = $value->to_sector.'/'.date('H:i',strtotime($value->arrival_time));
             $sub_array[] = is_time_defrence($value->departure_time, $value->arrival_time);
 
-            $sub_array[] = $this->getMasterName($value->user_role,'pilot_role');
+            $sub_array[] = getMasterName($value->user_role,'pilot_role');
             $sub_array[] = $value->rate_per_hour;
             $sub_array[] = $value->amount;
             $sub_array[] = $value->remark;

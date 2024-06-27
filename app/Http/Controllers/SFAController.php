@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User; 
-use App\Models\Master; 
+use App\Models\User;
+use App\Models\Master;
 use App\Models\FlyingLog;
 use App\Models\SfaRate;
 use App\Models\PilotSfa;
@@ -13,7 +13,7 @@ use App\Models\PilotLog;
 use Illuminate\Support\Facades\DB;
 class SFAController extends Controller
 {
-    
+
     public function index()
     {
         if(getUserType() == 'user')
@@ -47,12 +47,12 @@ class SFAController extends Controller
         if(!empty($_POST['from_date'])&&empty($_POST['to_date']))
         {
             $from=$_POST['from_date'];
-            $users->where('date','>=',date('Y-m-d',strtotime($from))); 
+            $users->where('date','>=',date('Y-m-d',strtotime($from)));
         }
         if(empty($_POST['from_date'])&&!empty($_POST['to_date']))
         {
             $to=$_POST['to_date'];
-            $users->where('date','<=',date('Y-m-d',strtotime($to))); 
+            $users->where('date','<=',date('Y-m-d',strtotime($to)));
         }
         if(!empty($_POST['from_date'])&&!empty($_POST['to_date']))
         {
@@ -60,12 +60,12 @@ class SFAController extends Controller
             $to=$_POST['to_date'];
             $users->where(function($q) use($from, $to){
                 $q->whereBetween('date', [date('Y-m-d',strtotime($from)), date('Y-m-d',strtotime($to))]);
-            }); 
+            });
         }
-        
+
         if(!empty($_POST['aircraft']))
         {
-          $users->where('aircraft_id',$_POST['aircraft']);  
+          $users->where('aircraft_id',$_POST['aircraft']);
         }
         $pilot=$_POST['pilot'];
         if(!empty($pilot))
@@ -74,9 +74,9 @@ class SFAController extends Controller
         }
         if(!empty($_POST['flying_type']))
         {
-          $users->where('flying_type', $_POST['flying_type']);  
+          $users->where('flying_type', $_POST['flying_type']);
         }
-        
+
         if (isset($_POST['search'])&&!empty($_POST['search']['value'])) {
             $users->where('fron_sector', 'LIKE', '%' . $_POST['search']['value'] . '%');
         }
@@ -147,8 +147,8 @@ class SFAController extends Controller
         );
         echo json_encode($output);
     }
-    
-    
+
+
     public function previewSfaReport(Request $request)
 	{
 	    $pilots= $pilots=$request->pilots;
@@ -160,21 +160,21 @@ class SFAController extends Controller
 	    $remark = $request->remark;
 	    $flying_id = $request->flying_id;
 	    $certified_that = $request->certified_that;
-	    
+
 	    $users = FlyingLog::with(['pilot1', 'pilot2', 'aircraft'])->whereIn('id',  $flying_id);
         $total_row = $users->get()->count();
-        
+
         $users->orderBy('departure_time', 'asc');
 	    $result =$users->get();;
 	    $i=0;
 	    $data_array = array();
-	    
+
 	    foreach($flying_id as $key=> $values)
       	{
       	    if(!empty($values))
       	    {
           	    $value=FlyingLog::with(['pilot1', 'pilot2', 'aircraft'])->where('id',$values)->first();
-          	    
+
                 $sub_array = array();
     	        $sub_array[] = ++$i;
     	        $sub_array[] = is_get_date_format($value->date);
@@ -183,7 +183,7 @@ class SFAController extends Controller
                 $sub_array[] = $value->fron_sector.'/'.date('H:i',strtotime($value->departure_time));
                 $sub_array[] = $value->to_sector.'/'.date('H:i',strtotime($value->arrival_time));
                 $sub_array[] = is_time_defrence($value->departure_time, $value->arrival_time);
-                
+
                 $mint=minutes(is_time_defrence($value->departure_time, $value->arrival_time));
                 $times[]=is_time_defrence($value->departure_time, $value->arrival_time);
                 $hours=$mint/60;
@@ -202,19 +202,19 @@ class SFAController extends Controller
       	$data['remark'] = $remark;
       	$data['flying_id'] = $flying_id;
       	$data['certified_that'] = $certified_that ;
-      	
+
       	$user=User::find($pilots);
       	$data['all_flying'] = $data_array;
-        
+
       	$data['pilot_name'] = $user->salutation.' '.$user->name;
       	$data['designation'] = getMasterName($user->designation);
       	$data['certified_that'] = !empty($certified_that)?$certified_that:is_setting('certified_that');
       	$data['from_date'] = date("F d, Y",strtotime($data['from_date']));
       	$data['to_date'] = date("F d, Y",strtotime($data['to_date']));
-    
+
         $html=view('sfa.sfa-report-preview', $data)->render();
         $mpdfConfig = array(
-                'mode' => 'utf-8', 
+                'mode' => 'utf-8',
                 'format' => 'A4',
                 'margin_header' => 15,     // 30mm not pixel
                 'margin_footer' => 10,     // 10mm
@@ -227,7 +227,7 @@ class SFAController extends Controller
         $mpdf->SetFont('Times New Roman', 'B');
         $space1="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
         $space2="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-        
+
         $header = '<header>
                         <table style="width:100%; top:0;position: relative;">
                           <tr>
@@ -235,7 +235,7 @@ class SFAController extends Controller
                               <h4 style="margin: 0; line-height: 17px;font-size:23px">  Special Flying Allowance (SFA)</h4>
                               <h4 style="margin: 0; line-height: 17px;"> Employee : '.$user->salutation.' '.$user->name.'</h4>
                               <h4 style="margin: 0; line-height: 17px;">  '.date("M d, Y",strtotime($data['from_date'])).' - '.date("M d, Y",strtotime($data['to_date'])).'</h4>
-                              
+
                             </th>
                           </tr>
                         </table><br>
@@ -295,9 +295,9 @@ class SFAController extends Controller
         // $mpdf->defaultfooterline = 0;
         $mpdf->WriteHTML($html);
         $mpdf->Output('SAF-Report.pdf','D'); // opens in browser $mpdf->Output('arjun.pdf','D');
-        
+
 	}
-    
+
     public function getMasterName($id,$type)
     {
         $data=Master::where('id',$id)->where('type',$type)->first();
@@ -316,12 +316,12 @@ class SFAController extends Controller
         if(!empty($_POST['from_date'])&&empty($_POST['to_date']))
         {
             $from=$_POST['from_date'];
-            $users->where('from_date','>=',date('Y-m-d',strtotime($from))); 
+            $users->where('from_date','>=',date('Y-m-d',strtotime($from)));
         }
         if(empty($_POST['from_date'])&&!empty($_POST['to_date']))
         {
             $to=$_POST['to_date'];
-            $users->where('from_date','<=',date('Y-m-d',strtotime($to))); 
+            $users->where('from_date','<=',date('Y-m-d',strtotime($to)));
         }
         if(!empty($_POST['from_date'])&&!empty($_POST['to_date']))
         {
@@ -329,7 +329,7 @@ class SFAController extends Controller
             $to=$_POST['to_date'];
             $users->where(function($q) use($from, $to){
                 $q->whereBetween('from_date', [date('Y-m-d',strtotime($from)), date('Y-m-d',strtotime($to))]);
-            }); 
+            });
         }
 
         if (isset($_POST['search'])&&!empty($_POST['search']['value'])) {
@@ -463,7 +463,7 @@ class SFAController extends Controller
             $sub_array[] = $value->fron_sector.'/'.date('H:i',strtotime($value->departure_time));
             $sub_array[] = $value->to_sector.'/'.date('H:i',strtotime($value->arrival_time));
             $sub_array[] = is_time_defrence($value->departure_time, $value->arrival_time);
-            
+
             $sub_array[] = $this->getMasterName($value->user_role,'pilot_role');
             $sub_array[] = $value->rate_per_hour;
             $sub_array[] = $value->amount;
@@ -483,7 +483,7 @@ class SFAController extends Controller
             return view('sfa.view', $data);
         }
     }
-    
+
     public function downloadSfaReport(Request $request, $id)
 	{
         $id=encrypter('decrypt',$id);
@@ -510,7 +510,7 @@ class SFAController extends Controller
             $sub_array[] = $value->fron_sector.'/'.date('H:i',strtotime($value->departure_time));
             $sub_array[] = $value->to_sector.'/'.date('H:i',strtotime($value->arrival_time));
             $sub_array[] = is_time_defrence($value->departure_time, $value->arrival_time);
-            
+
             $sub_array[] = $this->getMasterName($value->user_role,'pilot_role');
             $sub_array[] = $value->rate_per_hour;
             $sub_array[] = $value->amount;
@@ -526,7 +526,7 @@ class SFAController extends Controller
       	$data['to_date'] = date("F d, Y",strtotime($sfa->to_date));
         $html=view('sfa.sfa-report-preview', $data)->render();
         $mpdfConfig = array(
-                'mode' => 'utf-8', 
+                'mode' => 'utf-8',
                 'format' => 'A4',
                 'margin_header' => 15,     // 30mm not pixel
                 'margin_footer' => 10,     // 10mm
@@ -539,9 +539,9 @@ class SFAController extends Controller
         $mpdf->SetFont('Times New Roman', 'B');
         $space1="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
         $space1="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-        
+
         $space2="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-        
+
         $header = '<header>
                         <table style="width:100%; top:0;position: relative;">
                           <tr>
@@ -549,7 +549,7 @@ class SFAController extends Controller
                               <h4 style="margin: 0; line-height: 17px;font-size:23px">  Special Flying Allowance (SFA)</h4>
                               <h4 style="margin: 0; line-height: 17px;"> Employee : '.$data['pilot_name'].'</h4>
                               <h4 style="margin: 0; line-height: 17px;">  '.date("M d, Y",strtotime($data['from_date'])).' - '.date("M d, Y",strtotime($data['to_date'])).'</h4>
-                              
+
                             </th>
                           </tr>
                         </table><br>
@@ -609,7 +609,7 @@ class SFAController extends Controller
         // $mpdf->defaultfooterline = 0;
         $mpdf->WriteHTML($html);
         $mpdf->Output('SAF-Report.pdf','D'); // opens in browser $mpdf->Output('arjun.pdf','D');
-        
+
 	}
 
     public function sfaDelete(Request $request, $id)
