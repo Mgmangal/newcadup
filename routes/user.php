@@ -34,18 +34,28 @@ Route::get('my-fdtl-report', [FDTLController::class, 'myFdtlReport'])->name('use
 Route::post('get-report', [FDTLController::class, 'getReport'])->name('user.fdtl.getReport');
 Route::get('fdtl/report/print/{id?}/{front_date?}/{to_date?}', [FDTLController::class, 'printReport'])->name('user.fdtl.printReport');
 
+Route::get('statistics', [FlyingController::class, 'statistics'])->name('user.flying.statistics');
+Route::get('my-statistics', [FlyingController::class, 'myStatistics'])->name('user.flying.myStatistics');
+Route::post('statistics-list', [FlyingController::class, 'statisticsList'])->name('user.flying.statisticsList');
+Route::get('statistics/print/{from_date?}/{to_date?}/{aircraft?}/{pilot?}/{flying_type?}', [FlyingController::class, 'statisticsPrint'])->name('user.flying.statisticsPrint');
+
+Route::get('voilations', [FDTLController::class, 'voilations'])->name('user.fdtl.voilations');
+Route::get('my-voilations', [FDTLController::class, 'MyVoilations'])->name('user.fdtl.MyVoilations');
+Route::post('voilations-list', [FDTLController::class, 'voilationsList'])->name('user.fdtl.voilationsList');
 
 Route::get('/flying/verify/{id}',[FlyingLogController::class, 'verify'])->name('user.flying.verify');
 
+Route::get('sfa/sfa-generate', [SFAController::class, 'sfaGenerate'])->name('user.sfa.sfaGenerate');
+Route::get('sfa/my-sfa-generate', [SFAController::class, 'mySfaGenerate'])->name('user.sfa.mySfaGenerate');
+Route::post('sfa-store', [SFAController::class, 'sfaStore'])->name('user.sfa.sfaStore');
 
-Route::get('/statistics', [FlyingLogController::class, 'statistics'])->name('user.flying.statistics');
-Route::post('/statistics/list', [FlyingLogController::class, 'statisticsList'])->name('user.flying.statistics.list');
-Route::get('/statistics/print/{from_date?}/{to_date?}/{aircraft?}/{flying_type?}', [FlyingLogController::class, 'statisticsPrint'])->name('user.flying.statistics.print');
+Route::get('sfa/sfa-list', [SFAController::class, 'sfaList'])->name('user.sfa.sfaList');
+Route::get('sfa/my-sfa-list', [SFAController::class, 'mySfaList'])->name('user.sfa.mySfaList');
 
-Route::get('/sfa/generate', [SFAController::class, 'generate'])->name('user.sfa.generate');
-Route::post('/sfa/generate', [SFAController::class, 'generateSfa'])->name('user.sfa.generate');
-Route::get('/sfa/list', [SFAController::class, 'index'])->name('user.sfa.list');
-Route::post('/sfa/list', [SFAController::class, 'getUserSfaList'])->name('user.sfa.list');
+
+// Route::get('/sfa/generate', [SFAController::class, 'generate'])->name('user.sfa.generate');
+// Route::post('/sfa/generate', [SFAController::class, 'generateSfa'])->name('user.sfa.generate');
+Route::post('get-sfa-list', [SFAController::class, 'getSfaList'])->name('user.sfa.getSfaList');
 Route::get('/sfa/view/{id}', [SFAController::class, 'sfaView'])->name('user.sfa.view');
 Route::get('/sfa/delete/{id}', [SFAController::class, 'sfaDelete'])->name('user.sfa.deleted');
 Route::get('/sfa/verify/{id}',[SFAController::class, 'verify'])->name('user.sfa.verify');
@@ -96,8 +106,7 @@ Route::prefix('my-leave')->group(function () {
 });
 Route::get('/contract', [ContractController::class, 'index'])->name('user.contract');
 Route::post('/contract', [ContractController::class, 'list'])->name('user.contract');
-Route::get('/voilations', [FDTLController::class, 'voilationsReport'])->name('user.voilations');
-Route::post('/voilations/list', [FDTLController::class, 'voilationsReportList'])->name('user.voilations.report.list');
+
 
 
 
