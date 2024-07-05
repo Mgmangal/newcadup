@@ -111,7 +111,7 @@ class ReceiveDispatchController extends Controller
         $column = ['id', 'date', 'letter_number', 'subject', 'receive_from', 'receive_to', 'source', 'other_source', 'letter_type', 'other_letter_type','created_by', 'id'];
         $users = Receive::where('is_delete', '0');
         $total_row = $users->get()->count();
-        
+
         if(!empty($_POST['source']))
         {
             $source=$_POST['source'];
@@ -127,7 +127,7 @@ class ReceiveDispatchController extends Controller
             $to_section=$_POST['to_section'];
             $users->where('to_section',$to_section);
         }
-        
+
         if(!empty($_POST['reference_no']))
         {
             $reference_no=$_POST['reference_no'];
@@ -138,7 +138,7 @@ class ReceiveDispatchController extends Controller
             $letter_type=$_POST['letter_type'];
             $users->where('letter_type',$letter_type);
         }
-        
+
         if(!empty($_POST['from_date'])&&empty($_POST['to_date']))
         {
             $from=$_POST['from_date'];
@@ -159,7 +159,7 @@ class ReceiveDispatchController extends Controller
         }
 
         if (isset($_POST['search'])&&!empty($_POST['search']['value'])) {
-            
+
             $users->where('date', 'LIKE', '%' . $_POST['search']['value'] . '%');
             $users->orWhere('letter_number', 'LIKE', '%' . $_POST['search']['value'] . '%');
             $users->orWhere('source', 'LIKE', '%' . $_POST['search']['value'] . '%');
@@ -171,7 +171,7 @@ class ReceiveDispatchController extends Controller
             $users->orWhere('subject', 'LIKE', '%' . $_POST['search']['value'] . '%');
             $users->orWhere('receive_to', 'LIKE', '%' . $_POST['search']['value'] . '%');
         }
-        
+
         if (isset($_POST['order'])) {
             $users->orderBy($column[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
         } else {
@@ -187,7 +187,7 @@ class ReceiveDispatchController extends Controller
             $action  ='';
             if(!empty($value->document))
             {
-               $action  .='<a target="blank" href="'.asset('uploads/receive-dispatch/'.$value->document).'" class="btn btn-sm btn-success m-1"><i class="fas fa-lg fa-fw me-2 fa-eye"></i></a>'; 
+               $action  .='<a target="blank" href="'.asset('uploads/receive-dispatch/'.$value->document).'" class="btn btn-sm btn-success m-1"><i class="fas fa-lg fa-fw me-2 fa-eye"></i></a>';
             }
             $action  .= '<a href="'.route('app.receive.edit', $value->id).'" class="btn btn-primary btn-sm m-1"><i class="fas fa-edit"></i></a>';
             $action  .= '<a href="javascript:void(0);" onclick="addFile(`'.$value->id.'`,`receipt`);" class="btn btn-dark btn-sm m-1"><i class="fas fa-folder-plus"></i></a>';
@@ -197,7 +197,7 @@ class ReceiveDispatchController extends Controller
             }
             if($value->letter_type=='Leave Application')
             {
-               $action .= '<a href="'.route('app.pilot.leave.create').'" class="btn btn-success btn-sm m-1"><i class="fas fa-calendar-plus"></i></a>'; 
+               $action .= '<a href="'.route('app.pilot.leave.create').'" class="btn btn-success btn-sm m-1"><i class="fas fa-calendar-plus"></i></a>';
             }
             $action .= '<a href="javascript:void(0);" onclick="deleted(`'.route('app.receive.destroy', $value->id).'`);" class="btn btn-danger btn-sm m-1"><i class="fas fa-trash"></i></a>';
             $sub_array = array();
@@ -207,7 +207,7 @@ class ReceiveDispatchController extends Controller
             $sub_array[] = $value->subject;
             $sub_array[] = $value->receive_to;
             $sub_array[] = $value->receive_from;
-           
+
             if($value->source == 'Section'){
                 $sub_array[] = getMasterName($value->section);
             } else if($value->source == 'Other'){
@@ -252,7 +252,7 @@ class ReceiveDispatchController extends Controller
         $pilots = User::where('designation', '1')->where('status', 'active')->get();
         return view('receive-dispatch.receive-bill-list', compact('pilots'));
     }
-    
+
     public function receiptBillList(Request $request)
     {
         $column = ['id', 'date', 'letter_number', 'subject', 'receive_from', 'receive_to', 'source', 'other_source', 'letter_type', 'other_letter_type', 'id'];
@@ -268,7 +268,7 @@ class ReceiveDispatchController extends Controller
             $letter_type=$_POST['letter_type'];
             $users->where('letter_type',$letter_type);
         }
-        
+
         if(!empty($_POST['from_date'])&&empty($_POST['to_date']))
         {
             $from=$_POST['from_date'];
@@ -289,7 +289,7 @@ class ReceiveDispatchController extends Controller
         }
 
         if (isset($_POST['search'])&&!empty($_POST['search']['value'])) {
-            
+
             $users->where('date', 'LIKE', '%' . $_POST['search']['value'] . '%');
             $users->orWhere('letter_number', 'LIKE', '%' . $_POST['search']['value'] . '%');
             $users->orWhere('source', 'LIKE', '%' . $_POST['search']['value'] . '%');
@@ -301,7 +301,7 @@ class ReceiveDispatchController extends Controller
             $users->orWhere('subject', 'LIKE', '%' . $_POST['search']['value'] . '%');
             $users->orWhere('receive_to', 'LIKE', '%' . $_POST['search']['value'] . '%');
         }
-        
+
         if (isset($_POST['order'])) {
             $users->orderBy($column[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
         } else {
@@ -317,7 +317,7 @@ class ReceiveDispatchController extends Controller
             $action  ='';
             if(!empty($value->document))
             {
-               $action  .='<a target="blank" href="'.asset('uploads/receive-dispatch/'.$value->document).'" class="btn btn-sm btn-success m-1"><i class="fas fa-lg fa-fw me-2 fa-eye"></i></a>'; 
+               $action  .='<a target="blank" href="'.asset('uploads/receive-dispatch/'.$value->document).'" class="btn btn-sm btn-success m-1"><i class="fas fa-lg fa-fw me-2 fa-eye"></i></a>';
             }
             //$action  .= '<a href="'.route('app.receive.edit', $value->id).'" class="btn btn-primary btn-sm m-1"><i class="fas fa-edit"></i></a>';
             $action  .= '<a href="javascript:void(0);" onclick="addFile(`'.$value->id.'`,`receipt`);" class="btn btn-dark btn-sm m-1"><i class="fas fa-folder-plus"></i></a>';
@@ -327,7 +327,7 @@ class ReceiveDispatchController extends Controller
             }
             if($value->letter_type=='Leave Application')
             {
-               $action .= '<a href="'.route('app.pilot.leave.create').'" class="btn btn-success btn-sm m-1"><i class="fas fa-calendar-plus"></i></a>'; 
+               $action .= '<a href="'.route('app.pilot.leave.create').'" class="btn btn-success btn-sm m-1"><i class="fas fa-calendar-plus"></i></a>';
             }
             //$action .= '<a href="javascript:void(0);" onclick="deleted(`'.route('app.receive.destroy', $value->id).'`);" class="btn btn-danger btn-sm m-1"><i class="fas fa-trash"></i></a>';
             $sub_array = array();
@@ -345,7 +345,7 @@ class ReceiveDispatchController extends Controller
                 $sub_array[] = $value->source;
             }
             $sub_array[] = ($value->letter_type == 'Other') ? $value->other_letter_type : $value->letter_type;
-            $sub_array[] = checkBillStatus($value->id)?'<span class="btn btn-sm btn-success">Verified</span>':'<span class="btn btn-sm btn-info">Unverified</span>';
+            $sub_array[] = checkBillStatus($value->id)?'<span class="btn btn-sm btn-success">Verified</span>':'<span class="btn btn-sm btn-info">Non Verified</span>';
             $sub_array[] = $action;
            $data[] = $sub_array;
         }
@@ -358,7 +358,7 @@ class ReceiveDispatchController extends Controller
 
         echo json_encode($output);
     }
-    
+
     public function receiveBill($id)
     {
         $data=Receive::find($id);
@@ -412,7 +412,7 @@ class ReceiveDispatchController extends Controller
         $message = (!empty($edit_id)) ? 'Receive bill updated successfully' : 'Receive bill added successfully';
         return response()->json(['success'=>true,'message'=>$message]);
     }
-    
+
     public function receiveBillList (Request $request)
     {
         $column = ['id', 'dates', 'receives_id', 'receive_from', 'total_amount', 'fly_verify', 'id'];
@@ -422,7 +422,7 @@ class ReceiveDispatchController extends Controller
             $letter_type=$_POST['reference_no'];
             $users->where('bill_no',$letter_type);
         }
-        
+
         if(!empty($_POST['from_date'])&&empty($_POST['to_date']))
         {
             $from=$_POST['from_date'];
@@ -463,17 +463,17 @@ class ReceiveDispatchController extends Controller
         foreach ($result as $key => $value) {
             $action  = '<a href="javascript:void(0);" onclick="receiveBillEdit(`' . route('app.receive.bill.edit', $value->id) . '`);" class="btn btn-primary btn-sm m-1"><i class="fa fa-edit"></i></a>';
             $action  .= '<a href="javascript:void(0);" onclick="addFile(`'.$value->id.'`,`receipt_bill`);" class="btn btn-dark btn-sm m-1"><i class="fas fa-folder-plus"></i></a>';
-            
+
             $action .= '<a href="javascript:void(0);" onclick="deleted(`' . route('app.receive.bill.destroy', $value->id) . '`);" class="btn btn-danger btn-sm m-1"><i class="fa fa-trash"></i></a>';
             if($value->fly_verify=='yes')
             {
                 if(checkReceiptBillStatus($value->id,$value->receives_id))
                 {
-                    $fly_verify  = '<span class="btn btn-sm btn-success">Verified</span> <span class="btn btn-sm btn-danger" onclick="unverifyReceiptBill('.$value->receives_id.','.$value->id.')">Unveify</span>';
+                    $fly_verify  = '<span class="btn btn-sm btn-success">Verified</span> <span class="btn btn-sm btn-danger" onclick="unverifyReceiptBill('.$value->receives_id.','.$value->id.')">Non-verified</span>';
                 }else{
                     $fly_verify  = '<a href="'.route('app.receive.flyingVerifyLogs',['receipt_id'=>$value->receives_id,'bill_id'=>$value->id]).'" class="btn btn-primary btn-sm m-1">Verify Sector</a>';
                 }
-                    
+
             }else{
                 $fly_verify  = '';
             }
@@ -496,7 +496,7 @@ class ReceiveDispatchController extends Controller
 
         echo json_encode($output);
     }
-    
+
     public function receiveBillEdit($id)
     {
         $row = ReceiveBill::find($id);
@@ -505,7 +505,7 @@ class ReceiveDispatchController extends Controller
             'data' => $row
         ]);
     }
-    
+
     public function receiveBillDestroy($id)
     {
         $data = ReceiveBill::find($id);
@@ -513,7 +513,7 @@ class ReceiveDispatchController extends Controller
         $data->save();
         return response()->json(['success' => true, 'message' => 'Receive Bill Deleted Successfully.']);
     }
-    
+
     public function receiptUnverify(Request $request)
     {
         $receives_id=$request->receives_id;
@@ -533,7 +533,7 @@ class ReceiveDispatchController extends Controller
             return response()->json(['success' => false, 'message' => null,'data'=>null]);
         }
     }
-    
+
     public function fileStore(Request $request)
     {
         $validation = Validator::make($request->all(), [
@@ -585,7 +585,7 @@ class ReceiveDispatchController extends Controller
         $aircrafts = AirCraft::where('status', 'active')->get();
         return view('receive-dispatch.flying-verify-logs', compact('data','aircrafts'));
     }
-    
+
     public function getFlyingLogs(Request $request)
     {
         $from = $request->from_date;
@@ -643,7 +643,7 @@ class ReceiveDispatchController extends Controller
         }else{
             $btn = '';
         }
-        
+
 
         return response()->json(['success' => true, 'html' => $html, 'btn' => $btn]);
     }
@@ -654,7 +654,7 @@ class ReceiveDispatchController extends Controller
         $bill_id=$request->bill_id;
         $receives_id=$request->receives_id;
         $expence_id=$request->expence_id;
-        $data = ReceiveBill::find($bill_id); 
+        $data = ReceiveBill::find($bill_id);
         //print_r($expence_id);die;
         $expenseTypes = is_string($data->expenses_type) ? json_decode($data->expenses_type, true) : (is_array($data->expenses_type) ? $data->expenses_type : []);
         foreach ($expenseTypes as $expenses)
@@ -683,7 +683,7 @@ class ReceiveDispatchController extends Controller
         return redirect()->back()->with('success', 'Save Successfully');
     }
 
-    
+
     public function dispatchIndex()
     {
         $pilots = User::where('designation', '1')->where('status', 'active')->get();
@@ -742,7 +742,7 @@ class ReceiveDispatchController extends Controller
         if(!empty($edit_id)){
             $data = Dispatch::find($edit_id);
             $data->updated_by=Auth::id();
-            
+
             $message = 'Updated Successfully';
         }else{
             $data = new Dispatch;
@@ -780,17 +780,17 @@ class ReceiveDispatchController extends Controller
         $sections = Master::where('type', 'section')->where('status', 'active')->where('is_delete', '0')->get();
         $from_users = User::whereJsonContains('section', $data->section)->where('status','active')->where('is_delete','0')->get();
         $to_users = User::whereJsonContains('section', $data->dispatch_section)->where('status','active')->where('is_delete','0')->get();
-        
+
         return view('receive-dispatch.dispatch-manage', compact('data', 'sections' , 'from_users', 'to_users'));
     }
 
     public function dispatchList(Request $request)
     {
-        
+
         $column = ['id', 'date', 'letter_number', 'subject', 'dispatch_section', 'dispatch_from', 'forwarded_to', 'receiver', 'letter_type', 'other_letter_type','created_by', 'id'];
         $users = Dispatch::where('is_delete', '0');
         $total_row = $users->get()->count();
-        
+
         if(!empty($_POST['source']))
         {
             $source=$_POST['source'];
@@ -806,7 +806,7 @@ class ReceiveDispatchController extends Controller
             $to_section=$_POST['to_section'];
             $users->where('receiver',$to_section);
         }
-        
+
         if(!empty($_POST['reference_no']))
         {
             $reference_no=$_POST['reference_no'];
@@ -817,7 +817,7 @@ class ReceiveDispatchController extends Controller
             $letter_type=$_POST['letter_type'];
             $users->where('letter_type',$letter_type);
         }
-        
+
         if(!empty($_POST['from_date'])&&empty($_POST['to_date']))
         {
             $from=$_POST['from_date'];
@@ -838,7 +838,7 @@ class ReceiveDispatchController extends Controller
         }
 
         if (isset($_POST['search'])&&!empty($_POST['search']['value'])) {
-            
+
             $users->where('date', 'LIKE', '%' . $_POST['search']['value'] . '%');
             $users->orWhere('letter_number', 'LIKE', '%' . $_POST['search']['value'] . '%');
             $users->orWhere('dispatch_section', 'LIKE', '%' . $_POST['search']['value'] . '%');
@@ -849,7 +849,7 @@ class ReceiveDispatchController extends Controller
             $users->orWhere('subject', 'LIKE', '%' . $_POST['search']['value'] . '%');
             $users->orWhere('receive_to', 'LIKE', '%' . $_POST['search']['value'] . '%');
         }
-        
+
         if (isset($_POST['order'])) {
             $users->orderBy($column[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
         } else {
@@ -908,7 +908,7 @@ class ReceiveDispatchController extends Controller
         $aircraft->save();
         return response()->json(['success'=>true,'message'=>'Deleted Successfully']);
     }
-    
+
     public function getMasterName($id,$type)
     {
         $data=Master::where('id',$id)->where('type',$type)->first();
@@ -927,7 +927,7 @@ class ReceiveDispatchController extends Controller
         foreach ($stampTickets as $value) {
             $userId = auth()->user()->id;
             $stampTicketId = $value->id;
-            
+
             $isAssigned = isset($assignedStampTickets[$stampTicketId]);
             $assignedQuantity = $isAssigned ? $assignedStampTickets[$stampTicketId] : '';
             if(!empty($assignedQuantity))
@@ -976,7 +976,7 @@ class ReceiveDispatchController extends Controller
 
         return response()->json($data);
     }
-    
+
     public function assignTickets(Request $request)
     {
         $validation = Validator::make($request->all(), [
@@ -1018,7 +1018,7 @@ class ReceiveDispatchController extends Controller
                     }
                 }
             }
-            
+
             $ticket2->stamp_tickets = $ticketdsd;
             $ticket2->save();
 
@@ -1033,17 +1033,17 @@ class ReceiveDispatchController extends Controller
             ]);
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
     public function leaveIndex()
     {
         $pilots = User::where('designation', '1')->where('status', 'active')->get();
@@ -1153,7 +1153,7 @@ class ReceiveDispatchController extends Controller
             $letter_type=$_POST['letter_type'];
             $users->where('letter_type',$letter_type);
         }
-        
+
         if(!empty($_POST['from_date'])&&empty($_POST['to_date']))
         {
             $from=$_POST['from_date'];
@@ -1174,7 +1174,7 @@ class ReceiveDispatchController extends Controller
         }
 
         if (isset($_POST['search'])&&!empty($_POST['search']['value'])) {
-            
+
             $users->where('date', 'LIKE', '%' . $_POST['search']['value'] . '%');
             $users->orWhere('letter_number', 'LIKE', '%' . $_POST['search']['value'] . '%');
             $users->orWhere('source', 'LIKE', '%' . $_POST['search']['value'] . '%');
@@ -1186,7 +1186,7 @@ class ReceiveDispatchController extends Controller
             $users->orWhere('subject', 'LIKE', '%' . $_POST['search']['value'] . '%');
             $users->orWhere('receive_to', 'LIKE', '%' . $_POST['search']['value'] . '%');
         }
-        
+
         if (isset($_POST['order'])) {
             $users->orderBy($column[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
         } else {
@@ -1202,14 +1202,14 @@ class ReceiveDispatchController extends Controller
             $action  ='';
             if(!empty($value->document))
             {
-               $action  .='<a target="blank" href="'.asset('uploads/receive-dispatch/'.$value->document).'" class="btn btn-sm btn-success m-1"><i class="fas fa-lg fa-fw me-2 fa-eye"></i></a>'; 
+               $action  .='<a target="blank" href="'.asset('uploads/receive-dispatch/'.$value->document).'" class="btn btn-sm btn-success m-1"><i class="fas fa-lg fa-fw me-2 fa-eye"></i></a>';
             }
             $action  .= '<a href="'.route('app.receive.leave.edit', $value->id).'" class="btn btn-primary btn-sm m-1"><i class="fas fa-edit"></i></a>';
             $action  .= '<a href="javascript:void(0);" onclick="addFile(`'.$value->id.'`,`receipt`);" class="btn btn-dark btn-sm m-1"><i class="fas fa-folder-plus"></i></a>';
-            
+
             if($value->letter_type=='Leave Application')
             {
-               $action .= '<a href="'.route('app.pilot.leave.create').'" class="btn btn-success btn-sm m-1"><i class="fas fa-calendar-plus"></i></a>'; 
+               $action .= '<a href="'.route('app.pilot.leave.create').'" class="btn btn-success btn-sm m-1"><i class="fas fa-calendar-plus"></i></a>';
             }
             $action .= '<a href="javascript:void(0);" onclick="deleted(`'.route('app.receive.leave.destroy', $value->id).'`);" class="btn btn-danger btn-sm m-1"><i class="fas fa-trash"></i></a>';
             $sub_array = array();

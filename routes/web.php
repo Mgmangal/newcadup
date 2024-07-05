@@ -1,36 +1,37 @@
 <?php
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Artisan;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\PilotController;
-use App\Http\Controllers\SettingController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\AirCraftController;
-use App\Http\Controllers\JobFunctionController;
-use App\Http\Controllers\CertificateController;
-use App\Http\Controllers\DepartmentController;
-use App\Http\Controllers\SectionController;
-use App\Http\Controllers\DesignationController;
+use App\Http\Controllers\AaiController;
 use App\Http\Controllers\AdtController;
-use App\Http\Controllers\FlyingLogController;
-use App\Http\Controllers\ExternalFlyingLogController;
-use App\Http\Controllers\NoneFlyingLogController;
-use App\Http\Controllers\FDTLController;
-use App\Http\Controllers\SFAController;
 use App\Http\Controllers\LTMController;
-use App\Http\Controllers\ReceiveDispatchController;
-use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SFAController;
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\CityController;
+use App\Http\Controllers\FDTLController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\FilesController;
+use App\Http\Controllers\PilotController;
 use App\Http\Controllers\StateController;
 use App\Http\Controllers\CvrFdrController;
-use App\Http\Controllers\FilesController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\MyLeaveController;
-use App\Http\Controllers\LoadTrimController;
-use App\Http\Controllers\StampticketController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SectionController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\AirCraftController;
 use App\Http\Controllers\ContractController;
+use App\Http\Controllers\LoadTrimController;
+use App\Http\Controllers\FlyingLogController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\CertificateController;
+use App\Http\Controllers\DesignationController;
+use App\Http\Controllers\JobFunctionController;
+use App\Http\Controllers\StampticketController;
+use App\Http\Controllers\NoneFlyingLogController;
+use App\Http\Controllers\ReceiveDispatchController;
+use App\Http\Controllers\ExternalFlyingLogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -347,12 +348,17 @@ Route::group(['prefix'=>'admin', 'middleware' => ['auth', 'verified','timezone']
         Route::get('/post-flight-doc/print/{from_date?}/{to_date?}/{passenger?}/{bunch_no?}', [FlyingLogController::class, 'postFlightDocPrint'])->name('app.flying-details.assignPostFlightDocPrint');
         Route::post('/receive-flight-doc/view-details', [FlyingLogController::class, 'openFlightDetailModel'])->name('app.openFlightDetailModel');
 
-        Route::get('/generate-aai-report/{id}', [FlyingLogController::class, 'generateAaiReport'])->name('app.flying.generateAaiReport');
-        Route::post('/aai-report-store', [FlyingLogController::class, 'aaiReportStore'])->name('app.flying.aaiReportStore');
-        Route::post('/aai-reports-list', [FlyingLogController::class, 'aaiReportsList'])->name('app.flying.aaiReportsList');
-        Route::get('/aai-report-edit/{id}', [FlyingLogController::class, 'aaiReportEdit'])->name('app.flying.aaiReportEdit');
-        // Route::post('/aai-report-update/{id}', [FlyingLogController::class, 'aaiReportUpdate'])->name('app.flying.aaiReportUpdate');
-        Route::get('/aai-report-destroy/{id}', [FlyingLogController::class, 'aaiReportDestroy'])->name('app.flying.aaiReportDestroy');
+    });
+
+    Route::group(['prefix' => 'aai-reports'], function () {
+        Route::get('flying-logs', [AaiController::class, 'flyingLogs'])->name('app.aai_report.flyingLogs');
+        Route::post('flying-log-list', [AaiController::class, 'flyingLogList'])->name('app.aai_report.flyingLogList');
+        Route::get('generate/{id}', [AaiController::class, 'generate'])->name('app.aai_report.generate');
+        Route::post('store', [AaiController::class, 'store'])->name('app.aai_report.store');
+        Route::post('list', [AaiController::class, 'list'])->name('app.aai_report.list');
+        Route::post('bulk-store', [AaiController::class, 'bulkStore'])->name('app.aai_report.bulkStore');
+        Route::get('edit/{id}', [AaiController::class, 'edit'])->name('app.aai_report.edit');
+        Route::get('destroy/{id}', [AaiController::class, 'destroy'])->name('app.aai_report.destroy');
     });
 
     Route::group(['prefix' => 'external-flying-details'], function () {
@@ -438,8 +444,6 @@ Route::group(['prefix'=>'admin', 'middleware' => ['auth', 'verified','timezone']
         Route::post('/user/list', [SfaController::class, 'getUserSfaList'])->name('app.user.sfa.list');
     });
 
-
-
     Route::group(['prefix' => 'receipt-dispatch'], function () {
         Route::get('/receipt', [ReceiveDispatchController::class, 'receiveIndex'])->name('app.receive');
         Route::post('receipt/list', [ReceiveDispatchController::class, 'receiveList'])->name('app.receive.list');
@@ -501,7 +505,7 @@ Route::group(['prefix'=>'admin', 'middleware' => ['auth', 'verified','timezone']
         Route::get('vip-recency', [ReportController::class, 'vipRecency'])->name('app.reports.vipRecency');
         Route::get('vip-recency-print/{date?}/{aircraft_type?}', [ReportController::class, 'printVipRecency'])->name('app.reports.printVipRecency');
 
-        Route::get('aai-reports', [FlyingLogController::class, 'aaiReports'])->name('app.flying.aaiReports');
+        Route::get('aai-reports', [ReportController::class, 'aaiReports'])->name('app.reports.aaiReports');
     });
 
     Route::prefix('/states')->group(function () {
@@ -591,6 +595,6 @@ Route::group(['prefix'=>'admin', 'middleware' => ['auth', 'verified','timezone']
 
 
 
-Route::group(['prefix' => 'users','middleware' => ['auth','timezone']], function () {
+Route::group(['prefix' => 'user','middleware' => ['auth','timezone']], function () {
     require __DIR__ . '/user.php';
 });

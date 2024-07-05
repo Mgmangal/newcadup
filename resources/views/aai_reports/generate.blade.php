@@ -2,7 +2,7 @@
     <x-slot name="breadcrumb">
         <ul class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{route('app.dashboard')}}">DASHBOARD</a></li>
-            <li class="breadcrumb-item"><a href="{{route('app.flying-details')}}">FLYING DETAILS</a></li>
+            <li class="breadcrumb-item"><a href="{{route('app.flying-details')}}">AAI REPORTS</a></li>
             <li class="breadcrumb-item active">GENRATE AAI REPORT</li>
         </ul>
     </x-slot>
@@ -20,7 +20,7 @@
             <a href="{{url()->previous()}}" class="btn btn-primary btn-sm p-2">Back</a>
         </div>
         <div class="card-body">
-            <form action="{{route('app.flying.aaiReportStore')}}" method="POST" enctype="multipart/form-data" id="manageForm">
+            <form action="{{route('app.aai_report.store')}}" method="POST" enctype="multipart/form-data" id="manageForm">
                 @csrf
                 <div class="row m-3">
                     <input type="hidden" name="flying_log_id" value="{{$data->id}}" class="form-control">
@@ -28,9 +28,9 @@
                         <div class="form-group">
                             <label for="d_i_ind" class="form-label">D I IND<span class="text-danger">*</span></label>
                             <select name="d_i_ind" id="d_i_ind" class="form-control">
-                                <option value="">Select</option>
+                                <!--<option value="">Select</option>-->
+                                <!--<option value="I">I</option>-->
                                 <option value="D">D</option>
-                                <option value="I">I</option>
                             </select>
                             @error('d_i_ind')
                             <span class="text-danger">{{$message}}</span>
@@ -41,8 +41,8 @@
                         <div class="form-group">
                             <label for="rcs_ind" class="form-label">RCS IND<span class="text-danger">*</span></label>
                             <select name="rcs_ind" id="rcs_ind" class="form-control">
-                                <option value="">Select</option>
-                                <option value="RCS">RCS</option>
+                                <!--<option value="">Select</option>-->
+                                <!--<option value="RCS">RCS</option>-->
                                 <option value="Non RCS">Non RCS</option>
                             </select>
                             @error('rcs_ind')
@@ -242,7 +242,7 @@
                         if (response.success) {
                             success(response.message);
                             setTimeout(() => {
-                                window.location.href = "{{route('app.flying-details')}}";
+                                window.location.href = "{{route('app.aai_report.flyingLogs')}}";
                             }, 2000);
                         } else {
                             $.each(response.message, function(fieldName, field) {
