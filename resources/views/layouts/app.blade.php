@@ -302,7 +302,7 @@
                     </div>
                     <!-- Manage Oprations -->
                     <div
-                        class="menu-item has-sub {{ request()->routeIs('app.flying-details.lkoheVilkLko')||request()->routeIs('app.flying-details.receiveFlightDoc')||request()->routeIs('app.flying-details.process')|| request()->routeIs('app.pilot')|| request()->routeIs('app.external.flying-details')||request()->routeIs('app.pilot.monitoring')||request()->routeIs('app.flying-details.create')||request()->routeIs('app.pilot.leave')||request()->routeIs('app.pilot.availability')||request()->routeIs('app.air-crafts.availability')||request()->routeIs('app.fdtl.monitoring')||request()->routeIs('app.flying-details') ? 'active' : ''}}">
+                        class="menu-item has-sub {{ request()->routeIs('app.flying-details.lkoheVilkLko')||request()->routeIs('app.flying-details.receiveFlightDoc')||request()->routeIs('app.flying-details.process')|| request()->routeIs('app.pilot')|| request()->routeIs('app.external.flying-details')||request()->routeIs('app.pilot.monitoring')||request()->routeIs('app.flying-details.create')||request()->routeIs('app.pilot.leave')||request()->routeIs('app.pilot.availability')||request()->routeIs('app.air-crafts.availability')||request()->routeIs('app.fdtl.monitoring')||request()->routeIs('app.flying-details')||request()->routeIs('app.aai_report.flyingLogs') ? 'active' : ''}}">
                         <a href="#" class="menu-link">
                             <span class="menu-icon">
                                 <i class="fa fa-cog"></i>
@@ -374,6 +374,12 @@
                                 class="menu-item {{ request()->routeIs('app.flying-details.receiveFlightDoc') ? 'active' : ''}}">
                                 <a href="{{route('app.flying-details.receiveFlightDoc')}}" class="menu-link">
                                     <span class="menu-text">Receive Flight Doc </span>
+                                </a>
+                            </div>
+                            <div
+                                class="menu-item {{ request()->routeIs('app.aai_report.flyingLogs') ? 'active' : ''}}">
+                                <a href="{{route('app.aai_report.flyingLogs')}}" class="menu-link">
+                                    <span class="menu-text">Generate AAI Reports </span>
                                 </a>
                             </div>
                             <div class="menu-item ">
@@ -536,7 +542,7 @@
                     </div>
                     <!-- Reports -->
                     <div
-                        class="menu-item has-sub {{ request()->routeIs(['app.reports.vipRecency','app.reports.pilotFlyingCurrency','app.reports.pilotGroundTraining','app.external.flying-details.statistics', 'app.pilot.flyingHourMonthly', 'app.sfa', 'app.fdtl', 'app.fdtl.voilations', 'app.flying-details.statistics', 'app.flying.aaiReports']) ? 'active' : '' }}">
+                        class="menu-item has-sub {{ request()->routeIs(['app.reports.vipRecency','app.reports.pilotFlyingCurrency','app.reports.pilotGroundTraining','app.external.flying-details.statistics', 'app.pilot.flyingHourMonthly', 'app.sfa', 'app.fdtl', 'app.fdtl.voilations', 'app.flying-details.statistics', 'app.reports.aaiReports']) ? 'active' : '' }}">
                         <a href="#" class="menu-link">
                             <span class="menu-icon">
                                 <i class="fa fa-cog"></i>
@@ -612,8 +618,8 @@
                                 </a>
                             </div>
                             <div
-                                class="menu-item {{ request()->routeIs('app.flying.aaiReports') ? 'active' : ''}}">
-                                <a href="{{route('app.flying.aaiReports')}}" class="menu-link">
+                                class="menu-item {{ request()->routeIs('app.reports.aaiReports') ? 'active' : ''}}">
+                                <a href="{{route('app.reports.aaiReports')}}" class="menu-link">
                                     <span class="menu-text">AAI Reports</span>
                                 </a>
                             </div>

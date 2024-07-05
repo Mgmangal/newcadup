@@ -138,7 +138,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="modal fade" id="fileModel" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -173,9 +173,9 @@
             </div>
         </div>
     </div>
-    
-    
-    
+
+
+
     <x-slot name="js">
         <script src="https://cdn.ckeditor.com/4.17.1/standard/ckeditor.js"></script>
         <script src="{{ asset('assets/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
@@ -223,7 +223,7 @@
                             $('#receive_from').val(response.data.receive_from);
                             $('#dates').val(response.data.dates);
                             $('#total_amount').val(response.data.total_amount);
-    
+
                             // Check checkboxes based on expenses_type array
                             var expensesType = response.data.expenses_type;
                             if (expensesType && expensesType.length > 0) {
@@ -231,7 +231,7 @@
                                     $('#expanses_type' + expenseId).prop('checked', true);
                                 });
                             }
-    
+
                             $('#fly_verify').val(response.data.fly_verify);
                             if (response.data.fly_verify == 'yes') {
                                 $('#fly_verify').prop('checked', true);
@@ -348,7 +348,7 @@
                     }
                 });
             }
-            
+
             function addFile(receive_id,file_type) {
                 clearError($('#manageForm'));
                 $('#manageForm')[0].reset();
@@ -360,8 +360,8 @@
                     success: function(response) {
                         if(response.success)
                         {
-                           $('#edit_id').val(response.data.id); 
-                           $('#file_id').val(response.data.file_id); 
+                           $('#edit_id').val(response.data.id);
+                           $('#file_id').val(response.data.file_id);
                            $('.modal-title').html('Update File');
                         }else{
                             $('#edit_id').val('');
@@ -369,8 +369,8 @@
                         }
                         $('#receive_id').val(receive_id);
                         $('#file_type').val(file_type);
-                        
-                        $('#fileModel').modal('show'); 
+
+                        $('#fileModel').modal('show');
                     }
                 });
             }

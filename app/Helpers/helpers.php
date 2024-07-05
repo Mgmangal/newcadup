@@ -955,20 +955,56 @@ function getPilotRoleHours($from, $to, $user_id, $role)
     return $totalTime;
 }
 
-function PilotsAircraftWiseFlyingSummary($user_id,$role,$aircroft,$from,$to)
+function PilotsAircraftWiseFlyingSummary($user_id,$role,$aircraft,$from,$to)
 {
     if($role=='579')
     {  //p2
+        // $data = FlyingLog::where(function ($q) use ($user_id, $role) {
+        //     $q->where('pilot1_id', $user_id)->where('pilot1_role', $role)->orWhere('pilot2_id', $user_id)->where('pilot2_role', $role);
+        // })->where('aircraft_id',$aircroft)->whereBetween('date', [$from, $to])->orderBy('id', 'desc')->get();
+        
         $data = FlyingLog::where(function ($q) use ($user_id, $role) {
-            $q->where('pilot1_id', $user_id)->where('pilot1_role', $role)->orWhere('pilot2_id', $user_id)->where('pilot2_role', $role);
-        })->where('aircraft_id',$aircroft)->whereBetween('date', [$from, $to])->orderBy('id', 'desc')->get();
+            $q->where(function ($q1) use ($user_id, $role) {
+                    $q1->where('pilot1_id', $user_id)
+                       ->where('pilot1_role', $role);
+                })
+                ->orWhere(function ($q2) use ($user_id, $role) {
+                    $q2->where('pilot2_id', $user_id)
+                       ->where('pilot2_role', $role);
+                });
+        })
+        ->where('aircraft_id', $aircraft)
+        ->whereBetween('date', [$from, $to])
+        ->orderBy('id', 'desc')
+        ->get();
+    
     }else{
-         //p1
-       $data = FlyingLog::where(function ($q) use ($user_id, $role) {
-            $q->where('pilot1_id', $user_id)->where('pilot1_role', $role)->orWhere('pilot2_id', $user_id)->where(function($q) use($role){
-                $q->where('pilot2_role', $role)->orWhere('pilot2_role','580')->orWhere('pilot2_role','581')->orWhere('pilot2_role', '582')->orWhere('pilot2_role', '583');
+         //p1 pilot1_id && pilot1_role='578','580', '581', '582' || pilot2_id && pilot2_role='578','580', '581', '582'
+         
+        // $data = FlyingLog::where(function ($q) use ($user_id, $role) {
+        //     $q->where('pilot1_id', $user_id)->where('pilot1_role', $role)->orWhere('pilot2_id', $user_id)->where(function($q) use($role){
+        //         $q->where('pilot2_role', $role)->orWhere('pilot2_role','580')->orWhere('pilot2_role','581')->orWhere('pilot2_role', '582')->orWhere('pilot2_role', '583');
+        //     });
+        // })->where('aircraft_id',$aircroft)->whereBetween('date', [$from, $to])->orderBy('id', 'desc')->get(); 
+    
+        $data = FlyingLog::where(function ($q) use ($user_id, $role) {
+            $q->where(function ($q) use ($user_id, $role) {
+                $q->where('pilot1_id', $user_id)
+                  ->whereIn('pilot1_role', ['578', '580', '581', '582']);
+            })
+            ->orWhere(function ($q) use ($user_id, $role) {
+                $q->where('pilot2_id', $user_id)
+                  ->where(function ($q) use ($role) {
+                      $q->where('pilot2_role', $role)
+                        ->orWhereIn('pilot2_role', ['578', '580', '581', '582']);
+                  });
             });
-        })->where('aircraft_id',$aircroft)->whereBetween('date', [$from, $to])->orderBy('id', 'desc')->get(); 
+        })
+        ->where('aircraft_id', $aircraft)
+        ->whereBetween('date', [$from, $to])
+        ->orderBy('id', 'desc')
+        ->get();
+
     }
     $times = [];
     foreach ($data as $k => $data) {

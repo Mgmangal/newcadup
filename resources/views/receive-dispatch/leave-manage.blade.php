@@ -75,7 +75,7 @@
                     <!--        </select>-->
                     <!--    </div>-->
                     <!--</div>-->
-                    
+
                     <div class="col-md-4 section">
                         <div class="form-group">
                             <label for="section" class="form-label">Section<span class="text-danger">*</span></label>
@@ -92,23 +92,23 @@
 
                     <div class="col-md-4">
                         <div class="form-group receive_from">
-                           
+
                             <label for="receive_from" class="form-label">Receivers Name</label>
                             <select name="receive_from" id="receive_from" class="form-select">
                                 <option value="">Please Select</option>
                                  @if (!empty($to_users))
                                     @foreach ($to_users as $to)
-                                        <option value="{{ $to->fullName() }}" {{ !empty($data) && $data->receive_to == $to->fullName() ? 'selected' : '' }}>
+                                        <option value="{{ $to->fullName() }}" {{ !empty($data) && $data->receive_from == $to->fullName() ? 'selected' : '' }}>
                                             {{ $to->fullName() }}
                                         </option>
                                     @endforeach
 
                                 @endif
                             </select>
-                           
+
                         </div>
                     </div>
-                    
+
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="to_section" class="form-label">To Section<span
@@ -217,9 +217,9 @@
                 })
             });
         </script>
-        
+
         <script>
-           
+
 
             function getUserBySection(e, select_id) {
                 var id = $(e).val();

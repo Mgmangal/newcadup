@@ -20,7 +20,6 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">AAI Reports</h3>
-            {{-- <a href="{{route('app.flying-details.create')}}" class="btn btn-primary btn-sm p-2">Add New</a> --}}
         </div>
         <div class="card-body">
             <div class="row mb-3">
@@ -75,7 +74,7 @@
                             <th>Connection Status Disembarkation</th>
                             <th>Flight Status</th>
                             <th>PNR Status</th>
-                            <th>Action</th>
+                            <!--<th>Action</th>-->
                         </tr>
                     </thead>
                     <tbody>
@@ -145,7 +144,7 @@
                         }
                     ],
                     ajax: {
-                        url: "{{route('app.flying.aaiReportsList')}}",
+                        url: "{{route('app.aai_report.list')}}",
                         type: "post",
                         data: {
                             "_token": "{{ csrf_token() }}",from_date:$('#from_date').val(),to_date:$('#to_date').val(),from_sector:$('#from_sector').val()
