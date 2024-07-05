@@ -38,6 +38,12 @@
     <link rel="stylesheet" href="{{asset('assets/theme_one/css/dashforge.css')}}">
     <!-- <link rel="stylesheet" href="{{asset('assets/theme_one/css/dashforge.dashboard.css')}}"> -->
     @yield('css')
+    <style>
+        .navbar-menu {
+            justify-content: center !important;
+            max-width: 100%;
+        }
+    </style>
 </head>
 
 <body class="page-profile">
@@ -157,20 +163,40 @@
                                 <i data-feather="calendar"></i>Licence</a>
                         </li>
                         <li class="nav-sub-item">
+                            <a href="{{route('user.certificate.myLicence')}}" class="nav-sub-link">
+                                <i data-feather="calendar"></i>My Licence</a>
+                        </li>
+                        <li class="nav-sub-item">
                             <a href="{{route('user.certificate.trainings')}}" class="nav-sub-link">
                                 <i data-feather="message-square"></i>Training</a>
+                        </li>
+                        <li class="nav-sub-item">
+                            <a href="{{route('user.certificate.myTrainings')}}" class="nav-sub-link">
+                                <i data-feather="message-square"></i>My Training</a>
                         </li>
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.medicals')}}" class="nav-sub-link">
                                 <i data-feather="message-square"></i>Medical</a>
                         </li>
                         <li class="nav-sub-item">
+                            <a href="{{route('user.certificate.myMedicals')}}" class="nav-sub-link">
+                                <i data-feather="message-square"></i>My Medical</a>
+                        </li>
+                        <li class="nav-sub-item">
                             <a href="{{route('user.certificate.qualifications')}}" class="nav-sub-link">
                                 <i data-feather="message-square"></i>Qualification</a>
                         </li>
                         <li class="nav-sub-item">
+                            <a href="{{route('user.certificate.myQualifications')}}" class="nav-sub-link">
+                                <i data-feather="message-square"></i>My Qualification</a>
+                        </li>
+                        <li class="nav-sub-item">
                             <a href="{{route('user.certificate.groundTrainings')}}" class="nav-sub-link">
                                 <i data-feather="message-square"></i>Ground Training</a>
+                        </li>
+                        <li class="nav-sub-item">
+                            <a href="{{route('user.certificate.myGroundTrainings')}}" class="nav-sub-link">
+                                <i data-feather="message-square"></i>My Ground Training</a>
                         </li>
                     </ul>
                 </li>
@@ -198,6 +224,9 @@
                 </li>
                 <li class="nav-item">
                     <a href="{{route('user.my.leave')}}" class="nav-link"><i data-feather="archive"></i> Leave</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{route('user.loadTrim')}}" class="nav-link"><i data-feather="archive"></i> Load & Trim</a>
                 </li>
                 <!-- <li class="nav-item">
                     <a href="{{route('user.contract')}}" class="nav-link"><i data-feather="archive"></i> Contract</a>
@@ -335,8 +364,20 @@
     <script src="{{asset('assets/theme_one/lib/js-cookie/js.cookie.js')}}"></script>
     <!-- <script src="{{asset('assets/theme_one/js/dashforge.settings.js')}}"></script> -->
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script type="text/javascript">
-         function success(message) {
+
+
+    <script>
+        $(document).ready(function() {
+            @if (Session::has('warning'))
+                warning('{{ Session::get('warning') }}');
+            @elseif(Session::has('success'))
+                success('{{ Session::get('success') }}');
+            @elseif(Session::has('error'))
+                error('{{ Session::get('error') }}');
+            @endif
+
+        });
+        function success(message) {
             swal({
                 title: "Success",
                 text: message,

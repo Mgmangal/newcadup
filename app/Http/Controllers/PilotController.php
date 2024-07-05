@@ -544,7 +544,7 @@ class PilotController extends Controller
             $file = $request->file('documnets');
             $ext= $file->getClientOriginalExtension();
             $file_name=changeSpaceInUnderscore(getEmpName($user_id).'-'.getMasterName($training_id).'-'.date('d-m-Y-h-i')).'.'.$ext;
-            
+
             // $file_name=changeSpaceInUnderscore(getEmpName($user_id)).'-'.changeSpaceInUnderscore(getMasterName($training_id)).'-'.date('d-m-Y-h-i').'.'.$ext;
             $file->move(public_path('uploads/pilot_certificate'), $file_name);
             $data->documents = $file_name;
@@ -596,7 +596,7 @@ class PilotController extends Controller
             $file = $request->file('documnets');
             $ext= $file->getClientOriginalExtension();
             $file_name=changeSpaceInUnderscore(getEmpName($user_id).'-'.getMasterName($medical_id).'-'.date('d-m-Y-h-i')).'.'.$ext;
-            
+
             // $file_name=changeSpaceInUnderscore(getEmpName($user_id)).'-'.changeSpaceInUnderscore(getMasterName($medical_id)).'-'.date('d-m-Y-h-i').'.'.$ext;
             $file->move(public_path('uploads/pilot_certificate'), $file_name);
             $data->documents = $file_name;
@@ -649,7 +649,7 @@ class PilotController extends Controller
             $file = $request->file('documnets');
             $ext= $file->getClientOriginalExtension();
             $file_name=changeSpaceInUnderscore(getEmpName($user_id).'-'.getMasterName($medical_id).'-'.date('d-m-Y-h-i')).'.'.$ext;
-            
+
             // $file_name=changeSpaceInUnderscore(getEmpName($user_id)).'-'.changeSpaceInUnderscore(getMasterName($medical_id)).'-'.date('d-m-Y-h-i').'.'.$ext;
             $file->move(public_path('uploads/pilot_certificate'), $file_name);
             $data->documents = $file_name;
@@ -692,7 +692,7 @@ class PilotController extends Controller
             $file = $request->file('documnets');
             $ext= $file->getClientOriginalExtension();
             $file_name=changeSpaceInUnderscore(getEmpName($user_id).'-'.getMasterName($qualification_id).'-'.date('d-m-Y-h-i')).'.'.$ext;
-            
+
             // $file_name=changeSpaceInUnderscore(getEmpName($user_id)).'-'.changeSpaceInUnderscore(getMasterName($qualification_id)).'-'.date('d-m-Y-h-i').'.'.$ext;
             $file->move(public_path('uploads/pilot_certificate'), $file_name);
             $data->documents = $file_name;
@@ -739,7 +739,7 @@ class PilotController extends Controller
             $file = $request->file('documnets');
             $ext= $file->getClientOriginalExtension();
             $file_name=changeSpaceInUnderscore(getEmpName($user_id).'-'.getMasterName($qualification_id).'-'.date('d-m-Y-h-i')).'.'.$ext;
-            
+
             // $file_name=changeSpaceInUnderscore(getEmpName($user_id)).'-'.changeSpaceInUnderscore(getMasterName($qualification_id)).'-'.date('d-m-Y-h-i').'.'.$ext;
             $file->move(public_path('uploads/pilot_certificate'), $file_name);
             $data->documents = $file_name;
@@ -789,7 +789,7 @@ class PilotController extends Controller
             $file = $request->file('documnets');
             $ext= $file->getClientOriginalExtension();
             $file_name=changeSpaceInUnderscore(getEmpName($user_id).'-'.getMasterName($training_id).'-'.date('d-m-Y-h-i')).'.'.$ext;
-            
+
             // $file_name=changeSpaceInUnderscore(getEmpName($user_id)).'-'.changeSpaceInUnderscore(getMasterName($training_id)).'-'.date('d-m-Y-h-i').'.'.$ext;
             $file->move(public_path('uploads/pilot_certificate'), $file_name);
             $data->documents = $file_name;
@@ -859,7 +859,7 @@ class PilotController extends Controller
             $file = $request->file('documnets');
             $ext= $file->getClientOriginalExtension();
             $file_name=changeSpaceInUnderscore(getEmpName($user_id).'-'.getMasterName($training_id).'-'.date('d-m-Y-h-i')).'.'.$ext;
-            
+
             // $file_name=changeSpaceInUnderscore(getEmpName($user_id)).'-'.changeSpaceInUnderscore(getMasterName($training_id)).'-'.date('d-m-Y-h-i').'.'.$ext;
             $file->move(public_path('uploads/pilot_certificate'), $file_name);
             $data->documents = $file_name;
@@ -1030,7 +1030,8 @@ class PilotController extends Controller
         $master_id=$request->master_id;
         $leave_dates=$request->leave_dates;
         $status=$request->status;
-        $remarks=$request->remark; 
+        $remarks=$request->remark;
+        $no_of_days=$request->no_of_days;
         $date=explode('-',$leave_dates);
         $data=new Leave();
         if($request->hasFile('documnets')) {
@@ -1048,13 +1049,13 @@ class PilotController extends Controller
         $data->master_id=$master_id;
         $data->leave_dates=$leave_dates;
         $data->remark=$remarks;
+        $data->no_of_days=$no_of_days;
         $data->from_date=date('Y-m-d',strtotime($date[0]));
         $data->to_date=date('Y-m-d',strtotime($date[1]));
         $data->status=$status;
         $data->save();
         return redirect()->route('app.pilot.leave')->with('success','Leave created successfully');
     }
-
     public function leaveEdit ($id)
     {
         $users=User::where('designation','=',1)->get();
@@ -1069,6 +1070,7 @@ class PilotController extends Controller
         $master_id=$request->master_id;
         $leave_dates=$request->leave_dates;
         $remarks=$request->remark;
+        $no_of_days=$request->no_of_days;
         $date=explode('-',$leave_dates);
         $status=$request->status;
         $data=Leave::find($id);
@@ -1088,13 +1090,14 @@ class PilotController extends Controller
         $data->master_id=$master_id;
         $data->leave_dates=$leave_dates;
         $data->remark=$remarks;
+        $data->no_of_days=$no_of_days;
         $data->from_date=date('Y-m-d',strtotime($date[0]));
         $data->to_date=date('Y-m-d',strtotime($date[1]));
         $data->status=$status;
         $data->save();
         return redirect()->route('app.pilot.leave')->with('success','Leave updated successfully');
     }
-    
+
     public function updateLeaveStatus(Request $request)
     {
          try {
@@ -1142,16 +1145,16 @@ class PilotController extends Controller
             $from_date=date('Y-m-d',strtotime($from_date));
             $to_date=date('Y-m-d',strtotime($to_date));
             $diff = date_diff(date_create($from_date), date_create($to_date));
-            $apply_leave+=$diff->format('%a');
+            $apply_leave+= $value->no_of_days;//$diff->format('%a');
             if($value->status=='approved'){
-                $consumed_leave+=$diff->format('%a');
+                $consumed_leave+=$value->no_of_days;//$diff->format('%a');
             }
         }
         $remaining_leave=$total_leave-$apply_leave;
 
 
         return response()->json(['status' => true, 'message' => $html,'total_leave'=>$total_leave,'apply_leave'=>$apply_leave,'consumed_leave'=>$consumed_leave,'remaining_leave'=>$remaining_leave]);
-       
+
     }
     public function leaveShow($id)
     {
@@ -1349,7 +1352,7 @@ class PilotController extends Controller
        if($docType=='qualification')
         {
             $data= PilotQualification::find($id);
-            
+
         }
        $result['status']=true;
        if(!empty($data)&&!empty($data->documents))
@@ -1359,7 +1362,7 @@ class PilotController extends Controller
            $data->save();
            $result['status']=true;
        }
-       
+
        return response()->json($result);
     }
 
@@ -1384,7 +1387,7 @@ class PilotController extends Controller
                 $data= PilotLicense::where('user_id',$user_id)->where('license_id',$id);
                 $data->update(['is_applicable'=>$status]);
             }
-            
+
         }
         if($docType=='training')
         {
@@ -1400,7 +1403,7 @@ class PilotController extends Controller
                 $data= PilotTraining::where('user_id',$user_id)->where('training_id',$id);
                 $data->update(['is_applicable'=>$status]);
             }
-            
+
         }
         if($docType=='medical')
         {
@@ -1416,7 +1419,7 @@ class PilotController extends Controller
                 $data= PilotMedical::where('user_id',$user_id)->where('medical_id',$id);
                 $data->update(['is_applicable'=>$status]);
             }
-            
+
         }
         if($docType=='ground_training')
         {
@@ -1432,7 +1435,7 @@ class PilotController extends Controller
                 $data= PilotGroundTraining::where('user_id',$user_id)->where('training_id',$id);
                 $data->update(['is_applicable'=>$status]);
             }
-            
+
         }
         if($docType=='qualification')
         {
@@ -1527,7 +1530,7 @@ class PilotController extends Controller
 
 		echo json_encode($output);
     }
-    
+
     public function documentsStore(Request $request)
     {
         $validation = Validator::make($request->all(), [

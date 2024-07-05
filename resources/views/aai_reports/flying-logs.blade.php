@@ -2,7 +2,8 @@
     <x-slot name="breadcrumb">
         <ul class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{route('app.dashboard')}}">DASHBOARD</a></li>
-            <li class="breadcrumb-item active">PROCESS FLYING LOG</li>
+            <li class="breadcrumb-item active">AAI REPORTS</li>
+            <li class="breadcrumb-item active">AAI FLYING LIST</li>
         </ul>
     </x-slot>
     <x-slot name="css">
@@ -18,12 +19,8 @@
     <x-success class="mb-4" />
     <div class="card">
         <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">Flying Log List</h3>
-            <div>
-                <a href="javascript:void(0);" onclick="unprocess();" class="btn btn-info btn-sm p-2">Unprocess</a>
-                <a href="javascript:void(0);" onclick="process();" class="btn btn-primary btn-sm p-2">Process</a>
-                <a href="javascript:void(0);" onclick="analyzeViolation();" class="btn btn-info btn-sm p-2">Analyze Violation</a>
-            </div>
+            <h3 class="card-title">AAI Flying List</h3>
+            <button type="button" onclick="generateReports(this);" class="btn btn-primary btn-sm p-2">Generate Report</button>
         </div>
         <div class="card-body">
             <div class="row mb-3">
@@ -39,7 +36,7 @@
                         <input type="text" class="form-control filters dates" id="to_date" placeholder="DD-MM-YYYY" autocomplete="off">
                     </div>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-1">
                     <div class="form-group">
                         <label for="aircraft" class="form-label">Aircraft</label>
                         <select class="form-control filters" id="aircraft">
@@ -50,7 +47,33 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <label for="$passenger" class="form-label">Passenger </label>
+                        <select class="form-control filters" id="passenger">
+                            <option value="">Select</option>
+                            @foreach($passengers as $passenger)
+                                <option value="{{$passenger->more_data}}">{{$passenger->more_data}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                
+                
+                
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <label for="from_sector" class="form-label">From Sector</label>
+                        <input type="text" class="form-control filters auto_complete_input" id="from_sector" placeholder="" autocomplete="off">
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <label for="to_sector" class="form-label">To Sector</label>
+                        <input type="text" class="form-control filters auto_complete_input" id="to_sector" placeholder="" autocomplete="off">
+                    </div>
+                </div>
+                <div class="col-md-2">
                     <div class="form-group">
                         <label for="pilot" class="form-label">Pilots</label>
                         <select class="form-control filters" id="pilot">
@@ -61,7 +84,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group">
                         <label for="flying_type" class="form-label">Flying Type</label>
                         <select class="form-control filters" id="flying_type">
@@ -72,16 +95,17 @@
                         </select>
                     </div>
                 </div>
+                
             </div>
             <div class="table-responsive">
-                <table id="datatableDefault" class="table text-nowrap w-100">
+                <table id="datatableDefault" class="table text-nowrap= w-100">
                     <thead>
                         <tr>
                             <th>#</th>
                             <th>Date</th>
                             <th>Aircraft</th>
                             <th>From/To</th>
-                            <th>Chocks Off / On</th>
+                            <th>Chocks Off/On</th>
                             <th>Block Time<br> (Hrs:Mins)</th>
                             <th>Crew</th>
                             <th>Flying Type</th>
@@ -96,34 +120,10 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="manageModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalLabel"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form action="{{route('app.flying-details.process.save')}}" method="POST" id="roleForm" class="">
-                    @csrf
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Date</label>
-                        <input type="text" class="form-control dates" name="dates" placeholder="Enter Date" autocomplete="off"/>
-                        <input type="hidden" name="types" id="types"  />
-                        <div class="invalid-feedback"></div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-                </form>
-            </div>
-        </div>
-    </div>
 
 
     <x-slot name="js">
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
          <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
         <script src="{{asset('assets/plugins/datatables.net/js/jquery.dataTables.min.js')}}"></script>
         <script src="{{asset('assets/plugins/datatables.net-bs5/js/dataTables.bootstrap5.min.js')}}"></script>
@@ -142,12 +142,12 @@
                 formatDate:'Y/m/d',
                 autoclose: true,
                 clearBtn: true,
-                todayButton: true,
+                todayButton: true,               
                 // maxDate: new Date(new Date().getTime() + 5 * 24 * 60 * 60 * 1000),
                 onSelectDate: function(ct) {
                 }
             });
-
+            
             function dataList() {
                 $('#datatableDefault').DataTable().destroy();
                 $('#datatableDefault').DataTable({
@@ -156,7 +156,7 @@
                     dom: "<'row mb-3'<'col-sm-4'l><'col-sm-8 text-end'<'d-flex justify-content-end'fB>>>t<'d-flex align-items-center'<'me-auto'i><'mb-0'p>>",
                     lengthMenu: [20, 50, 100, 200, 500, 1000, 2000, 5000, 10000],
                     responsive: true,
-                     order: [[1, 'desc']],
+                    order: [[1, 'desc']],
                     // columnDefs: [{
                     //     width: 200,
                     //     targets: 3
@@ -175,96 +175,81 @@
                         }
                     ],
                     ajax: {
-                        url: "{{route('app.flying-details.list')}}",
+                        url: "{{route('app.aai_report.flyingLogList')}}",
                         type: "post",
                         data: {
-                            "_token": "{{ csrf_token() }}",from_date:$('#from_date').val(),to_date:$('#to_date').val(),aircraft:$('#aircraft').val(),pilot:$('#pilot').val(),flying_type:$('#flying_type').val()
+                            "_token": "{{ csrf_token() }}",from_date:$('#from_date').val(),to_date:$('#to_date').val(),aircraft:$('#aircraft').val(),pilot:$('#pilot').val(),flying_type:$('#flying_type').val(),from_sector:$('#from_sector').val(),to_sector:$('#to_sector').val(),passenger:$('#passenger').val()     
                         },
                     },
-                    fnRowCallback: function( nRow, aData, iDisplayIndex ) {
+                    fnRowCallback: function( nRow, aData, iDisplayIndex ) { 
                         var oSettings = this.fnSettings ();
                         $("td:eq(0)", nRow).html(oSettings._iDisplayStart+iDisplayIndex +1);
                         $('td:eq(5)', nRow).css('text-align','center');
                     },
                     "initComplete": function() {
-
+                            
                     }
                 });
             }
             dataList();
-
+            
             $('.filters').on('change',function(){
                 dataList();
             });
-
-            function unprocess()
+            
+            function getSectors()
             {
-                $('#modalLabel').html('Unprocess');
-                $('#types').val('unprocess');
-                $('#roleForm').find('.is-invalid').removeClass('is-invalid');
-                $('#roleForm').find('.invalid-feedback').hide();
-                $('#roleForm')[0].reset();
-                $('#manageModal').modal('show')
-            }
-
-            function process()
-            {
-                $('#modalLabel').html('Process');
-                $('#types').val('process');
-                $('#roleForm').find('.is-invalid').removeClass('is-invalid');
-                $('#roleForm').find('.invalid-feedback').hide();
-                $('#roleForm')[0].reset();
-                $('#manageModal').modal('show')
-            }
-
-            $('#roleForm').submit(function(e) {
-                e.preventDefault();
-                $('#roleForm').find('.invalid-feedback').hide();
                 $.ajax({
-                    url: $(this).attr('action'),
-                    method: $(this).attr('method'),
+                    url: "{{route('app.sectors.autocomplete')}}",
+                    type: 'get',
+                    data: {},
                     dataType: 'json',
-                    data: $(this).serialize(),
+                    success: function(data) {
+                        console.log(data);
+                        localStorage.setItem('htmltest', JSON.stringify(data));
+                    }
+                });
+            }
+            getSectors();
+            
+            function autoCompleteInput()
+            {
+                $( ".auto_complete_input" ).autocomplete({
+                  source: jQuery.parseJSON( localStorage.getItem('htmltest'))
+                });
+            }
+          
+            autoCompleteInput();
+            
+            function generateReports(e) 
+            {
+                $.ajax({
+                    url: "{{ route('app.aai_report.bulkStore') }}",
+                    method: 'POST',
+                    dataType: 'json',
+                    data: {
+                        "_token": "{{ csrf_token() }}",from_date:$('#from_date').val(),to_date:$('#to_date').val(),aircraft:$('#aircraft').val(),pilot:$('#pilot').val(),flying_type:$('#flying_type').val(),from_sector:$('#from_sector').val(),to_sector:$('#to_sector').val(),passenger:$('#passenger').val()     
+                    },
                     beforeSend: function() {
                         showLoader();
+                        $(e).html('Processing...');
                     },
                     success: function(response) {
                         if (response.success) {
-                            $('#roleForm')[0].reset();
-                            $('#manageModal').modal('hide');
                             dataList();
-                        } else {
-                            $.each(response.message, function(fieldName, field) {
-                                $('#roleForm').find('[name=' + fieldName + ']').addClass('is-invalid');
-                                $('#roleForm').find('[name=' + fieldName + ']').after('<div class="invalid-feedback">' + field + '</div>');
-                            })
+                            success(response.message);
                         }
                     },
-                    complete: function() {
-                        hideLoader();
-                    }
-                })
-            })
-
-            function analyzeViolation()
-            {
-                $.ajax({
-                    url: "{{route('app.flying-details.analyze.violation')}}",
-                    method: 'post',
-                    dataType: 'json',
-                    data: {"_token": "{{ csrf_token() }}"},
-                    beforeSend: function() {
-                       showLoader();
-                    },
-                    success: function(response) {
-                        console.log(response);
+                    error: function(xhr, status, error) {
+                        console.error('AJAX error:', status, error);
+                        warning('An error occurred while generating reports.');
                     },
                     complete: function() {
                         hideLoader();
+                        $(e).html('Generate Report');
                     }
-                })
+                });
             }
-
         </script>
     </x-slot>
 </x-app-layout>

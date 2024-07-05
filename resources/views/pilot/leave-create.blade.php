@@ -42,7 +42,7 @@
                             </select>
                             <span class="text-danger user_error"></span>
                         </div>
-                        
+
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
@@ -79,9 +79,9 @@
                                 value="{{old('leave_dates')}}">
                                 <span class="text-danger date_error"></span>
                         </div>
-                        
+
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-2">
                         <div class="form-group">
                             <label for="status" class="form-label">Status<span class="text-danger">*</span></label>
                             <select class="form-control" id="status" name="status" required>
@@ -90,6 +90,12 @@
                                 <option value="approved">Approved</option>
                                 <option value="rejected">Rejected</option>
                             </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="no_of_days" class="form-label">Leave Duration</label>
+                            <input type="number" class="form-control" name="no_of_days" id="no_of_days">
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -156,6 +162,8 @@
             // maxDate: '12/31/2018',
         }, function(start, end) {
             // $('#daterange input').val(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            var days = end.diff(start, 'days') + 1;
+            $('#no_of_days').val(days);
         });
 
         function checkValidLeave() {

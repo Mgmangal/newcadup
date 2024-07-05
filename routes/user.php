@@ -10,6 +10,7 @@ use App\Http\Controllers\ThemeOne\FlyingController;
 use App\Http\Controllers\ThemeOne\ReportController;
 use App\Http\Controllers\ThemeOne\MyLeaveController;
 use App\Http\Controllers\ThemeOne\ContractController;
+use App\Http\Controllers\ThemeOne\LoadTrimController;
 use App\Http\Controllers\ThemeOne\FlyingLogController;
 use App\Http\Controllers\ThemeOne\CertificateController;
 
@@ -51,10 +52,6 @@ Route::post('sfa-store', [SFAController::class, 'sfaStore'])->name('user.sfa.sfa
 
 Route::get('sfa/sfa-list', [SFAController::class, 'sfaList'])->name('user.sfa.sfaList');
 Route::get('sfa/my-sfa-list', [SFAController::class, 'mySfaList'])->name('user.sfa.mySfaList');
-
-
-// Route::get('/sfa/generate', [SFAController::class, 'generate'])->name('user.sfa.generate');
-// Route::post('/sfa/generate', [SFAController::class, 'generateSfa'])->name('user.sfa.generate');
 Route::post('get-sfa-list', [SFAController::class, 'getSfaList'])->name('user.sfa.getSfaList');
 Route::get('/sfa/view/{id}', [SFAController::class, 'sfaView'])->name('user.sfa.view');
 Route::get('/sfa/delete/{id}', [SFAController::class, 'sfaDelete'])->name('user.sfa.deleted');
@@ -62,34 +59,38 @@ Route::get('/sfa/verify/{id}',[SFAController::class, 'verify'])->name('user.sfa.
 Route::get('/sfa/approved/{id}',[SFAController::class, 'approved'])->name('user.sfa.approved');
 Route::get('/sfa/download/{id}', [SFAController::class, 'downloadSfaReport'])->name('user.sfa.download');
 
-Route::get('/certificate/licence', [CertificateController::class, 'index'])->name('user.certificate.licence');
-Route::get('/certificate/trainings', [CertificateController::class, 'trainings'])->name('user.certificate.trainings');
-Route::get('/certificate/medicals', [CertificateController::class, 'medicals'])->name('user.certificate.medicals');
-Route::get('/certificate/qualifications', [CertificateController::class, 'qualifications'])->name('user.certificate.qualifications');
-Route::get('/certificate/ground-trainings', [CertificateController::class, 'groundTrainings'])->name('user.certificate.groundTrainings');
-
-Route::post('/monitoring/license-list', [LTMController::class, 'monitoringLicenseList'])->name('user.ltm.monitoringLicenseList');
-Route::post('/monitoring/training-list', [LTMController::class, 'monitoringTrainingList'])->name('user.ltm.monitoringTrainingList');
-Route::post('/monitoring/medical-list', [LTMController::class, 'monitoringMedicalList'])->name('user.ltm.monitoringMedicalList');
-Route::post('/monitoring/qualification-list', [LTMController::class, 'monitoringQualificationList'])->name('user.ltm.monitoringQualificationList');
-Route::post('/monitoring/ground-training-list', [LTMController::class, 'monitoringGroundTrainingList'])->name('user.ltm.monitoringGroundTrainingList');
-Route::group(['prefix' => 'log'], function () {
-
-    Route::get('/certificate/licence/{id}', [CertificateController::class, 'licenceLog'])->name('user.certificate.licence.log');
-    Route::get('/certificate/trainings/{id}', [CertificateController::class, 'trainingsLog'])->name('user.certificate.trainings.log');
-    Route::get('/certificate/medicals/{id}', [CertificateController::class, 'medicalsLog'])->name('user.certificate.medicals.log');
-    Route::get('/certificate/qualifications/{id}', [CertificateController::class, 'qualificationsLog'])->name('user.certificate.qualifications.log');
-    Route::get('/certificate/ground-trainings/{id}', [CertificateController::class, 'groundTrainingsLog'])->name('user.certificate.groundTrainings.log');
-
-    Route::post('/monitoring/license-list', [CertificateController::class, 'monitoringLicenseLogList'])->name('user.ltm.monitoringLicenseList.log');
-    Route::post('/monitoring/training-list', [CertificateController::class, 'monitoringTrainingLogList'])->name('user.ltm.monitoringTrainingList.log');
-    Route::post('/monitoring/medical-list', [CertificateController::class, 'monitoringMedicalLogList'])->name('user.ltm.monitoringMedicalList.log');
-    Route::post('/monitoring/qualification-list', [CertificateController::class, 'monitoringQualificationLogList'])->name('user.ltm.monitoringQualificationList.log');
-    Route::post('/monitoring/ground-training-list', [CertificateController::class, 'monitoringGroundTrainingLogList'])->name('user.ltm.monitoringGroundTrainingList.log');
+Route::prefix('load-trim')->group(function () {
+    Route::get('/', [LoadTrimController::class, 'index'])->name('user.loadTrim');
+    Route::get('/add', [LoadTrimController::class, 'apply'])->name('user.loadTrim.add');
+    Route::post('list', [LoadTrimController::class, 'list'])->name('user.loadTrim.list');
+    Route::post('store', [LoadTrimController::class, 'store'])->name('user.loadTrim.store');
+    Route::get('edit/{id}', [LoadTrimController::class, 'edit'])->name('user.loadTrim.edit');
+    Route::post('update/{id}', [LoadTrimController::class, 'update'])->name('user.loadTrim.update');
+    Route::get('cancel/{id}', [LoadTrimController::class, 'cancelled'])->name('user.loadTrim.cancelled');
 });
 
+Route::group(['prefix' => 'certificate'], function () {
+
+    Route::get('licence', [CertificateController::class, 'licence'])->name('user.certificate.licence');
+    Route::get('my-licence', [CertificateController::class, 'myLicence'])->name('user.certificate.myLicence');
+    Route::post('licence-list', [CertificateController::class, 'licenceList'])->name('user.certificate.licenceList');
+    Route::get('trainings', [CertificateController::class, 'trainings'])->name('user.certificate.trainings');
+    Route::get('my-trainings', [CertificateController::class, 'myTrainings'])->name('user.certificate.myTrainings');
+    Route::post('training-list', [CertificateController::class, 'trainingList'])->name('user.certificate.trainingList');
+    Route::get('medicals', [CertificateController::class, 'medicals'])->name('user.certificate.medicals');
+    Route::get('my-medicals', [CertificateController::class, 'myMedicals'])->name('user.certificate.myMedicals');
+    Route::post('medical-list', [CertificateController::class, 'medicalList'])->name('user.certificate.medicalList');
+    Route::get('qualifications', [CertificateController::class, 'qualifications'])->name('user.certificate.qualifications');
+    Route::get('my-qualifications', [CertificateController::class, 'myQualifications'])->name('user.certificate.myQualifications');
+    Route::post('qualification-list', [CertificateController::class, 'qualificationList'])->name('user.certificate.qualificationList');
+    Route::get('ground-trainings', [CertificateController::class, 'groundTrainings'])->name('user.certificate.groundTrainings');
+    Route::get('my-ground-trainings', [CertificateController::class, 'myGroundTrainings'])->name('user.certificate.myGroundTrainings');
+    Route::post('ground-training-list', [CertificateController::class, 'groundTrainingList'])->name('user.certificate.groundTrainingList');
+
+    Route::get('{type}/{user_id}/{id}', [CertificateController::class, 'viewLogs'])->name('user.certificate.viewLogs');
+    Route::post('get-log-list', [CertificateController::class, 'getLogList'])->name('user.certificate.getLogList');
+});
 Route::post('/certificate/view', [CertificateController::class, 'viewData'])->name('user.ltm.view');
-Route::get('/pilot/licence', [LTMController::class, 'index'])->name('user.pilot.licenses');
 
 Route::get('/flying-currency', [ReportController::class, 'pilotFlyingCurrency'])->name('user.reports.pilotFlyingCurrency');
 Route::get('/flying-currency-print/{date?}/{aircraft?}/{report_type?}', [ReportController::class, 'pilotFlyingCurrencyPrint'])->name('user.reports.pilotFlyingCurrencyPrint');

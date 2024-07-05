@@ -129,10 +129,10 @@ class SFAController extends Controller
                 $paybilAmount=round(($hours*$wing_rate),2);
                 $gtotal+=$paybilAmount;
             }
-            $sub_array[] = $this->getMasterName($value->user_role,'pilot_role');
+            $sub_array[] = getMasterName($value->user_role,'pilot_role');
             $sub_array[] = $check==0?'<input type="number" required="" form="sfa-form" name="rate_per_unit[]" class="form-control rate_per_unit" onchange="calPrice(this)" id="" value="'.($wing_rate).'" style=" border-radius: 5px !important;" placeholder="Enter Rate/Hours" readonly>':'-';
             $sub_array[] = $check==0?'<input type="number" form="sfa-form" name="amount[]" readonly="" class="form-control amount" id="" value="'.$paybilAmount.'" style=" border-radius: 5px !important;" placeholder="Total Amount" readonly>':'-';
-            $sub_array[] = $check==0?'<input type="text" value="'.$this->getMasterName($value->flying_type,'flying_type').'" form="sfa-form" name="remark[]" maxlength="20" class="form-control remark" id="" style="border-radius: 5px !important;" placeholder="Enter Remarks"><input type="hidden" value="'.$value->flying_log_id.'" form="sfa-form" name="flying_id[]" class=" flying_id" >':'Already SFA Generated';
+            $sub_array[] = $check==0?'<input type="text" value="'.getMasterName($value->flying_type,'flying_type').'" form="sfa-form" name="remark[]" maxlength="20" class="form-control remark" id="" style="border-radius: 5px !important;" placeholder="Enter Remarks"><input type="hidden" value="'.$value->flying_log_id.'" form="sfa-form" name="flying_id[]" class=" flying_id" >':'Already SFA Generated';
             $data[] = $sub_array;
         }
         $total_time=AddPlayTime($times);
@@ -188,7 +188,7 @@ class SFAController extends Controller
                 $times[]=is_time_defrence($value->departure_time, $value->arrival_time);
                 $hours=$mint/60;
                 $paybilAmount=$hours*$rate_per_unit[$key];
-                $sub_array[] = $pilots==$value->pilot1_id?$this->getMasterName($value->pilot1_role,'pilot_role'):$this->getMasterName($value->pilot2_role,'pilot_role');
+                $sub_array[] = $pilots==$value->pilot1_id?getMasterName($value->pilot1_role,'pilot_role'):getMasterName($value->pilot2_role,'pilot_role');
                 $sub_array[] = $rate_per_unit[$key];
                 $sub_array[] = $paybilAmount;
                 $sub_array[] = $remark[$key];//.'-'.$hours.'-'.$rate_per_unit[$i];
@@ -225,9 +225,8 @@ class SFAController extends Controller
         ini_set('memory_limit', '-1');
         $mpdf = new \Mpdf\Mpdf($mpdfConfig);
         $mpdf->SetFont('Times New Roman', 'B');
-        $space1="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+        $space1="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
         $space2="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-
         $header = '<header>
                         <table style="width:100%; top:0;position: relative;">
                           <tr>
@@ -240,54 +239,54 @@ class SFAController extends Controller
                           </tr>
                         </table><br>
                     </header>';
-        $footer = '<footer>
-            <table style="width:100%;position: relative; bottom: 360px;" class="footer-main11">
-              <tr>
-                <td class="footer" style="font-size:12px;" >
-                    '.(!empty($certified_that)?$certified_that:is_setting('certified_that')).'
-                </td>
-              </tr>
-              <tr>
-                <td style="padding-top: 5px;padding-left: 5px;">
-                  <p style="display:flex1;font-size: 13px;">
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br><br>
-                    <span style="height:40px">HOURS CHECKED</span>'.$space1.'
-                    <span style="height:40px; margin-left:50px">HOURS VERIFIED </span>
-                  </p><br><br>
-                  <p style="display:flex1;font-size: 17px;color: #000;">
-                    <span style="font-size: 16px;color: #000;">Claimant\'s signature </span>'.$space2.'
-                    <span style="font-size: 16px;color: #000;padding-right: 15px;margin-left: 500px;">Claimant\'s signature </span>
-                  </p>
-                  <p style="font-size: 13px;color: #000;margin: 0px;"><span style="color:red; font-size: 17px;">A/C Type</span> - Aircraft Type , <span style="color:red; font-size: 17px;">Regn.</span> - Aircraft Registration , <span style="color:red; font-size: 17px;">Sr. No.</span> - Serial Number , <span style="color:red; font-size: 17px;">G.O. </span>- Government Order</p>
-                </td>
-              </tr>
-            </table>
-            <p style="display:flex;justify-content: space-between;margin-left: 150mm; margin-top:1mm">
-                <span style="">Page {PAGENO} of {nb} </span>
-            </p>
-            </footer>';
-        $footer = '<footer>
-            <table style="width:100%;position: relative; bottom: 360px;" class="footer-main11">
-              <tr>
-                <td class="footer" style="font-size:12px;" >
-                    '.(!empty($certified_that)?$certified_that:is_setting('certified_that')).'
-                </td>
-              </tr>
-              <tr>
-                <td style="padding-top: 5px;padding-left: 5px;">
-                  <p style="display:flex1;font-size: 13px;">
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br><br><br>
-                    <span style="height:40px">Claimant\'s signature HOURS CHECKED</span>'.$space1.'
-                    <span style="height:40px; margin-left:50px">Claimant\'s signature HOURS VERIFIED </span>
-                  </p><br>
-                  <p style="font-size: 13px;color: #000;margin: 0px;"><span style="color:red; font-size: 17px;">A/C Type</span> - Aircraft Type , <span style="color:red; font-size: 17px;">Regn.</span> - Aircraft Registration , <span style="color:red; font-size: 17px;">Sr. No.</span> - Serial Number , <span style="color:red; font-size: 17px;">G.O. </span>- Government Order</p>
-                </td>
-              </tr>
-            </table>
-            <p style="display:flex;justify-content: space-between;margin-left: 150mm; margin-top:1mm">
-                <span style="">Page {PAGENO} of {nb} </span>
-            </p>
-            </footer>';
+                    $footer = '<footer>
+                        <table style="width:100%;position: relative; bottom: 360px;" class="footer-main11">
+                        <tr>
+                            <td class="footer" style="font-size:12px;" >
+                                '.(!empty($certified_that)?$certified_that:is_setting('certified_that')).'
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding-top: 5px;padding-left: 5px;">
+                            <p style="display:flex1;font-size: 13px;">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br><br>
+                                <span style="height:40px">HOURS CHECKED</span>'.$space1.'
+                                <span style="height:40px; margin-left:50px">HOURS VERIFIED </span>
+                            </p><br><br>
+                            <p style="display:flex1;font-size: 17px;color: #000;">
+                                <span style="font-size: 16px;color: #000;">Claimant\'s signature </span>'.$space2.'
+                                <span style="font-size: 16px;color: #000;padding-right: 15px;margin-left: 500px;">Claimant\'s signature </span>
+                            </p><br>
+                            <p style="font-size: 13px;color: #000;margin: 0px;"><span style="color:red; font-size: 17px;">A/C Type</span> - Aircraft Type , <span style="color:red; font-size: 17px;">Regn.</span> - Aircraft Registration , <span style="color:red; font-size: 17px;">Sr. No.</span> - Serial Number , <span style="color:red; font-size: 17px;">G.O. </span>- Government Order</p>
+                            </td>
+                        </tr>
+                        </table>
+                        <p style="display:flex;justify-content: space-between;margin-left: 150mm; margin-top:1mm">
+                            <span style="">Page {PAGENO} of {nb} </span>
+                        </p>
+                    </footer>';
+        // $footer = '<footer>
+        //     <table style="width:100%;position: relative; bottom: 360px;" class="footer-main11">
+        //       <tr>
+        //         <td class="footer" style="font-size:12px;" >
+        //             '.(!empty($certified_that)?$certified_that:is_setting('certified_that')).'
+        //         </td>
+        //       </tr>
+        //       <tr>
+        //         <td style="padding-top: 5px;padding-left: 5px;">
+        //           <p style="display:flex1;font-size: 13px;">
+        //           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br><br><br>
+        //             <span style="height:40px">Claimant\'s signature HOURS CHECKED</span>'.$space1.'
+        //             <span style="height:40px; margin-left:50px">Claimant\'s signature HOURS VERIFIED </span>
+        //           </p><br>
+        //           <p style="font-size: 13px;color: #000;margin: 0px;"><span style="color:red; font-size: 17px;">A/C Type</span> - Aircraft Type , <span style="color:red; font-size: 17px;">Regn.</span> - Aircraft Registration , <span style="color:red; font-size: 17px;">Sr. No.</span> - Serial Number , <span style="color:red; font-size: 17px;">G.O. </span>- Government Order</p>
+        //         </td>
+        //       </tr>
+        //     </table>
+        //     <p style="display:flex;justify-content: space-between;margin-left: 150mm; margin-top:1mm">
+        //         <span style="">Page {PAGENO} of {nb} </span>
+        //     </p>
+        //     </footer>';
         $mpdf->SetHTMLHeader($header);
 
         $mpdf->SetHTMLFooter($footer);
@@ -464,7 +463,7 @@ class SFAController extends Controller
             $sub_array[] = $value->to_sector.'/'.date('H:i',strtotime($value->arrival_time));
             $sub_array[] = is_time_defrence($value->departure_time, $value->arrival_time);
 
-            $sub_array[] = $this->getMasterName($value->user_role,'pilot_role');
+            $sub_array[] = getMasterName($value->user_role,'pilot_role');
             $sub_array[] = $value->rate_per_hour;
             $sub_array[] = $value->amount;
             $sub_array[] = $value->remark;
@@ -511,7 +510,7 @@ class SFAController extends Controller
             $sub_array[] = $value->to_sector.'/'.date('H:i',strtotime($value->arrival_time));
             $sub_array[] = is_time_defrence($value->departure_time, $value->arrival_time);
 
-            $sub_array[] = $this->getMasterName($value->user_role,'pilot_role');
+            $sub_array[] = getMasterName($value->user_role,'pilot_role');
             $sub_array[] = $value->rate_per_hour;
             $sub_array[] = $value->amount;
             $sub_array[] = $value->remark;

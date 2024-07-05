@@ -186,7 +186,6 @@ class SFAController extends Controller
         $mpdf->SetFont('Times New Roman', 'B');
         $space1="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
         $space2="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-
         $header = '<header>
                         <table style="width:100%; top:0;position: relative;">
                           <tr>
@@ -199,55 +198,55 @@ class SFAController extends Controller
                           </tr>
                         </table><br>
                     </header>';
-        $footer = '<footer>
-            <table style="width:100%;position: relative; bottom: 360px;" class="footer-main11">
-              <tr>
-                <td class="footer" style="font-size:12px;" >
-                    '.(!empty($certified_that)?$certified_that:is_setting('certified_that')).'
-                </td>
-              </tr>
-              <tr>
-                <td style="padding-top: 5px;padding-left: 5px;">
-                  <p style="display:flex1;font-size: 13px;">
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br><br>
-                    <span style="height:40px">HOURS CHECKED</span>'.$space1.'
-                    <span style="height:40px; margin-left:50px">HOURS VERIFIED </span>
-                  </p><br><br>
-                  <p style="display:flex1;font-size: 17px;color: #000;">
-                    <span style="font-size: 16px;color: #000;">Claimant\'s signature </span>'.$space2.'
-                    <span style="font-size: 16px;color: #000;padding-right: 15px;margin-left: 500px;">Claimant\'s signature </span>
-                  </p>
-                  <p style="font-size: 13px;color: #000;margin: 0px;"><span style="color:red; font-size: 17px;">A/C Type</span> - Aircraft Type , <span style="color:red; font-size: 17px;">Regn.</span> - Aircraft Registration , <span style="color:red; font-size: 17px;">Sr. No.</span> - Serial Number , <span style="color:red; font-size: 17px;">G.O. </span>- Government Order</p>
-                </td>
-              </tr>
-            </table>
-            <p style="display:flex;justify-content: space-between;margin-left: 150mm; margin-top:1mm">
-                <span style="">Page {PAGENO} of {nb} </span>
-            </p>
-            </footer>';
-        $footer = '<footer>
-            <table style="width:100%;position: relative; bottom: 360px;" class="footer-main11">
-              <tr>
-                <td class="footer" style="font-size:12px;" >
-                    '.(!empty($certified_that)?$certified_that:is_setting('certified_that')).'
-                </td>
-              </tr>
-              <tr>
-                <td style="padding-top: 5px;padding-left: 5px;">
-                  <p style="display:flex1;font-size: 13px;">
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br><br>
-                    <span style="height:40px">Claimant\'s signature HOURS CHECKED</span>'.$space1.'
-                    <span style="height:40px; margin-left:50px">Claimant\'s signature HOURS VERIFIED </span>
-                  </p><br><br>
+                    $footer = '<footer>
+                    <table style="width:100%;position: relative; bottom: 360px;" class="footer-main11">
+                    <tr>
+                        <td class="footer" style="font-size:12px;" >
+                            '.(!empty($certified_that)?$certified_that:is_setting('certified_that')).'
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-top: 5px;padding-left: 5px;">
+                        <p style="display:flex1;font-size: 13px;">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br><br>
+                            <span style="height:40px">HOURS CHECKED</span>'.$space1.'
+                            <span style="height:40px; margin-left:50px">HOURS VERIFIED </span>
+                        </p><br><br>
+                        <p style="display:flex1;font-size: 17px;color: #000;">
+                            <span style="font-size: 16px;color: #000;">Claimant\'s signature </span>'.$space2.'
+                            <span style="font-size: 16px;color: #000;padding-right: 15px;margin-left: 500px;">Claimant\'s signature </span>
+                        </p><br>
+                        <p style="font-size: 13px;color: #000;margin: 0px;"><span style="color:red; font-size: 17px;">A/C Type</span> - Aircraft Type , <span style="color:red; font-size: 17px;">Regn.</span> - Aircraft Registration , <span style="color:red; font-size: 17px;">Sr. No.</span> - Serial Number , <span style="color:red; font-size: 17px;">G.O. </span>- Government Order</p>
+                        </td>
+                    </tr>
+                    </table>
+                    <p style="display:flex;justify-content: space-between;margin-left: 150mm; margin-top:1mm">
+                        <span style="">Page {PAGENO} of {nb} </span>
+                    </p>
+                </footer>';
+        // $footer = '<footer>
+        //     <table style="width:100%;position: relative; bottom: 360px;" class="footer-main11">
+        //       <tr>
+        //         <td class="footer" style="font-size:12px;" >
+        //             '.(!empty($certified_that)?$certified_that:is_setting('certified_that')).'
+        //         </td>
+        //       </tr>
+        //       <tr>
+        //         <td style="padding-top: 5px;padding-left: 5px;">
+        //           <p style="display:flex1;font-size: 13px;">
+        //           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br><br>
+        //             <span style="height:40px">Claimant\'s signature HOURS CHECKED</span>'.$space1.'
+        //             <span style="height:40px; margin-left:50px">Claimant\'s signature HOURS VERIFIED </span>
+        //           </p><br><br>
 
-                  <p style="font-size: 13px;color: #000;margin: 0px;"><span style="color:red; font-size: 17px;">A/C Type</span> - Aircraft Type , <span style="color:red; font-size: 17px;">Regn.</span> - Aircraft Registration , <span style="color:red; font-size: 17px;">Sr. No.</span> - Serial Number , <span style="color:red; font-size: 17px;">G.O. </span>- Government Order</p>
-                </td>
-              </tr>
-            </table>
-            <p style="display:flex;justify-content: space-between;margin-left: 150mm; margin-top:1mm">
-                <span style="">Page {PAGENO} of {nb} </span>
-            </p>
-            </footer>';
+        //           <p style="font-size: 13px;color: #000;margin: 0px;"><span style="color:red; font-size: 17px;">A/C Type</span> - Aircraft Type , <span style="color:red; font-size: 17px;">Regn.</span> - Aircraft Registration , <span style="color:red; font-size: 17px;">Sr. No.</span> - Serial Number , <span style="color:red; font-size: 17px;">G.O. </span>- Government Order</p>
+        //         </td>
+        //       </tr>
+        //     </table>
+        //     <p style="display:flex;justify-content: space-between;margin-left: 150mm; margin-top:1mm">
+        //         <span style="">Page {PAGENO} of {nb} </span>
+        //     </p>
+        //     </footer>';
         $mpdf->SetHTMLHeader($header);
 
         $mpdf->SetHTMLFooter($footer);
