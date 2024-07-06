@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+// hallo
 use Illuminate\Http\Request;
 use App\Models\AirCraft;
 use App\Models\FlyingLog;
