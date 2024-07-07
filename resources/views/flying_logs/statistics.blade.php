@@ -46,7 +46,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group">
                         <label for="pilot" class="form-label">Pilots</label>
                         <select class="form-control filters" id="pilot">
@@ -57,7 +57,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group">
                         <label for="flying_type" class="form-label">Flying Type</label>
                         <select class="form-control filters" id="flying_type">
@@ -68,7 +68,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-group">
                         <button class="btn btn-sm btn-info mt-4" onclick="printReport();">Print</button>
                     </div>
