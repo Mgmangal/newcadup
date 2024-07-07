@@ -26,13 +26,7 @@ class FlyingLogController extends Controller
         $pilot_roles = Master::where('type', 'pilot_role')->where('status', 'active')->get();
         $passengers = Master::where('type', 'passenger')->where('status', 'active')->get();
         $pilot_role = Master::where('type', 'pilot_role')->where('status', 'active')->get();
-        if(getUserType()=='admin')
-        {
-            return view('flying_logs.index', compact('pilots', 'aircrafts','flying_types','pilot_roles','passengers'));
-        }else{
-            return view('theme-one.flying_logs.index', compact('pilots', 'aircrafts','flying_types','pilot_roles','passengers','pilot_role'));
-
-        }
+        return view('flying_logs.index', compact('pilots', 'aircrafts','flying_types','pilot_roles','passengers'));
 
     }
 
@@ -305,12 +299,7 @@ class FlyingLogController extends Controller
         $pilots = User::where('designation', '1')->where('status', 'active')->get();
         $aircrafts = AirCraft::where('status', 'active')->get();
         $flying_types =Master::where('type', 'flying_type')->where('status', 'active')->get();// array( '1' => 'Agriculture minister', '2' => 'Cabinet Minister', '3' => 'CM', '4' => 'CS', '5' => 'DGP', '6' => 'Dy. CM', '7' => 'Governor', '8' => 'Positioning', '9' => 'PPC', '10' => 'RTB', '11' => 'Speaker UP', '12' => 'VIP', '13' => 'VVIP', '14' => 'Home Secretary', '15' => 'Personal Secretary Home', '16' => 'AG', '17' => 'Maintenance', '18' => 'ADG', '19' => 'Standard Check', '20' => 'Civil aviation minister', '21' => 'Special Duty', '22' => 'Other', '23' => 'Water Resources Minister', '24' => 'State Minister', '25' => 'NA', '26' => 'Irrigation Minister', '27' => 'PWD', '28' => 'Local Flying', '29' => 'State election commissioner', '30' => 'Chief election commissioner', '31' => 'DM', '32' => 'APC', '33' => 'Director Aviation', '34' => 'Route Check', '35' => 'Check Flight', '36' => 'Flower Dropping', '37' => 'Central Minister', '38' => 'Forest Minister', '39' => 'Principal Secretary irrigation', '40' => 'Secretary', '41' => 'Assembly Speaker', '42' => 'Health Minister', '43' => 'Power minister', '44' => 'Nager Vikas Minister', '45' => 'Election Commissioner', '46' => 'Urban Minister', '47' => 'Ground Run', '48' => 'Instant Release Check', '49' => 'Sports minister' );
-        if(getUserType()=='user')
-        {
-            return view('theme-one.flying_logs.statistics', compact('pilots', 'aircrafts','flying_types'));
-        }else{
-            return view('flying_logs.statistics', compact('pilots', 'aircrafts','flying_types'));
-        }
+        return view('flying_logs.statistics', compact('pilots', 'aircrafts','flying_types'));
     }
 
     public function statisticsPrint($from_date='',$to_date='',$aircraft='',$flying_type='')

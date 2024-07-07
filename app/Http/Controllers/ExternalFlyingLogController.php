@@ -166,8 +166,8 @@ class ExternalFlyingLogController extends Controller
 
         if(!empty($_POST['aircraft']))
         {
-            $aircrafts = AirCraft::where('aircraft_cateogry', $_POST['aircraft'])->pluck('id')->toArray();
-            $users->whereIn('aircraft_id',$aircrafts);
+            $aircrafts = AirCraft::where('aircraft_cateogry', $_POST['aircraft'])->pluck('aircraft_type');
+            $users->whereIn('aircraft_type',$aircrafts)->get();
         }
         if(!empty($_POST['pilot']))
         {
@@ -207,8 +207,8 @@ class ExternalFlyingLogController extends Controller
             $sub_array[] = $value->fron_sector.' /<br>'.$value->to_sector;
             $sub_array[] = date('H:i',strtotime($value->departure_time)).' /<br>'. date('H:i',strtotime($value->arrival_time));
             $sub_array[] = is_time_defrence($value->departure_time, $value->arrival_time);
-            $sub_array[] = @$value->pilot1->salutation . ' ' . @$value->pilot1->name.'-'.$this->getMasterName($value->pilot1_role,'pilot_role');
-            $sub_array[] = $this->getMasterName($value->flying_type,'flying_type');
+            $sub_array[] = @$value->pilot1->salutation . ' ' . @$value->pilot1->name.'-'.getMasterName($value->pilot1_role,'pilot_role');
+            $sub_array[] = getMasterName($value->flying_type,'flying_type');
             $sub_array[] =  $action;
             $data[] = $sub_array;
         }
@@ -288,9 +288,10 @@ class ExternalFlyingLogController extends Controller
             });
         }
 
-        if(!empty($_POST['aircraft']))
+        if(!empty($aircraft))
         {
-          $external_flying_logs->where('aircraft_cateogry',$aircraft);
+            $aircrafts = AirCraft::where('aircraft_cateogry', $aircraft)->pluck('aircraft_type');
+            $external_flying_logs->whereIn('aircraft_type',$aircrafts)->get();
         }
         if(!empty($_POST['flying_type']))
         {

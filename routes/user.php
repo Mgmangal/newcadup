@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ThemeOne\LTMController;
 use App\Http\Controllers\ThemeOne\SFAController;
 use App\Http\Controllers\ThemeOne\FDTLController;
 use App\Http\Controllers\ThemeOne\HomeController;
@@ -9,6 +8,7 @@ use App\Http\Controllers\ThemeOne\UserController;
 use App\Http\Controllers\ThemeOne\FlyingController;
 use App\Http\Controllers\ThemeOne\ReportController;
 use App\Http\Controllers\ThemeOne\MyLeaveController;
+use App\Http\Controllers\ThemeOne\ReportsController;
 use App\Http\Controllers\ThemeOne\ContractController;
 use App\Http\Controllers\ThemeOne\LoadTrimController;
 use App\Http\Controllers\ThemeOne\FlyingLogController;
@@ -92,10 +92,29 @@ Route::group(['prefix' => 'certificate'], function () {
 });
 Route::post('/certificate/view', [CertificateController::class, 'viewData'])->name('user.ltm.view');
 
-Route::get('/flying-currency', [ReportController::class, 'pilotFlyingCurrency'])->name('user.reports.pilotFlyingCurrency');
-Route::get('/flying-currency-print/{date?}/{aircraft?}/{report_type?}', [ReportController::class, 'pilotFlyingCurrencyPrint'])->name('user.reports.pilotFlyingCurrencyPrint');
-Route::get('/flying-test-details-print/{date?}', [ReportController::class, 'FlyingTestDetailsPrint'])->name('user.reports.FlyingTestDetailsPrint');
-Route::get('/training-and-checks-print/{date?}/{aircraft?}', [ReportController::class, 'trainingChecksPrint'])->name('user.reports.trainingChecksPrint');
+Route::prefix('reports')->group(function () {
+
+    Route::get('external-flying', [ReportsController::class, 'externalFlying'])->name('user.reports.externalFlying');
+    Route::post('external-flying-list', [ReportsController::class, 'externalFlyingList'])->name('user.reports.externalFlyingList');
+    Route::get('external-flying-print/{from_date?}/{to_date?}/{aircraft?}/{flying_type?}', [ReportsController::class, 'externalFlyingPrint'])->name('user.reports.externalFlyingPrint');
+
+    Route::get('pilot-flying-hours', [ReportsController::class, 'pilotFlyingHours'])->name('user.reports.pilotFlyingHours');
+    Route::get('pilot-flying-hours-print/{from_date?}/{to_date?}', [ReportsController::class, 'pilotFlyingHoursPrint'])->name('user.reports.flyingHoursPrint');
+    Route::get('aircraft-wise-summary-print/{from_date?}/{to_date?}', [ReportsController::class, 'aircraftWiseSummaryPrint'])->name('user.reports.aircraftWiseSummaryPrint');
+
+    Route::get('pilot-ground-training', [ReportsController::class, 'pilotGroundTraining'])->name('user.reports.pilotGroundTraining');
+    Route::get('pilot-ground-training-print/{date?}/{aircraft?}', [ReportsController::class, 'pilotGroundTrainingPrint'])->name('user.reports.pilotGroundTrainingPrint');
+
+    Route::get('vip-recency', [ReportsController::class, 'vipRecency'])->name('user.reports.vipRecency');
+    Route::get('vip-recency-print/{date?}/{aircraft_type?}', [ReportsController::class, 'vipRecencyPrint'])->name('user.reports.vipRecencyPrint');
+
+});
+
+Route::get('/flying-currency', [ReportsController::class, 'pilotFlyingCurrency'])->name('user.reports.pilotFlyingCurrency');
+Route::get('/flying-currency-print/{date?}/{aircraft?}/{report_type?}', [ReportsController::class, 'pilotFlyingCurrencyPrint'])->name('user.reports.pilotFlyingCurrencyPrint');
+Route::get('/flying-test-details-print/{date?}', [ReportsController::class, 'FlyingTestDetailsPrint'])->name('user.reports.FlyingTestDetailsPrint');
+Route::get('/training-and-checks-print/{date?}/{aircraft?}', [ReportsController::class, 'trainingChecksPrint'])->name('user.reports.trainingChecksPrint');
+
 Route::prefix('my-leave')->group(function () {
     Route::get('/', [MyLeaveController::class, 'index'])->name('user.my.leave');
     Route::get('/apply', [MyLeaveController::class, 'apply'])->name('user.my.leave.apply');

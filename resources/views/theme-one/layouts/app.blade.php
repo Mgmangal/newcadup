@@ -160,43 +160,43 @@
                     <ul class="navbar-menu-sub">
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.licence')}}" class="nav-sub-link">
-                                <i data-feather="calendar"></i>Licence</a>
+                                <i data-feather="shield"></i>Licence</a>
                         </li>
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.myLicence')}}" class="nav-sub-link">
-                                <i data-feather="calendar"></i>My Licence</a>
+                                <i data-feather="shield"></i>My Licence</a>
                         </li>
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.trainings')}}" class="nav-sub-link">
-                                <i data-feather="message-square"></i>Training</a>
+                                <i data-feather="shield"></i>Training</a>
                         </li>
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.myTrainings')}}" class="nav-sub-link">
-                                <i data-feather="message-square"></i>My Training</a>
+                                <i data-feather="shield"></i>My Training</a>
                         </li>
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.medicals')}}" class="nav-sub-link">
-                                <i data-feather="message-square"></i>Medical</a>
+                                <i data-feather="shield"></i>Medical</a>
                         </li>
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.myMedicals')}}" class="nav-sub-link">
-                                <i data-feather="message-square"></i>My Medical</a>
+                                <i data-feather="shield"></i>My Medical</a>
                         </li>
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.qualifications')}}" class="nav-sub-link">
-                                <i data-feather="message-square"></i>Qualification</a>
+                                <i data-feather="shield"></i>Qualification</a>
                         </li>
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.myQualifications')}}" class="nav-sub-link">
-                                <i data-feather="message-square"></i>My Qualification</a>
+                                <i data-feather="shield"></i>My Qualification</a>
                         </li>
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.groundTrainings')}}" class="nav-sub-link">
-                                <i data-feather="message-square"></i>Ground Training</a>
+                                <i data-feather="shield"></i>Ground Training</a>
                         </li>
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.myGroundTrainings')}}" class="nav-sub-link">
-                                <i data-feather="message-square"></i>My Ground Training</a>
+                                <i data-feather="shield"></i>My Ground Training</a>
                         </li>
                     </ul>
                 </li>
@@ -213,6 +213,55 @@
                             <a href="app-chat.html" class="nav-sub-link">
                                 <i data-feather="message-square"></i>List</a>
                         </li> -->
+                    </ul>
+                </li>
+                <li class="nav-item with-sub">
+                    <a href="" class="nav-link">
+                        <i data-feather="layers"></i> Reports
+                    </a>
+                    <ul class="navbar-menu-sub">
+                        <li class="nav-sub-item">
+                            <a href="{{ route('user.reports.externalFlying') }}" class="nav-sub-link">
+                                <i data-feather="file-text"></i>External Flying</a>
+                        </li>
+                        <li class="nav-sub-item">
+                            <a href="{{ route('user.reports.pilotFlyingHours') }}" class="nav-sub-link">
+                                <i data-feather="file-text"></i>Pilot Flying Hours</a>
+                        </li>
+                        <li class="nav-sub-item">
+                            <a href="{{ route('user.reports.pilotGroundTraining') }}" class="nav-sub-link">
+                                <i data-feather="file-text"></i>Pilot Ground Training</a>
+                        </li>
+                        <li class="nav-sub-item">
+                            <a href="{{ route('user.reports.vipRecency') }}" class="nav-sub-link">
+                                <i data-feather="file-text"></i>VIP Recency</a>
+                        </li>
+                        <li class="nav-sub-item">
+                            <a href="{{ route('app.flying-details.statistics') }}" class="nav-sub-link">
+                                <i data-feather="file-text"></i>Flight Statistics</a>
+                        </li>
+                        <li class="nav-sub-item">
+                            <a href="{{ route('app.reports.pilotFlyingCurrency') }}" class="nav-sub-link">
+                                <i data-feather="file-text"></i>Pilot Flying Currency</a>
+                        </li><li class="nav-sub-item">
+                            <a href="{{ route('app.sfa') }}" class="nav-sub-link">
+                                <i data-feather="file-text"></i>SFA Report</a>
+                        </li>
+                        <li class="nav-sub-item">
+                            <a href="{{ route('app.fdtl') }}" class="nav-sub-link">
+                                <i data-feather="file-text"></i>FDTL Report</a>
+                        </li>
+                        <li class="nav-sub-item">
+                            <a href="{{ route('app.fdtl.voilations') }}" class="nav-sub-link">
+                                <i data-feather="file-text"></i>Violations Summary</a>
+                        </li>
+                        <li class="nav-sub-item">
+                            <a href="{{ route('app.fdtl.voilations.report') }}" class="nav-sub-link">
+                                <i data-feather="file-text"></i>Violations Report</a>
+                        </li><li class="nav-sub-item">
+                            <a href="{{ route('app.reports.aaiReports') }}" class="nav-sub-link">
+                                <i data-feather="file-text"></i>AAI Reports</a>
+                        </li>
                     </ul>
                 </li>
 
