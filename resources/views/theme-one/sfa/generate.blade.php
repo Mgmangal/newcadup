@@ -197,7 +197,7 @@
                 { "orderable": false, "targets": [2,3,4,5,6,7,8,9,10] }  // Disable order on first columns
             ],
             ajax: {
-                url: "{{route('app.sfa.list')}}",
+                url: "{{route('user.sfa.flyinglist')}}",
                 type: 'POST',
                 data:{"_token": "{{ csrf_token() }}",pilot,from_date,to_date},
             },

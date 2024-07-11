@@ -74,46 +74,66 @@
                         <i data-feather="package"></i> Flying
                     </a>
                     <ul class="navbar-menu-sub">
+                        @can('Sortie')
                         <li class="nav-sub-item">
                             <a href="{{route('user.flying.shortie')}}" class="nav-sub-link">
                                 <i data-feather="calendar"></i>Sortie</a>
                         </li>
+                        @endcan
+                        @can('My Sortie')
                         <li class="nav-sub-item">
                             <a href="{{route('user.flying.myShortie')}}" class="nav-sub-link">
                                 <i data-feather="calendar"></i>My Sortie</a>
                         </li>
+                        @endcan
+                        @can('Flying')
                         <li class="nav-sub-item">
                             <a href="{{route('user.flying.index')}}" class="nav-sub-link">
                                 <i data-feather="message-square"></i>Flying</a>
                         </li>
+                        @endcan
+                        @can('My Flying')
                         <li class="nav-sub-item">
                             <a href="{{route('user.flying.myFlying')}}" class="nav-sub-link">
                                 <i data-feather="message-square"></i>My Flying</a>
                         </li>
+                        @endcan
+                        @can('FDTL')
                         <li class="nav-sub-item">
                             <a href="{{route('user.fdtl.index')}}" class="nav-sub-link">
                                 <i data-feather="message-square"></i>FDTL</a>
                         </li>
+                        @endcan
+                        @can('My FDTL')
                         <li class="nav-sub-item">
                             <a href="{{ route('user.fdtl.myFdtlReport') }}" class="nav-sub-link">
                                 <i data-feather="message-square"></i>My FDTL</a>
                         </li>
+                        @endcan
+                        @can('Statistic')
                         <li class="nav-sub-item">
                             <a href="{{route('user.flying.statistics')}}" class="nav-sub-link">
                                 <i data-feather="message-square"></i>Statistic</a>
                         </li>
+                        @endcan
+                        @can('My Statistic')
                         <li class="nav-sub-item">
                             <a href="{{route('user.flying.myStatistics')}}" class="nav-sub-link">
                                 <i data-feather="message-square"></i>My Statistic</a>
                         </li>
+                        @endcan
+                        @can('Voilations')
                         <li class="nav-sub-item">
                             <a href="{{route('user.fdtl.voilations')}}" class="nav-sub-link">
                                 <i data-feather="message-square"></i>Voilations</a>
                         </li>
+                        @endcan
+                        @can('My Voilations')
                         <li class="nav-sub-item">
                             <a href="{{route('user.fdtl.MyVoilations')}}" class="nav-sub-link">
                                 <i data-feather="message-square"></i>My Voilations</a>
                         </li>
+                        @endcan
                     </ul>
                 </li>
                 <li class="nav-item with-sub">
@@ -121,22 +141,30 @@
                         <i data-feather="layers"></i> SFA
                     </a>
                     <ul class="navbar-menu-sub">
+                        @can('SFA Generate')
                         <li class="nav-sub-item">
                             <a href="{{route('user.sfa.sfaGenerate')}}" class="nav-sub-link">
                                 <i data-feather="calendar"></i>SFA Generate</a>
                         </li>
+                        @endcan
+                        @can('My SFA Generate')
                         <li class="nav-sub-item">
                             <a href="{{route('user.sfa.mySfaGenerate')}}" class="nav-sub-link">
                                 <i data-feather="calendar"></i>My SFA Generate</a>
                         </li>
+                        @endcan
+                        @can('SFA List')
                         <li class="nav-sub-item">
                             <a href="{{route('user.sfa.sfaList')}}" class="nav-sub-link">
                                 <i data-feather="message-square"></i>SFA List</a>
                         </li>
+                        @endcan
+                        @can('My SFA List')
                         <li class="nav-sub-item">
                             <a href="{{route('user.sfa.mySfaList')}}" class="nav-sub-link">
                                 <i data-feather="message-square"></i>My SFA List</a>
                         </li>
+                        @endcan
                     </ul>
                 </li>
                 <li class="nav-item with-sub">
@@ -144,13 +172,11 @@
                         <i data-feather="layers"></i> Contract
                     </a>
                     <ul class="navbar-menu-sub">
+                        @can('Contract')
                         <li class="nav-sub-item">
-                        <a href="{{route('user.contract')}}" class="nav-sub-link"><i data-feather="archive"></i> Contract</a>
+                            <a href="{{route('user.contract')}}" class="nav-sub-link"><i data-feather="archive"></i> Contract</a>
                         </li>
-                        <!-- <li class="nav-sub-item">
-                            <a href="#" class="nav-sub-link">
-                                <i data-feather="message-square"></i>List</a>
-                        </li> -->
+                        @endcan
                     </ul>
                 </li>
                 <li class="nav-item with-sub">
@@ -158,46 +184,66 @@
                         <i data-feather="layers"></i> Certificate
                     </a>
                     <ul class="navbar-menu-sub">
+                        @can('Licence')
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.licence')}}" class="nav-sub-link">
                                 <i data-feather="shield"></i>Licence</a>
                         </li>
+                        @endcan
+                        @can('My Licence')
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.myLicence')}}" class="nav-sub-link">
                                 <i data-feather="shield"></i>My Licence</a>
                         </li>
+                        @endcan
+                        @can('Training')
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.trainings')}}" class="nav-sub-link">
                                 <i data-feather="shield"></i>Training</a>
                         </li>
+                        @endcan
+                        @can('My Training')
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.myTrainings')}}" class="nav-sub-link">
                                 <i data-feather="shield"></i>My Training</a>
                         </li>
+                        @endcan
+                        @can('Medical')
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.medicals')}}" class="nav-sub-link">
                                 <i data-feather="shield"></i>Medical</a>
                         </li>
+                        @endcan
+                        @can('My Medical')
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.myMedicals')}}" class="nav-sub-link">
                                 <i data-feather="shield"></i>My Medical</a>
                         </li>
+                        @endcan
+                        @can('Qualification')
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.qualifications')}}" class="nav-sub-link">
                                 <i data-feather="shield"></i>Qualification</a>
                         </li>
+                        @endcan
+                        @can('My Qualification')
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.myQualifications')}}" class="nav-sub-link">
                                 <i data-feather="shield"></i>My Qualification</a>
                         </li>
+                        @endcan
+                        @can('Ground Training')
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.groundTrainings')}}" class="nav-sub-link">
                                 <i data-feather="shield"></i>Ground Training</a>
                         </li>
+                        @endcan
+                        @can('My Ground Training')
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.myGroundTrainings')}}" class="nav-sub-link">
                                 <i data-feather="shield"></i>My Ground Training</a>
                         </li>
+                        @endcan
                     </ul>
                 </li>
                 <li class="nav-item with-sub">
@@ -209,10 +255,6 @@
                             <a href="{{route('user.reports.pilotFlyingCurrency')}}" class="nav-sub-link">
                                 <i data-feather="calendar"></i>Show</a>
                         </li>
-                        <!-- <li class="nav-sub-item">
-                            <a href="app-chat.html" class="nav-sub-link">
-                                <i data-feather="message-square"></i>List</a>
-                        </li> -->
                     </ul>
                 </li>
                 <li class="nav-item with-sub">
@@ -220,66 +262,89 @@
                         <i data-feather="layers"></i> Reports
                     </a>
                     <ul class="navbar-menu-sub">
+                        @can('External Flying')
                         <li class="nav-sub-item">
                             <a href="{{ route('user.reports.externalFlying') }}" class="nav-sub-link">
                                 <i data-feather="file-text"></i>External Flying</a>
                         </li>
+                        @endcan
+                        @can('Pilot Flying Hours')
                         <li class="nav-sub-item">
                             <a href="{{ route('user.reports.pilotFlyingHours') }}" class="nav-sub-link">
                                 <i data-feather="file-text"></i>Pilot Flying Hours</a>
                         </li>
+                        @endcan
+                        @can('Pilot Ground Training')
                         <li class="nav-sub-item">
                             <a href="{{ route('user.reports.pilotGroundTraining') }}" class="nav-sub-link">
                                 <i data-feather="file-text"></i>Pilot Ground Training</a>
                         </li>
+                        @endcan
+                        @can('VIP Recency')
                         <li class="nav-sub-item">
                             <a href="{{ route('user.reports.vipRecency') }}" class="nav-sub-link">
                                 <i data-feather="file-text"></i>VIP Recency</a>
                         </li>
+                        @endcan
+                        @can('Flight Statistics')
                         <li class="nav-sub-item">
-                            <a href="{{ route('app.flying-details.statistics') }}" class="nav-sub-link">
+                            <a href="{{ route('user.flying.statistics') }}" class="nav-sub-link">
                                 <i data-feather="file-text"></i>Flight Statistics</a>
                         </li>
+                        @endcan
+                        @can('Pilot Flying Currency')
                         <li class="nav-sub-item">
-                            <a href="{{ route('app.reports.pilotFlyingCurrency') }}" class="nav-sub-link">
+                            <a href="{{ route('user.reports.pilotFlyingCurrency') }}" class="nav-sub-link">
                                 <i data-feather="file-text"></i>Pilot Flying Currency</a>
-                        </li><li class="nav-sub-item">
-                            <a href="{{ route('app.sfa') }}" class="nav-sub-link">
+                        </li>
+                        @endcan
+                        @can('SFA Report')
+                        <li class="nav-sub-item">
+                            <a href="{{ route('user.sfa.sfaList') }}" class="nav-sub-link">
                                 <i data-feather="file-text"></i>SFA Report</a>
                         </li>
+                        @endcan
+                        @can('FDTL Report')
                         <li class="nav-sub-item">
-                            <a href="{{ route('app.fdtl') }}" class="nav-sub-link">
+                            <a href="{{ route('user.fdtl.index') }}" class="nav-sub-link">
                                 <i data-feather="file-text"></i>FDTL Report</a>
                         </li>
+                        @endcan
+                        @can('Violations Summary')
                         <li class="nav-sub-item">
-                            <a href="{{ route('app.fdtl.voilations') }}" class="nav-sub-link">
+                            <a href="{{ route('user.fdtl.voilations') }}" class="nav-sub-link">
                                 <i data-feather="file-text"></i>Violations Summary</a>
                         </li>
+                        @endcan
+                        @can('Violations Report')
                         <li class="nav-sub-item">
-                            <a href="{{ route('app.fdtl.voilations.report') }}" class="nav-sub-link">
+                            <a href="{{ route('user.fdtl.voilations.report') }}" class="nav-sub-link">
                                 <i data-feather="file-text"></i>Violations Report</a>
-                        </li><li class="nav-sub-item">
-                            <a href="{{ route('app.reports.aaiReports') }}" class="nav-sub-link">
+                        </li>
+                        @endcan
+                        @can('AAI Reports')
+                        <li class="nav-sub-item">
+                            <a href="{{ route('user.reports.aaiReports') }}" class="nav-sub-link">
                                 <i data-feather="file-text"></i>AAI Reports</a>
                         </li>
+                        @endcan
                     </ul>
                 </li>
 
                 <li class="nav-item">
-                    <a href="" class="nav-link"><i data-feather="box"></i> Fuel</a>
+                    <a href="javascript:void(0);" class="nav-link"><i data-feather="box"></i> Fuel</a>
                 </li>
                 <li class="nav-item">
-                    <a href="" class="nav-link"><i data-feather="archive"></i> Incidence</a>
+                    <a href="javascript:void(0);" class="nav-link"><i data-feather="archive"></i> Incidence</a>
                 </li>
                 <li class="nav-item">
                     <a href="{{route('user.my.leave')}}" class="nav-link"><i data-feather="archive"></i> Leave</a>
                 </li>
+                @can('Load & Trim')
                 <li class="nav-item">
                     <a href="{{route('user.loadTrim')}}" class="nav-link"><i data-feather="archive"></i> Load & Trim</a>
                 </li>
-                <!-- <li class="nav-item">
-                    <a href="{{route('user.contract')}}" class="nav-link"><i data-feather="archive"></i> Contract</a>
-                </li> -->
+                @endcan
             </ul>
         </div><!-- navbar-menu-wrapper -->
         <div class="navbar-right">
@@ -418,13 +483,12 @@
     <script>
         $(document).ready(function() {
             @if (Session::has('warning'))
-                warning('{{ Session::get('warning') }}');
+                warning("{{ Session::get('warning') }}");
             @elseif(Session::has('success'))
-                success('{{ Session::get('success') }}');
+                success("{{ Session::get('success') }}");
             @elseif(Session::has('error'))
-                error('{{ Session::get('error') }}');
+                error("{{ Session::get('error') }}");
             @endif
-
         });
         function success(message) {
             swal({

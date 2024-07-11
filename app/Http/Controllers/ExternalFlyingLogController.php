@@ -205,7 +205,7 @@ class ExternalFlyingLogController extends Controller
             $sub_array[] = is_get_date_format($value->date);
             $sub_array[] = @$value->aircraft_id;
             $sub_array[] = $value->fron_sector.' /<br>'.$value->to_sector;
-            $sub_array[] = date('H:i',strtotime($value->departure_time)).' /<br>'. date('H:i',strtotime($value->arrival_time));
+            $sub_array[] = is_set_time_format($value->departure_time).' / '.is_set_time_format($value->arrival_time);//date('H:i',strtotime($value->departure_time)).' /<br>'. date('H:i',strtotime($value->arrival_time));
             $sub_array[] = is_time_defrence($value->departure_time, $value->arrival_time);
             $sub_array[] = @$value->pilot1->salutation . ' ' . @$value->pilot1->name.'-'.getMasterName($value->pilot1_role,'pilot_role');
             $sub_array[] = getMasterName($value->flying_type,'flying_type');

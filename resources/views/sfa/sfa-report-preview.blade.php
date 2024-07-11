@@ -23,60 +23,7 @@
         </style>
     </head>
     <body>
-
-        <!--<header>
-            <table style="width:100%; top:0;position: relative;">
-              <tr>
-                <th>
-                  <h4 style="margin: 0; line-height: 17px;">  Special Flying Allowance (SFA)</h4>
-                  <h4 style="margin: 0; line-height: 17px;"> Employee : <?php //echo $pilot_name;?></h4>
-                  <h4 style="margin: 0; line-height: 17px;">  <?php //echo $from_date; ?> - <?php //echo $to_date; ?></h4>
-
-                </th>
-              </tr>
-            </table><br>
-            <table style="width:100%">
-                <tr>
-                    <td style="border-left: 1px solid;border-right: 1px solid;border-bottom: 1px solid;border-top: 1px solid;">
-                      <p style="display: flex; font-size: 18px;padding-left: 33px;color: #000;margin:0; padding: 5px;"><span>Name : <?php //echo $pilot_name;?></span><span style="margin-left: 300px;">Designation : <?php //echo $designation;?></span></p>
-                    </td>
-                </tr>
-            </table><br>
-        </header>-->
-
-        <!--<footer>-->
-            <!--<table style="width:100%;position: fixed; bottom: 360px;" class="footer-main">
-              <tr>
-                <td class="footer" >
-                    <?php //echo $certified_that; ?>
-                </td>
-              </tr>
-              <tr>
-                <td class="footer" style="padding-top: 5px;padding-left: 5px;">
-                  <p style="display:flex;justify-content: space-between;margin: 0;">
-                    <span style="height:50px">HOURS CHECKED</span>
-                    <span style="height:50px;padding-right: 15px;margin-left: 500px;">HOURS VERIFIED </span>
-                  </p>
-                  <p style="display:flex;justify-content: space-between;font-size: 17px;color: #000;">
-                    <span style="font-size: 19px;color: #000;">Claimant's signature </span>
-                    <span style="font-size: 19px;color: #000;padding-right: 15px;margin-left: 500px;">Claimant's signature </span>
-                  </p>
-                  <p style="font-size: 15px;color: #000;margin: 0px;"><span style="color:red; font-size: 17px;">A/C Type</span> - Aircraft Type , <span style="color:red; font-size: 17px;">Regn.</span> - Aircraft Registration , <span style="color:red; font-size: 17px;">Sr. No.</span> - Serial Number , <span style="color:red; font-size: 17px;">G.O. </span>- Government Order</p>
-                </td>
-              </tr>
-
-            </table>-->
-            <!--<table style="width:100%; border:none; margin-top:340px; <?php //echo $is_first_tbl<$total_page ? 'page-break-after: always;' : '' ; ?>">-->
-            <!--  <tr style="border:none;">-->
-            <!--    <th style="border:none;">-->
-            <!--      <span style="float: right;padding-right: 60px;padding: 20px;"> <a href="#" style="text-decoration: none;"><?php //echo "Page ".$is_first_tbl." of ".$total_page; ?></a> </span>-->
-            <!--    </th>-->
-            <!--  </tr>-->
-            <!--</table>-->
-        <!--</footer>-->
         <main >
-
-
             <!-- first form -->
             <?php
                 if(!empty($all_flying))

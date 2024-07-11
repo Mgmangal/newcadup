@@ -112,6 +112,7 @@ class RoleController extends Controller
         $role = Role::find($id);
         $role->delete();
         $role->permissions()->detach();
+        clearCache();
         return response()->json([
             'success' => true,
             'message' => 'Role Deleted Successfully'
@@ -140,6 +141,7 @@ class RoleController extends Controller
     {
         $role = Role::find($id);
         $role->permissions()->sync($request->permissions);
+        clearCache();
         return response()->json([
             'success' => true,
             'message' => 'Permissions Updated Successfully'

@@ -194,7 +194,6 @@ class CertificateController extends Controller
             $action  = '<a href="javascript:void(0);" onclick="showData('.$value->id.',\'training\')" class="btn btn-primary btn-sm m-1">View</a>';
             $action  .= '<a href="'.route('user.certificate.viewLogs', ['type' => 'training-logs', 'user_id' => $value->user_id, 'id' => $value->training_id]).'" class="btn btn-warning btn-sm m-1">Log</a>';
 
-
             $status='Active';
             $sub_array = array();
 			$sub_array[] = ++$key;
@@ -203,7 +202,7 @@ class CertificateController extends Controller
             $sub_array[] = '<b>' . $value->renewed_on . '</b>';
             $sub_array[] = $value->extended_date;
             $sub_array[] = $value->next_due;
-            if(strtotime($value->next_due) > strtotime($dates))
+            if(!empty($value->next_due)&&strtotime($value->next_due) > strtotime($dates))
             {
                 $day=\Carbon\Carbon::parse( $dates )->diffInDays($value->next_due );
                 $bt='style="background-color: #1e24dd;color: white;"';

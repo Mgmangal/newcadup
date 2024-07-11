@@ -194,8 +194,17 @@ class ReportsController extends Controller
         $data['aircraft_type']=$aircraft_type;
         return view('theme-one.reports.vip-recency-print', $data);
     }
+    public function aaiReports()
+    {
+        $sub_title = "AAI Report";
+        return view('theme-one.reports.aai-reports',compact('sub_title'));
+    }
 
-
+    public function flyingCurrency()
+    {
+        $sub_title = "Pilot Flying Currency";
+        return view('theme-one.reports.pilot-flying-currency',compact('sub_title'));
+    }
 
 
 

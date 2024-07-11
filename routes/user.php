@@ -6,15 +6,14 @@ use App\Http\Controllers\ThemeOne\FDTLController;
 use App\Http\Controllers\ThemeOne\HomeController;
 use App\Http\Controllers\ThemeOne\UserController;
 use App\Http\Controllers\ThemeOne\FlyingController;
-use App\Http\Controllers\ThemeOne\ReportController;
 use App\Http\Controllers\ThemeOne\MyLeaveController;
 use App\Http\Controllers\ThemeOne\ReportsController;
 use App\Http\Controllers\ThemeOne\ContractController;
 use App\Http\Controllers\ThemeOne\LoadTrimController;
-use App\Http\Controllers\ThemeOne\FlyingLogController;
+use App\Http\Controllers\ThemeOne\AaiController;
 use App\Http\Controllers\ThemeOne\CertificateController;
 
-
+ 
 Route::get('home', [HomeController::class, 'userIndex'])->name('user.home');
 Route::get('dashboard',[HomeController::class, 'userIndex'])->name('admin.dashboard');
 Route::get('profile',[UserController::class, 'profile'])->name('user.profile');
@@ -44,7 +43,7 @@ Route::get('voilations', [FDTLController::class, 'voilations'])->name('user.fdtl
 Route::get('my-voilations', [FDTLController::class, 'MyVoilations'])->name('user.fdtl.MyVoilations');
 Route::post('voilations-list', [FDTLController::class, 'voilationsList'])->name('user.fdtl.voilationsList');
 
-Route::get('/flying/verify/{id}',[FlyingLogController::class, 'verify'])->name('user.flying.verify');
+Route::get('/flying/verify/{id}',[FlyingController::class, 'verify'])->name('user.flying.verify');
 
 Route::get('sfa/sfa-generate', [SFAController::class, 'sfaGenerate'])->name('user.sfa.sfaGenerate');
 Route::get('sfa/my-sfa-generate', [SFAController::class, 'mySfaGenerate'])->name('user.sfa.mySfaGenerate');
@@ -53,6 +52,7 @@ Route::post('sfa-store', [SFAController::class, 'sfaStore'])->name('user.sfa.sfa
 Route::get('sfa/sfa-list', [SFAController::class, 'sfaList'])->name('user.sfa.sfaList');
 Route::get('sfa/my-sfa-list', [SFAController::class, 'mySfaList'])->name('user.sfa.mySfaList');
 Route::post('get-sfa-list', [SFAController::class, 'getSfaList'])->name('user.sfa.getSfaList');
+Route::post('sfa-flying-list', [SFAController::class, 'list'])->name('user.sfa.flyinglist');
 Route::get('/sfa/view/{id}', [SFAController::class, 'sfaView'])->name('user.sfa.view');
 Route::get('/sfa/delete/{id}', [SFAController::class, 'sfaDelete'])->name('user.sfa.deleted');
 Route::get('/sfa/verify/{id}',[SFAController::class, 'verify'])->name('user.sfa.verify');
@@ -107,10 +107,23 @@ Route::prefix('reports')->group(function () {
 
     Route::get('vip-recency', [ReportsController::class, 'vipRecency'])->name('user.reports.vipRecency');
     Route::get('vip-recency-print/{date?}/{aircraft_type?}', [ReportsController::class, 'vipRecencyPrint'])->name('user.reports.vipRecencyPrint');
+    
+    Route::get('/voilations/report', [FDTLController::class, 'voilationsReport'])->name('user.fdtl.voilations.report');
+    Route::post('/voilations/report/list', [FDTLController::class, 'voilationsReportList'])->name('user.fdtl.voilations.report.list');
 
+    Route::post('/voilation-details', [FDTLController::class, 'voilationDetails'])->name('user.fdtl.violation-details');
+    Route::post('/update-exception', [FDTLController::class, 'updateException'])->name('user.fdtl.updateException');
+
+    Route::post('/voilation-update', [FDTLController::class, 'voilationUpdate'])->name('user.fdtl.violation-update');
+    Route::post('/update-re-update', [FDTLController::class, 'voilationReUpdate'])->name('user.fdtl.update.re-update');
+
+    
+    
+    Route::get('aai-reports', [ReportsController::class, 'aaiReports'])->name('user.reports.aaiReports');
+    Route::post('list', [AaiController::class, 'list'])->name('user.aai_report.list');
 });
 
-Route::get('/flying-currency', [ReportsController::class, 'pilotFlyingCurrency'])->name('user.reports.pilotFlyingCurrency');
+Route::get('/flying-currency', [ReportsController::class, 'flyingCurrency'])->name('user.reports.pilotFlyingCurrency');
 Route::get('/flying-currency-print/{date?}/{aircraft?}/{report_type?}', [ReportsController::class, 'pilotFlyingCurrencyPrint'])->name('user.reports.pilotFlyingCurrencyPrint');
 Route::get('/flying-test-details-print/{date?}', [ReportsController::class, 'FlyingTestDetailsPrint'])->name('user.reports.FlyingTestDetailsPrint');
 Route::get('/training-and-checks-print/{date?}/{aircraft?}', [ReportsController::class, 'trainingChecksPrint'])->name('user.reports.trainingChecksPrint');

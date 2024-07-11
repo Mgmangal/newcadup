@@ -2,28 +2,37 @@
 
 // use App\Models\Role;
 use Carbon\Carbon;
-use App\Models\Users;
-use App\Models\Setting;
-use App\Models\FlyingLog;
-use App\Models\NoneFlyingLog;
-use App\Models\AirCraft;
-use App\Models\Master;
-use App\Models\MasterAssign;
 use App\Models\User;
 use App\Models\Leave;
+use App\Models\State;
+use App\Models\Master;
+use App\Models\Setting;
+use App\Models\AirCraft;
+use App\Models\FlyingLog;
+use App\Models\ReceiveBill;
+use App\Models\MasterAssign;
 use App\Models\PilotLicense;
 use App\Models\PilotMedical;
 use App\Models\PilotTraining;
-use App\Models\PilotQualification;
-use App\Models\PilotGroundTraining;
-use App\Models\ExternalFlyingLog;
 use App\Models\PilotFlyingLog;
-use App\Models\State;
 use App\Models\PilotViolation;
-use App\Models\ReceiveBill;
+use App\Models\ExternalFlyingLog;
+use App\Models\PilotQualification;
+use Illuminate\Support\Facades\DB;
+use App\Models\PilotGroundTraining;
 use App\Models\ReceiptBillFlyingLog;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Artisan;
+if(!function_exists('clearCache'))
+{
+    function clearCache()
+    {
+        Artisan::call('cache:clear');
+        Artisan::call('route:clear');
+        Artisan::call('view:clear');
+        Artisan::call('config:clear');
+    }
+}
 
 if(!function_exists('getUserType'))
 {
@@ -198,7 +207,12 @@ if (!function_exists('is_get_date_time_format')) {
         return \Carbon\Carbon::parse($date)->format('d-m-Y H:i');
     }
 }
-
+if (!function_exists('is_set_time_format')) {
+    function is_set_time_format($date)
+    {
+        return \Carbon\Carbon::parse($date)->timezone(session('timezone', 'UTC'))->format('H:i');
+    }
+}
 if (!function_exists('is_time_defrence')) {
     function is_time_defrence($date_start, $date_end)
     {
