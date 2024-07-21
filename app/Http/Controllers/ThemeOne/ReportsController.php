@@ -2,10 +2,16 @@
 
 namespace App\Http\Controllers\ThemeOne;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Master;
 use App\Models\AirCraft;
+use App\Models\PilotLicense;
+use App\Models\PilotMedical;
+use App\Models\PilotTraining;
 use App\Models\ExternalFlyingLog;
+use App\Models\PilotQualification;
+use App\Models\PilotGroundTraining;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Request;
 
@@ -206,7 +212,60 @@ class ReportsController extends Controller
         return view('theme-one.reports.pilot-flying-currency',compact('sub_title'));
     }
 
+    public function pilotFlyingCurrencyPrint($date = '', $aircraft = '', $report_type = '')
+    {
+        if (empty($date)) {
+            return 'Please select date';
+        }
 
+        if (empty($aircraft)) {
+            return 'Please select aircraft type';
+        }
+        if(empty($report_type)){
+            return 'Please select report type';
+        }
 
+        $data['date'] = $date;
+        $data['aircraft'] = $aircraft;
+        $data['report_type'] = $report_type;
+        $data['pilots'] = getCategoriesPilots($aircraft);
+        return view('reports.pilot_flying_currency_print', $data)->render();
+    }
 
+    public function trainingChecksPrint($date = '', $aircraft = '')
+    {
+        if (empty($date)) {
+            return 'Please select date';
+        }
+
+        if (empty($aircraft)) {
+            return 'Please select aircraft type';
+        }
+        $data['date'] = $date;
+        $data['aircraft'] = $aircraft;
+        $data['pilots'] = getCategoriesPilots($aircraft);
+
+        return view('reports.training_and_checks_print', $data)->render();
+    }
+
+    public function FlyingTestDetailsPrint($date = '')
+    {
+        if (empty($date)) {
+            return 'Please select a date.';
+        }
+        $startOfMonth = Carbon::parse($date)->startOfMonth()->toDateString();
+        $endOfMonth = Carbon::parse($date)->endOfMonth()->toDateString();
+        $licence = PilotLicense::whereBetween('renewed_on', [$startOfMonth, $endOfMonth])->latest()->get();
+        $medical = PilotMedical::whereBetween('planned_renewal_date', [$startOfMonth, $endOfMonth])->latest()->get();
+        $training = PilotTraining::whereBetween('renewed_on', [$startOfMonth, $endOfMonth])->latest()->get();
+        $qualification = PilotQualification::whereBetween('renewed_on', [$startOfMonth, $endOfMonth])->latest()->get();
+        $groundTraining = PilotGroundTraining::whereBetween('renewed_on', [$startOfMonth, $endOfMonth])->latest()->get();
+        $pilots = User::where('designation', '1')->where('status', 'active')->get();
+
+        $data['date'] = $date;
+        $data['pilots'] = $pilots;
+        $data['startOfMonth'] = $startOfMonth;
+        $data['endOfMonth'] = $endOfMonth;
+        return view('reports.flying_test_done_print', $data);
+    }
 }
