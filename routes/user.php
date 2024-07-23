@@ -13,7 +13,7 @@ use App\Http\Controllers\ThemeOne\LoadTrimController;
 use App\Http\Controllers\ThemeOne\AaiController;
 use App\Http\Controllers\ThemeOne\CertificateController;
 
- 
+
 Route::get('home', [HomeController::class, 'userIndex'])->name('user.home');
 Route::get('dashboard',[HomeController::class, 'userIndex'])->name('admin.dashboard');
 Route::get('profile',[UserController::class, 'profile'])->name('user.profile');
@@ -107,7 +107,7 @@ Route::prefix('reports')->group(function () {
 
     Route::get('vip-recency', [ReportsController::class, 'vipRecency'])->name('user.reports.vipRecency');
     Route::get('vip-recency-print/{date?}/{aircraft_type?}', [ReportsController::class, 'vipRecencyPrint'])->name('user.reports.vipRecencyPrint');
-    
+
     Route::get('/voilations/report', [FDTLController::class, 'voilationsReport'])->name('user.fdtl.voilations.report');
     Route::post('/voilations/report/list', [FDTLController::class, 'voilationsReportList'])->name('user.fdtl.voilations.report.list');
 
@@ -117,8 +117,8 @@ Route::prefix('reports')->group(function () {
     Route::post('/voilation-update', [FDTLController::class, 'voilationUpdate'])->name('user.fdtl.violation-update');
     Route::post('/update-re-update', [FDTLController::class, 'voilationReUpdate'])->name('user.fdtl.update.re-update');
 
-    
-    
+
+
     Route::get('aai-reports', [ReportsController::class, 'aaiReports'])->name('user.reports.aaiReports');
     Route::post('list', [AaiController::class, 'list'])->name('user.aai_report.list');
 });
@@ -139,6 +139,30 @@ Route::prefix('my-leave')->group(function () {
 });
 Route::get('/contract', [ContractController::class, 'index'])->name('user.contract');
 Route::post('/contract', [ContractController::class, 'list'])->name('user.contract');
+
+Route::group(['prefix' => 'users'], function () {
+    Route::get('/', [UserController::class, 'index'])->name('user.users');
+    Route::get('/create', [UserController::class, 'create'])->name('user.users.create');
+    Route::post('/store', [UserController::class, 'store'])->name('user.users.store');
+    Route::post('/list', [UserController::class, 'list'])->name('user.users.list');
+    Route::get('/edit/{id}', [UserController::class, 'edit'])->name('user.users.edit');
+    Route::put('/update/{id}', [UserController::class, 'update'])->name('user.users.update');
+    Route::post('/change/status', [UserController::class, 'updateStatus'])->name('user.users.status');
+    Route::get('/destroy/{id}', [UserController::class, 'destroy'])->name('user.users.destroy');
+
+
+    Route::post('/get-section', [UserController::class, 'getSection'])->name('app.users.getSection');
+    Route::post('/get-job-function', [UserController::class, 'getJobFunction'])->name('app.users.getJobFunction');
+    Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
+
+    Route::put('/profile/update', [UserController::class, 'profileUpdate'])->name('user.profile.update');
+
+    Route::get('/password', [UserController::class, 'password'])->name('user.password');
+    Route::put('/password/update', [UserController::class, 'passwordUpdate'])->name('user.password.update');
+
+    Route::post('get-user-by-section', [UserController::class,'getUserBySection'])->name('user.getUserBySection');
+
+});
 
 
 

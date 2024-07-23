@@ -69,6 +69,7 @@
                         Home
                     </a>
                 </li>
+                @can('Flying')
                 <li class="nav-item with-sub">
                     <a href="" class="nav-link">
                         <i data-feather="package"></i> Flying
@@ -136,6 +137,7 @@
                         @endcan
                     </ul>
                 </li>
+                @endcan
                 <li class="nav-item with-sub">
                     <a href="" class="nav-link">
                         <i data-feather="layers"></i> SFA
@@ -345,6 +347,11 @@
                     <a href="{{route('user.loadTrim')}}" class="nav-link"><i data-feather="archive"></i> Load & Trim</a>
                 </li>
                 @endcan
+                @can('Employee View')
+                <li class="nav-item">
+                    <a href="{{route('user.users')}}" class="nav-link"><i data-feather="archive"></i> Employees</a>
+                </li>
+                @endcan
             </ul>
         </div><!-- navbar-menu-wrapper -->
         <div class="navbar-right">
@@ -523,6 +530,32 @@
                 text: message,
                 icon: "warning",
                 button: "OK",
+            });
+        }
+        function deleted(url) {
+            swal({
+                title: "Are you sure?",
+                text: "Are you sure you want to delete this item?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            }).then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        url: url,
+                        type: 'get',
+                        data: {},
+                        dataType: 'json',
+                        success: function(data) {
+                            if (data.success) {
+                                swal("Success!", data.message, "success");
+                            } else {
+                                swal("Error!", data.message, "error");
+                            }
+                            dataList();
+                        }
+                    });
+                } else {}
             });
         }
     </script>
