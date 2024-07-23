@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     public function __construct()
-    {   
+    {
         //$this->middleware(['permission:Employee Add|Employee Edit|Employee Delete|Employee View']);
     }
     public function index()
@@ -97,7 +97,7 @@ class UserController extends Controller
             'data' => $html
         ]);
     }
-    
+
     public function store(Request $request)
     {
         $validation = $request->validate([
@@ -172,10 +172,10 @@ class UserController extends Controller
                 $action  .= '<a href="'.route('app.users.edit', $value->id).'" class="btn btn-warning btn-sm m-1">Edit</a>';
                 $action .= '<a href="'.route('app.users.roles', $value->id).'" class="btn btn-success btn-sm m-1">Assign Role</a>';
                 $action .= '<a href="'.route('app.users.licenses', $value->id).'" class="btn btn-success btn-sm m-1">Manage License</a>';
-                
+
             }
             // $action  = '<a href="'.route('app.users.edit', $value->id).'" class="btn btn-warning btn-sm m-1">Edit</a>';
-            
+
             if($value->id!=1&&auth()->user()->can('Employee Delete'))
             {
                 $action .= '<a href="javascript:void(0);" onclick="deleted(`'.route('app.users.destroy', $value->id).'`);" class="btn btn-danger btn-sm m-1">Delete</a>';
@@ -287,7 +287,7 @@ class UserController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
-    
+
     public function updateStatus(Request $request)
     {
         try {
@@ -314,7 +314,7 @@ class UserController extends Controller
             $user->is_delete='1';
             $user->status='inactive';
             $user->save();
-            return redirect()->route('app.users')->with('success','User deleted successfully');
+            return response()->json(['success' => true, 'message' => 'User Deleted successfully.']);
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -332,7 +332,7 @@ class UserController extends Controller
     {
         try {
             $user = User::find($id);
-            
+
             $user->roles()->sync($request->roles);
             return redirect()->route('users.index')->with('success','User role updated successfully');
         } catch (\Exception $e) {
@@ -356,7 +356,7 @@ class UserController extends Controller
     }
 
     public function profile(Request $request)
-    {   
+    {
         $user = User::find(Auth::user()->id);
         if(getUserType()=='admin')
         {
@@ -424,7 +424,7 @@ class UserController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
-    
+
     public function getUserBySection(Request $request)
     {
         $users = User::whereJsonContains('section', $request->id)->where('status','active')->where('is_delete','0')->get();
@@ -435,5 +435,5 @@ class UserController extends Controller
         }
         return response()->json($html);
     }
-    
+
 }

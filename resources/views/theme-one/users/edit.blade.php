@@ -1,22 +1,23 @@
-<x-app-layout>
-    <x-slot name="breadcrumb">
-        <ul class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{route('app.dashboard')}}">DASHBOARD</a></li>
-            <li class="breadcrumb-item"><a href="{{route('app.users')}}">EMPLOYEES</a></li>
-            <li class="breadcrumb-item active">EDIT</li>
-    </x-slot>
-    <x-slot name="css">
-        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" />
-    </x-slot>
-    <!-- Errors -->
+@extends('theme-one.layouts.app', ['title' => 'Employees', 'sub_title' => $sub_title])
+@section('css')
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+@endsection
+
+@section('content')
     <div class="card">
         <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">Employee Edit</h3>
-            <a href="{{url()->previous()}}" class="btn btn-primary btn-sm p-2">Back</a>
+            <h3 class="card-title">Employees {{ $sub_title }}</h3>
+            @if (auth()->user()->can('Employee Add'))
+                <a href="{{ route('user.users') }}" class="btn btn-primary text-white">Go Back</a>
+            @endif
         </div>
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
         <div class="card-body">
-            <form action="{{route('app.users.update', $user->id)}}" method="POST" enctype="multipart/form-data">
+            <form action="{{route('user.users.update', $user->id)}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="row m-3">
@@ -393,120 +394,115 @@
             </form>
         </div>
     </div>
+@endsection
 
+@section('js')
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        const handleAddEducationInput = () => {
+            const educationInputDiv = document.getElementById('add-education-input-div');
+            const educationIndex = $('#add-education-input-div .row').length;
+            if (!educationInputDiv) {
+                console.error("add-education-input-div not found.");
+                return;
+            }
+            // Your HTML template for education input fields
+            let html = `<div class="col-md-3 p-2">
+                            <div class="form-group">
+                                <label for="degree_${educationIndex}" class="form-label">Degree/ Certificate</label>
+                                <input type="text" class="form-control" id="degree_${educationIndex}" name="degree[]">
+                            </div>
+                        </div>
+                        <div class="col-md-3 p-2">
+                            <div class="form-group">
+                                <label for="year_${educationIndex}" class="form-label">Passing Year</label>
+                                <input type="text" class="form-control" id="year_${educationIndex}" name="year[]">
+                            </div>
+                        </div>
+                        <div class="col-md-3 p-2">
+                            <div class="form-group">
+                                <label for="institute_${educationIndex}" class="form-label">Institute Name</label>
+                                <input type="text" class="form-control" id="institute_${educationIndex}" name="institute[]">
+                            </div>
+                        </div>
+                        <div class="col-md-3 p-2 mt-4">
+                            <button type="button" onclick="handleRemoveEducationInput(this)" class="btn btn-danger btn-sm py-2"><i
+                                    class="fa fa-trash-alt"></i> Remove Education</button>
+                        </div>`;
 
+            const educationRow = document.createElement('div');
+            educationRow.className = "row";
+            educationRow.innerHTML = html;
 
+            educationInputDiv.appendChild(educationRow);
+            educationIndex++;
+        };
+        const handleRemoveEducationInput = (event) => {
+            $(event).parent().parent().remove();
+        };
+    </script>
+    <script>
+        $(".dates").datepicker({
+            timepicker: false,
+            dateFormat: 'dd-mm-yy',
+            autoclose: true,
+            clearBtn: true,
+            todayButton: true,
+        });
 
-    <x-slot name="js">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-        <script>
-            const handleAddEducationInput = () => {
-                const educationInputDiv = document.getElementById('add-education-input-div');
-                const educationIndex = $('#add-education-input-div .row').length;
-                if (!educationInputDiv) {
-                    console.error("add-education-input-div not found.");
-                    return;
+        $('#department').select2({
+            width: 'resolve',
+            placeholder: 'Select Department'
+        });
+        $('#designation').select2({
+            width: 'resolve',
+            placeholder: 'Select Designation'
+        });
+        $('#section').select2({
+            width: 'resolve',
+            placeholder: 'Select Section'
+        });
+        $('#jobfunction').select2({
+            width: 'resolve',
+            placeholder: 'Select Job Function'
+        });
+
+        function getSection()
+        {
+            $.ajax({
+                url: "{{route('app.users.getSection')}}",
+                type: "POST",
+                data: {
+                    _token: "{{csrf_token()}}",
+                    id: $('#department').val(),
+                    user_id:'{{$user->id}}'
+                },
+                success: function(data) {
+                    $('#section').html(data.data);
+                    $('#section').select2({ width: 'resolve',placeholder: 'Select Section' });
+                    getJobFunction();
                 }
-                // Your HTML template for education input fields
-                let html = `<div class="col-md-3 p-2">
-                                <div class="form-group">
-                                    <label for="degree_${educationIndex}" class="form-label">Degree/ Certificate</label>
-                                    <input type="text" class="form-control" id="degree_${educationIndex}" name="degree[]">
-                                </div>
-                            </div>
-                            <div class="col-md-3 p-2">
-                                <div class="form-group">
-                                    <label for="year_${educationIndex}" class="form-label">Passing Year</label>
-                                    <input type="text" class="form-control" id="year_${educationIndex}" name="year[]">
-                                </div>
-                            </div>
-                            <div class="col-md-3 p-2">
-                                <div class="form-group">
-                                    <label for="institute_${educationIndex}" class="form-label">Institute Name</label>
-                                    <input type="text" class="form-control" id="institute_${educationIndex}" name="institute[]">
-                                </div>
-                            </div>
-                            <div class="col-md-3 p-2 mt-4">
-                                <button type="button" onclick="handleRemoveEducationInput(this)" class="btn btn-danger btn-sm py-2"><i
-                                        class="fa fa-trash-alt"></i> Remove Education</button>
-                            </div>`;
-
-                const educationRow = document.createElement('div');
-                educationRow.className = "row";
-                educationRow.innerHTML = html;
-
-                educationInputDiv.appendChild(educationRow);
-                educationIndex++;
-            };
-            const handleRemoveEducationInput = (event) => {
-                $(event).parent().parent().remove();
-            };
-        </script>
-        <script>
-            $(".dates").datetimepicker({
-                timepicker: false,
-                format: 'd-m-Y',
-                formatDate:'Y/m/d',
-                autoclose: true,
-                clearBtn: true,
-                todayButton: true
-            });
-
-            $('#department').select2({
-                width: 'resolve',
-                placeholder: 'Select Department'
-            });
-            $('#designation').select2({
-                width: 'resolve',
-                placeholder: 'Select Designation'
-            });
-            $('#section').select2({
-                width: 'resolve',
-                placeholder: 'Select Section'
-            });
-            $('#jobfunction').select2({
-                width: 'resolve',
-                placeholder: 'Select Job Function'
-            });
-
-            function getSection()
-            {
-                $.ajax({
-                    url: "{{route('app.users.getSection')}}",
-                    type: "POST",
-                    data: {
-                        _token: "{{csrf_token()}}",
-                        id: $('#department').val(),
-                        user_id:'{{$user->id}}'
-                    },
-                    success: function(data) {
-                        $('#section').html(data.data);
-                        $('#section').select2({ width: 'resolve',placeholder: 'Select Section' });
-                        getJobFunction();
-                    }
-                })
-            }
-            function getJobFunction()
-            {
-                $.ajax({
-                    url: "{{route('app.users.getJobFunction')}}",
-                    type: "POST",
-                    data: {
-                        _token: "{{csrf_token()}}",
-                        id: $('#section').val(),
-                        user_id:'{{$user->id}}'
-                    },
-                    success: function(data) {
-                        $('#jobfunction').html(data.data);
-                        $('#jobfunction').select2({ width: 'resolve',placeholder: 'Select Job Function' });
-                    }
-                })
-            }
-
-            $(document).ready(function() {
-                getSection();
             })
-        </script>
-    </x-slot>
-</x-app-layout>
+        }
+        function getJobFunction()
+        {
+            $.ajax({
+                url: "{{route('app.users.getJobFunction')}}",
+                type: "POST",
+                data: {
+                    _token: "{{csrf_token()}}",
+                    id: $('#section').val(),
+                    user_id:'{{$user->id}}'
+                },
+                success: function(data) {
+                    $('#jobfunction').html(data.data);
+                    $('#jobfunction').select2({ width: 'resolve',placeholder: 'Select Job Function' });
+                }
+            })
+        }
+
+        $(document).ready(function() {
+            getSection();
+        })
+    </script>
+@endsection

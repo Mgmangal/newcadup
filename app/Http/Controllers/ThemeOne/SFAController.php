@@ -300,7 +300,7 @@ class SFAController extends Controller
             $rate->remark = $remark[$key];
             $rate->save();
         }
-       
+
         if($pilot == Auth()->user()->id){
             return redirect(route('user.sfa.mySfaList'))->with('success', 'SFA Generated Successfully.');
         }else{
@@ -476,9 +476,9 @@ class SFAController extends Controller
       	$data['from_date'] = date("F d, Y",strtotime($sfa->from_date));
       	$data['to_date'] = date("F d, Y",strtotime($sfa->to_date));
         $data['sfa_id']=$id;
-        
+
         return view('theme-one.sfa.view', $data);
-        
+
     }
 
     public function downloadSfaReport(Request $request, $id)
