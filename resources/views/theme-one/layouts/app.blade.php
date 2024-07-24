@@ -138,6 +138,7 @@
                     </ul>
                 </li>
                 @endcan
+                @can('SFA List')
                 <li class="nav-item with-sub">
                     <a href="" class="nav-link">
                         <i data-feather="layers"></i> SFA
@@ -169,6 +170,7 @@
                         @endcan
                     </ul>
                 </li>
+                @endcan
                 <li class="nav-item with-sub">
                     <a href="" class="nav-link">
                         <i data-feather="layers"></i> Contract
@@ -350,6 +352,11 @@
                 @can('Employee View')
                 <li class="nav-item">
                     <a href="{{route('user.users')}}" class="nav-link"><i data-feather="archive"></i> Employees</a>
+                </li>
+                @endcan
+                @can('Aircraft Type View')
+                <li class="nav-item">
+                    <a href="{{route('user.aircrafts')}}" class="nav-link"><i data-feather="archive"></i> Aircrafts</a>
                 </li>
                 @endcan
             </ul>

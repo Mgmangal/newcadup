@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ThemeOne\AaiController;
 use App\Http\Controllers\ThemeOne\SFAController;
 use App\Http\Controllers\ThemeOne\FDTLController;
 use App\Http\Controllers\ThemeOne\HomeController;
@@ -8,9 +9,9 @@ use App\Http\Controllers\ThemeOne\UserController;
 use App\Http\Controllers\ThemeOne\FlyingController;
 use App\Http\Controllers\ThemeOne\MyLeaveController;
 use App\Http\Controllers\ThemeOne\ReportsController;
+use App\Http\Controllers\ThemeOne\AirCraftController;
 use App\Http\Controllers\ThemeOne\ContractController;
 use App\Http\Controllers\ThemeOne\LoadTrimController;
-use App\Http\Controllers\ThemeOne\AaiController;
 use App\Http\Controllers\ThemeOne\CertificateController;
 
 
@@ -142,28 +143,33 @@ Route::post('/contract', [ContractController::class, 'list'])->name('user.contra
 
 Route::group(['prefix' => 'users'], function () {
     Route::get('/', [UserController::class, 'index'])->name('user.users');
-    Route::get('/create', [UserController::class, 'create'])->name('user.users.create');
-    Route::post('/store', [UserController::class, 'store'])->name('user.users.store');
-    Route::post('/list', [UserController::class, 'list'])->name('user.users.list');
-    Route::get('/edit/{id}', [UserController::class, 'edit'])->name('user.users.edit');
-    Route::put('/update/{id}', [UserController::class, 'update'])->name('user.users.update');
-    Route::post('/change/status', [UserController::class, 'updateStatus'])->name('user.users.status');
-    Route::get('/destroy/{id}', [UserController::class, 'destroy'])->name('user.users.destroy');
+    Route::get('create', [UserController::class, 'create'])->name('user.users.create');
+    Route::post('store', [UserController::class, 'store'])->name('user.users.store');
+    Route::post('list', [UserController::class, 'list'])->name('user.users.list');
+    Route::get('edit/{id}', [UserController::class, 'edit'])->name('user.users.edit');
+    Route::put('update/{id}', [UserController::class, 'update'])->name('user.users.update');
+    Route::post('change/status', [UserController::class, 'updateStatus'])->name('user.users.status');
+    Route::get('destroy/{id}', [UserController::class, 'destroy'])->name('user.users.destroy');
 
 
-    Route::post('/get-section', [UserController::class, 'getSection'])->name('app.users.getSection');
-    Route::post('/get-job-function', [UserController::class, 'getJobFunction'])->name('app.users.getJobFunction');
-    Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
-
-    Route::put('/profile/update', [UserController::class, 'profileUpdate'])->name('user.profile.update');
-
-    Route::get('/password', [UserController::class, 'password'])->name('user.password');
-    Route::put('/password/update', [UserController::class, 'passwordUpdate'])->name('user.password.update');
-
+    Route::get('profile', [UserController::class, 'profile'])->name('user.profile');
+    Route::put('profile/update', [UserController::class, 'profileUpdate'])->name('user.profile.update');
+    Route::get('password', [UserController::class, 'password'])->name('user.password');
+    Route::put('password/update', [UserController::class, 'passwordUpdate'])->name('user.password.update');
     Route::post('get-user-by-section', [UserController::class,'getUserBySection'])->name('user.getUserBySection');
 
 });
 
+Route::group(['prefix' => 'aircrafts'], function () {
+    Route::get('/', [AirCraftController::class, 'index'])->name('user.aircrafts');
+    Route::post('list', [AirCraftController::class, 'list'])->name('user.aircraft.list');
+    Route::get('create', [AirCraftController::class, 'create'])->name('user.aircraft.create');
+    Route::post('store', [AirCraftController::class, 'store'])->name('user.aircraft.store');
+    Route::get('edit/{id}', [AirCraftController::class, 'edit'])->name('user.aircraft.edit');
+    Route::put('update/{id}', [AirCraftController::class, 'update'])->name('user.aircraft.update');
+    Route::get('destroy/{id}', [AirCraftController::class, 'destroy'])->name('user.aircraft.destroy');
+
+});
 
 
 
