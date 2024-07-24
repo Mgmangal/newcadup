@@ -11,11 +11,11 @@
                 <a href="{{ route('user.users') }}" class="btn btn-primary text-white">Go Back</a>
             @endif
         </div>
-        @if (session('success'))
+        {{-- @if (session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
             </div>
-        @endif
+        @endif --}}
         <div class="card-body">
             <form action="{{route('user.users.store')}}" method="POST" enctype="multipart/form-data">
                 @csrf
