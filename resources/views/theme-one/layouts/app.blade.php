@@ -69,6 +69,33 @@
                         Home
                     </a>
                 </li>
+                <li class="nav-item with-sub">
+                    <a href="" class="nav-link">
+                        <i data-feather="layers"></i> Masters
+                    </a>
+                    <ul class="navbar-menu-sub">
+                        @can('Department View')
+                        <li class="nav-sub-item">
+                            <a href="{{route('user.master.department')}}" class="nav-sub-link"><i data-feather="loader"></i> Department</a>
+                        </li>
+                        @endcan
+                        @can('Designation View')
+                        <li class="nav-sub-item">
+                            <a href="{{route('user.master.designation')}}" class="nav-sub-link"><i data-feather="loader"></i> Designation</a>
+                        </li>
+                        @endcan
+                        @can('Job Function View')
+                        <li class="nav-sub-item">
+                            <a href="{{route('user.master.job_function')}}" class="nav-sub-link"><i data-feather="loader"></i> Job Function</a>
+                        </li>
+                        @endcan
+                        {{-- @can('Contract') --}}
+                        <li class="nav-sub-item">
+                            <a href="{{route('user.contract')}}" class="nav-sub-link"><i data-feather="loader"></i> Section</a>
+                        </li>
+                        {{-- @endcan --}}
+                    </ul>
+                </li>
                 @can('Flying')
                 <li class="nav-item with-sub">
                     <a href="" class="nav-link">
@@ -171,6 +198,7 @@
                     </ul>
                 </li>
                 @endcan
+                @can('Contract')
                 <li class="nav-item with-sub">
                     <a href="" class="nav-link">
                         <i data-feather="layers"></i> Contract
@@ -183,6 +211,7 @@
                         @endcan
                     </ul>
                 </li>
+                @endcan
                 <li class="nav-item with-sub">
                     <a href="" class="nav-link">
                         <i data-feather="layers"></i> Certificate
