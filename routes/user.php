@@ -7,6 +7,7 @@ use App\Http\Controllers\ThemeOne\FDTLController;
 use App\Http\Controllers\ThemeOne\HomeController;
 use App\Http\Controllers\ThemeOne\UserController;
 use App\Http\Controllers\ThemeOne\FlyingController;
+use App\Http\Controllers\ThemeOne\MasterController;
 use App\Http\Controllers\ThemeOne\MyLeaveController;
 use App\Http\Controllers\ThemeOne\ReportsController;
 use App\Http\Controllers\ThemeOne\AirCraftController;
@@ -171,5 +172,32 @@ Route::group(['prefix' => 'aircrafts'], function () {
 
 });
 
+Route::group(['prefix' => 'masters'], function () {
+    Route::get('job-function', [MasterController::class, 'job_function'])->name('user.master.job_function');
+    Route::post('job-function-list', [MasterController::class, 'job_function_list'])->name('user.master.job_function_list');
+    Route::post('job-function-store', [MasterController::class, 'job_function_store'])->name('user.master.job_function_store');
+    Route::get('job-function-edit/{id}', [MasterController::class, 'job_function_edit'])->name('user.master.job_function_edit');
+    Route::get('job-function-destroy/{id}', [MasterController::class, 'job_function_destroy'])->name('user.master.job_function_destroy');
+
+    Route::get('departments', [MasterController::class, 'department'])->name('user.master.department');
+    Route::post('departments-list', [MasterController::class, 'department_list'])->name('user.master.department_list');
+    Route::post('departments-store', [MasterController::class, 'department_store'])->name('user.master.department_store');
+    Route::get('departments-edit/{id}', [MasterController::class, 'department_edit'])->name('user.master.department_edit');
+    Route::get('departments-destroy/{id}', [MasterController::class, 'department_destroy'])->name('user.master.department_destroy');
+
+    Route::get('designation', [MasterController::class, 'designation'])->name('user.master.designation');
+    Route::post('designation-list', [MasterController::class, 'designation_list'])->name('user.master.designation_list');
+    Route::post('designation-store', [MasterController::class, 'designation_store'])->name('user.master.designation_store');
+    Route::get('designation-edit/{id}', [MasterController::class, 'designation_edit'])->name('user.master.designation_edit');
+    Route::get('designation-destroy/{id}', [MasterController::class, 'designation_destroy'])->name('user.master.designation_destroy');
+
+    // Route::get('/sections', [SectionController::class, 'index'])->name('app.settings.sections');
+    // Route::post('/sections/list', [SectionController::class, 'list'])->name('app.settings.sections.list');
+    // Route::post('/sections/store', [SectionController::class, 'store'])->name('app.settings.sections.store');
+    // Route::get('/sections/edit/{id}', [SectionController::class, 'edit'])->name('app.settings.sections.edit');
+    // Route::get('/sections/destroy/{id}', [SectionController::class, 'destroy'])->name('app.settings.sections.destroy');
+
+
+});
 
 

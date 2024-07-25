@@ -88,7 +88,7 @@
                 <form action="{{route('app.license')}}" method="POST" id="licenseManageForm" class="">
                     @csrf
                     <div class="modal-body" id="license">
-                        
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
