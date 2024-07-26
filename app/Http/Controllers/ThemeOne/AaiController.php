@@ -1,21 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
-// asasas
+namespace App\Http\Controllers\ThemeOne;
+
 use Illuminate\Http\Request;
 use App\Models\AirCraft;
 use App\Models\FlyingLog;
 use App\Models\AaiReport;
-use App\Models\PilotFlyingLog;
-use App\Models\ExternalFlyingLog;
 use App\Models\User;
 use App\Models\Master;
-use App\Models\PilotViolation;
-use Illuminate\Support\Facades\Validator;
+
 use Illuminate\Support\Facades\DB;
-use App\Models\FlightDocAssign;
-use App\Models\PilotLog;
-use Carbon\Carbon;
+use App\Http\Controllers\Controller;
 class AaiController extends Controller
 {
     public function flyingLogs()

@@ -288,6 +288,7 @@ class SFAController extends Controller
         $sfa->amount = $total_price;
         $sfa->certify_that = $certified_that;
         $sfa->status = 'Generated';
+        $sfa->save();
         $last_id=$sfa->id;
         foreach($flying_id as $key => $value){
             $rate = new SfaFlyingLog();
@@ -299,7 +300,7 @@ class SFAController extends Controller
             $rate->remark = $remark[$key];
             $rate->save();
         }
-        $sfa->save();
+
         if($pilot == Auth()->user()->id){
             return redirect(route('user.sfa.mySfaList'))->with('success', 'SFA Generated Successfully.');
         }else{
@@ -382,8 +383,8 @@ class SFAController extends Controller
             $sub_array[] = is_get_date_format($value->date);
             $sub_array[] = @$value->aircraft->call_sign;
             $sub_array[] = @$value->aircraft->aircraft_cateogry;
-            $sub_array[] = $value->fron_sector.'/'.date('H:i',strtotime($value->departure_time));
-            $sub_array[] = $value->to_sector.'/'.date('H:i',strtotime($value->arrival_time));
+            $sub_array[] = $value->fron_sector.'/'.is_set_time_format($value->departure_time);
+            $sub_array[] = $value->to_sector.'/'.is_set_time_format($value->arrival_time);
             $sub_array[] = is_time_defrence($value->departure_time, $value->arrival_time);
 
             $check  = DB::table('sfa_flying_logs') ->join('pilot_sfas', 'sfa_flying_logs.pilot_sfa_id', '=', 'pilot_sfas.id')->where('pilot_sfas.user_id', $pilot)->where('sfa_flying_logs.flying_log_id',$value->flying_log_id)->count();
@@ -458,8 +459,8 @@ class SFAController extends Controller
             $sub_array[] = is_get_date_format($value->date);
             $sub_array[] = getAirCraft($value->aircraft_id)->call_sign;
             $sub_array[] = getAirCraft($value->aircraft_id)->aircraft_cateogry;
-            $sub_array[] = $value->fron_sector.'/'.date('H:i',strtotime($value->departure_time));
-            $sub_array[] = $value->to_sector.'/'.date('H:i',strtotime($value->arrival_time));
+            $sub_array[] = $value->fron_sector.'/'.is_set_time_format($value->departure_time);
+            $sub_array[] = $value->to_sector.'/'.is_set_time_format($value->arrival_time);
             $sub_array[] = is_time_defrence($value->departure_time, $value->arrival_time);
 
             $sub_array[] = getMasterName($value->user_role,'pilot_role');
@@ -475,11 +476,9 @@ class SFAController extends Controller
       	$data['from_date'] = date("F d, Y",strtotime($sfa->from_date));
       	$data['to_date'] = date("F d, Y",strtotime($sfa->to_date));
         $data['sfa_id']=$id;
-        if(getUserType()=='user'){
-            return view('theme-one.sfa.view', $data);
-        }else{
-            return view('sfa.view', $data);
-        }
+
+        return view('theme-one.sfa.view', $data);
+
     }
 
     public function downloadSfaReport(Request $request, $id)
@@ -505,8 +504,8 @@ class SFAController extends Controller
             $sub_array[] = is_get_date_format($value->date);
             $sub_array[] = getAirCraft($value->aircraft_id)->call_sign;
             $sub_array[] = getAirCraft($value->aircraft_id)->aircraft_cateogry;
-            $sub_array[] = $value->fron_sector.'/'.date('H:i',strtotime($value->departure_time));
-            $sub_array[] = $value->to_sector.'/'.date('H:i',strtotime($value->arrival_time));
+            $sub_array[] = $value->fron_sector.'/'.is_set_time_format($value->departure_time);
+            $sub_array[] = $value->to_sector.'/'.is_set_time_format($value->arrival_time);
             $sub_array[] = is_time_defrence($value->departure_time, $value->arrival_time);
 
             $sub_array[] = getMasterName($value->user_role,'pilot_role');

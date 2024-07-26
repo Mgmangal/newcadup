@@ -204,7 +204,7 @@ class ReceiveDispatchController extends Controller
             $sub_array[] = ++$key;
             $sub_array[] = $value->date;
             $sub_array[] = $value->letter_number;
-            $sub_array[] = $value->subject;
+            $sub_array[] = wordwrap($value->subject, 25);
             $sub_array[] = $value->receive_to;
             $sub_array[] = $value->receive_from;
 
@@ -334,7 +334,7 @@ class ReceiveDispatchController extends Controller
             $sub_array[] = ++$key;
             $sub_array[] = $value->date;
             $sub_array[] = $value->letter_number;
-            $sub_array[] = $value->subject;
+            $sub_array[] = wordwrap($value->subject, 30, "<br>\n");
             $sub_array[] = $value->receive_from;
             $sub_array[] = $value->receive_to;
             if($value->source == 'Section'){
@@ -875,7 +875,7 @@ class ReceiveDispatchController extends Controller
             $sub_array[] = ++$key;
             $sub_array[] = date('d-m-Y',strtotime($value->date));
             $sub_array[] = $value->letter_number;
-            $sub_array[] = $value->subject;
+            $sub_array[] = wordwrap($value->receiver, 25);
             $sub_array[] = getMasterName($value->dispatch_section);
             $sub_array[] = getEmpFullName($value->dispatch_from);
             $sub_array[] = $value->forwarded_to;
@@ -1216,7 +1216,7 @@ class ReceiveDispatchController extends Controller
             $sub_array[] = ++$key;
             $sub_array[] = $value->date;
             $sub_array[] = $value->letter_number;
-            $sub_array[] = $value->subject;
+            $sub_array[] = wordwrap($value->subject, 20);
             $sub_array[] = $value->receive_from;
             $sub_array[] = $value->receive_to;
             if($value->source == 'Section'){

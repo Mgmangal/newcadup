@@ -1,17 +1,18 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ThemeOne\AaiController;
 use App\Http\Controllers\ThemeOne\SFAController;
 use App\Http\Controllers\ThemeOne\FDTLController;
 use App\Http\Controllers\ThemeOne\HomeController;
 use App\Http\Controllers\ThemeOne\UserController;
 use App\Http\Controllers\ThemeOne\FlyingController;
-use App\Http\Controllers\ThemeOne\ReportController;
+use App\Http\Controllers\ThemeOne\MasterController;
 use App\Http\Controllers\ThemeOne\MyLeaveController;
 use App\Http\Controllers\ThemeOne\ReportsController;
+use App\Http\Controllers\ThemeOne\AirCraftController;
 use App\Http\Controllers\ThemeOne\ContractController;
 use App\Http\Controllers\ThemeOne\LoadTrimController;
-use App\Http\Controllers\ThemeOne\FlyingLogController;
 use App\Http\Controllers\ThemeOne\CertificateController;
 
 
@@ -44,7 +45,7 @@ Route::get('voilations', [FDTLController::class, 'voilations'])->name('user.fdtl
 Route::get('my-voilations', [FDTLController::class, 'MyVoilations'])->name('user.fdtl.MyVoilations');
 Route::post('voilations-list', [FDTLController::class, 'voilationsList'])->name('user.fdtl.voilationsList');
 
-Route::get('/flying/verify/{id}',[FlyingLogController::class, 'verify'])->name('user.flying.verify');
+Route::get('/flying/verify/{id}',[FlyingController::class, 'verify'])->name('user.flying.verify');
 
 Route::get('sfa/sfa-generate', [SFAController::class, 'sfaGenerate'])->name('user.sfa.sfaGenerate');
 Route::get('sfa/my-sfa-generate', [SFAController::class, 'mySfaGenerate'])->name('user.sfa.mySfaGenerate');
@@ -53,6 +54,7 @@ Route::post('sfa-store', [SFAController::class, 'sfaStore'])->name('user.sfa.sfa
 Route::get('sfa/sfa-list', [SFAController::class, 'sfaList'])->name('user.sfa.sfaList');
 Route::get('sfa/my-sfa-list', [SFAController::class, 'mySfaList'])->name('user.sfa.mySfaList');
 Route::post('get-sfa-list', [SFAController::class, 'getSfaList'])->name('user.sfa.getSfaList');
+Route::post('sfa-flying-list', [SFAController::class, 'list'])->name('user.sfa.flyinglist');
 Route::get('/sfa/view/{id}', [SFAController::class, 'sfaView'])->name('user.sfa.view');
 Route::get('/sfa/delete/{id}', [SFAController::class, 'sfaDelete'])->name('user.sfa.deleted');
 Route::get('/sfa/verify/{id}',[SFAController::class, 'verify'])->name('user.sfa.verify');
@@ -108,9 +110,22 @@ Route::prefix('reports')->group(function () {
     Route::get('vip-recency', [ReportsController::class, 'vipRecency'])->name('user.reports.vipRecency');
     Route::get('vip-recency-print/{date?}/{aircraft_type?}', [ReportsController::class, 'vipRecencyPrint'])->name('user.reports.vipRecencyPrint');
 
+    Route::get('/voilations/report', [FDTLController::class, 'voilationsReport'])->name('user.fdtl.voilations.report');
+    Route::post('/voilations/report/list', [FDTLController::class, 'voilationsReportList'])->name('user.fdtl.voilations.report.list');
+
+    Route::post('/voilation-details', [FDTLController::class, 'voilationDetails'])->name('user.fdtl.violation-details');
+    Route::post('/update-exception', [FDTLController::class, 'updateException'])->name('user.fdtl.updateException');
+
+    Route::post('/voilation-update', [FDTLController::class, 'voilationUpdate'])->name('user.fdtl.violation-update');
+    Route::post('/update-re-update', [FDTLController::class, 'voilationReUpdate'])->name('user.fdtl.update.re-update');
+
+
+
+    Route::get('aai-reports', [ReportsController::class, 'aaiReports'])->name('user.reports.aaiReports');
+    Route::post('list', [AaiController::class, 'list'])->name('user.aai_report.list');
 });
 
-Route::get('/flying-currency', [ReportsController::class, 'pilotFlyingCurrency'])->name('user.reports.pilotFlyingCurrency');
+Route::get('/flying-currency', [ReportsController::class, 'flyingCurrency'])->name('user.reports.pilotFlyingCurrency');
 Route::get('/flying-currency-print/{date?}/{aircraft?}/{report_type?}', [ReportsController::class, 'pilotFlyingCurrencyPrint'])->name('user.reports.pilotFlyingCurrencyPrint');
 Route::get('/flying-test-details-print/{date?}', [ReportsController::class, 'FlyingTestDetailsPrint'])->name('user.reports.FlyingTestDetailsPrint');
 Route::get('/training-and-checks-print/{date?}/{aircraft?}', [ReportsController::class, 'trainingChecksPrint'])->name('user.reports.trainingChecksPrint');
@@ -127,6 +142,71 @@ Route::prefix('my-leave')->group(function () {
 Route::get('/contract', [ContractController::class, 'index'])->name('user.contract');
 Route::post('/contract', [ContractController::class, 'list'])->name('user.contract');
 
+Route::group(['prefix' => 'users'], function () {
+    Route::get('/', [UserController::class, 'index'])->name('user.users');
+    Route::get('create', [UserController::class, 'create'])->name('user.users.create');
+    Route::post('store', [UserController::class, 'store'])->name('user.users.store');
+    Route::post('list', [UserController::class, 'list'])->name('user.users.list');
+    Route::get('edit/{id}', [UserController::class, 'edit'])->name('user.users.edit');
+    Route::put('update/{id}', [UserController::class, 'update'])->name('user.users.update');
+    Route::post('change/status', [UserController::class, 'updateStatus'])->name('user.users.status');
+    Route::get('destroy/{id}', [UserController::class, 'destroy'])->name('user.users.destroy');
 
+
+    Route::get('profile', [UserController::class, 'profile'])->name('user.profile');
+    Route::put('profile/update', [UserController::class, 'profileUpdate'])->name('user.profile.update');
+    Route::get('password', [UserController::class, 'password'])->name('user.password');
+    Route::put('password/update', [UserController::class, 'passwordUpdate'])->name('user.password.update');
+    Route::post('get-user-by-section', [UserController::class,'getUserBySection'])->name('user.getUserBySection');
+
+});
+
+Route::group(['prefix' => 'aircrafts'], function () {
+    Route::get('/', [AirCraftController::class, 'index'])->name('user.aircrafts');
+    Route::post('list', [AirCraftController::class, 'list'])->name('user.aircraft.list');
+    Route::get('create', [AirCraftController::class, 'create'])->name('user.aircraft.create');
+    Route::post('store', [AirCraftController::class, 'store'])->name('user.aircraft.store');
+    Route::get('edit/{id}', [AirCraftController::class, 'edit'])->name('user.aircraft.edit');
+    Route::put('update/{id}', [AirCraftController::class, 'update'])->name('user.aircraft.update');
+    Route::get('destroy/{id}', [AirCraftController::class, 'destroy'])->name('user.aircraft.destroy');
+
+});
+
+Route::group(['prefix' => 'masters'], function () {
+    Route::get('job-functions', [MasterController::class, 'job_function'])->name('user.master.job_function');
+    Route::post('job-function-list', [MasterController::class, 'job_function_list'])->name('user.master.job_function_list');
+    Route::post('job-function-store', [MasterController::class, 'job_function_store'])->name('user.master.job_function_store');
+    Route::get('job-function-edit/{id}', [MasterController::class, 'job_function_edit'])->name('user.master.job_function_edit');
+    Route::get('job-function-destroy/{id}', [MasterController::class, 'job_function_destroy'])->name('user.master.job_function_destroy');
+
+    Route::get('departments', [MasterController::class, 'department'])->name('user.master.department');
+    Route::post('departments-list', [MasterController::class, 'department_list'])->name('user.master.department_list');
+    Route::post('departments-store', [MasterController::class, 'department_store'])->name('user.master.department_store');
+    Route::get('departments-edit/{id}', [MasterController::class, 'department_edit'])->name('user.master.department_edit');
+    Route::get('departments-destroy/{id}', [MasterController::class, 'department_destroy'])->name('user.master.department_destroy');
+
+    Route::get('designations', [MasterController::class, 'designation'])->name('user.master.designation');
+    Route::post('designation-list', [MasterController::class, 'designation_list'])->name('user.master.designation_list');
+    Route::post('designation-store', [MasterController::class, 'designation_store'])->name('user.master.designation_store');
+    Route::get('designation-edit/{id}', [MasterController::class, 'designation_edit'])->name('user.master.designation_edit');
+    Route::get('designation-destroy/{id}', [MasterController::class, 'designation_destroy'])->name('user.master.designation_destroy');
+
+    Route::get('sections', [MasterController::class, 'section'])->name('user.master.section');
+    Route::post('section-list', [MasterController::class, 'section_list'])->name('user.master.section_list');
+    Route::post('section-store', [MasterController::class, 'section_store'])->name('user.master.section_store');
+    Route::get('section-edit/{id}', [MasterController::class, 'section_edit'])->name('user.master.section_edit');
+    Route::get('section-destroy/{id}', [MasterController::class, 'section_destroy'])->name('user.master.section_destroy');
+
+    Route::get('roles', [MasterController::class, 'role'])->name('user.master.role');
+    Route::post('role-list', [MasterController::class, 'role_list'])->name('user.master.role_list');
+    Route::post('role-store', [MasterController::class, 'role_store'])->name('user.master.role_store');
+    Route::get('role-edit/{id}', [MasterController::class, 'role_edit'])->name('user.master.role_edit');
+    Route::get('role-destroy/{id}', [MasterController::class, 'role_destroy'])->name('user.master.role_destroy');
+    Route::get('role/permission/{id}', [MasterController::class, 'permission'])->name('user.master.permission');
+    Route::post('role/permission-store/{id}', [MasterController::class, 'permission_store'])->name('user.master.permission_store');
+
+    // Route::get('subroles/{id}', [RoleController::class, 'subroles'])->name('app.settings.subroles');
+
+});
 
 
