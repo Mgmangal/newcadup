@@ -173,7 +173,7 @@ Route::group(['prefix' => 'aircrafts'], function () {
 });
 
 Route::group(['prefix' => 'masters'], function () {
-    Route::get('job-function', [MasterController::class, 'job_function'])->name('user.master.job_function');
+    Route::get('job-functions', [MasterController::class, 'job_function'])->name('user.master.job_function');
     Route::post('job-function-list', [MasterController::class, 'job_function_list'])->name('user.master.job_function_list');
     Route::post('job-function-store', [MasterController::class, 'job_function_store'])->name('user.master.job_function_store');
     Route::get('job-function-edit/{id}', [MasterController::class, 'job_function_edit'])->name('user.master.job_function_edit');
@@ -185,18 +185,27 @@ Route::group(['prefix' => 'masters'], function () {
     Route::get('departments-edit/{id}', [MasterController::class, 'department_edit'])->name('user.master.department_edit');
     Route::get('departments-destroy/{id}', [MasterController::class, 'department_destroy'])->name('user.master.department_destroy');
 
-    Route::get('designation', [MasterController::class, 'designation'])->name('user.master.designation');
+    Route::get('designations', [MasterController::class, 'designation'])->name('user.master.designation');
     Route::post('designation-list', [MasterController::class, 'designation_list'])->name('user.master.designation_list');
     Route::post('designation-store', [MasterController::class, 'designation_store'])->name('user.master.designation_store');
     Route::get('designation-edit/{id}', [MasterController::class, 'designation_edit'])->name('user.master.designation_edit');
     Route::get('designation-destroy/{id}', [MasterController::class, 'designation_destroy'])->name('user.master.designation_destroy');
 
-    // Route::get('/sections', [SectionController::class, 'index'])->name('app.settings.sections');
-    // Route::post('/sections/list', [SectionController::class, 'list'])->name('app.settings.sections.list');
-    // Route::post('/sections/store', [SectionController::class, 'store'])->name('app.settings.sections.store');
-    // Route::get('/sections/edit/{id}', [SectionController::class, 'edit'])->name('app.settings.sections.edit');
-    // Route::get('/sections/destroy/{id}', [SectionController::class, 'destroy'])->name('app.settings.sections.destroy');
+    Route::get('sections', [MasterController::class, 'section'])->name('user.master.section');
+    Route::post('section-list', [MasterController::class, 'section_list'])->name('user.master.section_list');
+    Route::post('section-store', [MasterController::class, 'section_store'])->name('user.master.section_store');
+    Route::get('section-edit/{id}', [MasterController::class, 'section_edit'])->name('user.master.section_edit');
+    Route::get('section-destroy/{id}', [MasterController::class, 'section_destroy'])->name('user.master.section_destroy');
 
+    Route::get('roles', [MasterController::class, 'role'])->name('user.master.role');
+    Route::post('role-list', [MasterController::class, 'role_list'])->name('user.master.role_list');
+    Route::post('role-store', [MasterController::class, 'role_store'])->name('user.master.role_store');
+    Route::get('role-edit/{id}', [MasterController::class, 'role_edit'])->name('user.master.role_edit');
+    Route::get('role-destroy/{id}', [MasterController::class, 'role_destroy'])->name('user.master.role_destroy');
+    Route::get('role/permission/{id}', [MasterController::class, 'permission'])->name('user.master.permission');
+    Route::post('role/permission-store/{id}', [MasterController::class, 'permission_store'])->name('user.master.permission_store');
+
+    // Route::get('subroles/{id}', [RoleController::class, 'subroles'])->name('app.settings.subroles');
 
 });
 
