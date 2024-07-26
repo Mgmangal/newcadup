@@ -42,7 +42,7 @@
                 <h5 class="modal-title" id="modalLabel">Manage Job Function</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{route('app.settings.jobfunctions.store')}}" method="POST" id="manageForm" class="">
+            <form action="{{route('user.master.job_function_store')}}" method="POST" id="manageForm" class="">
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3">

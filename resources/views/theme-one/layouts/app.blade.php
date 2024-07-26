@@ -89,11 +89,16 @@
                             <a href="{{route('user.master.job_function')}}" class="nav-sub-link"><i data-feather="loader"></i> Job Function</a>
                         </li>
                         @endcan
-                        {{-- @can('Contract') --}}
+                        @can('Section View')
                         <li class="nav-sub-item">
-                            <a href="{{route('user.contract')}}" class="nav-sub-link"><i data-feather="loader"></i> Section</a>
+                            <a href="{{route('user.master.section')}}" class="nav-sub-link"><i data-feather="loader"></i> Section</a>
                         </li>
-                        {{-- @endcan --}}
+                        @endcan
+                        @can('Role View')
+                        <li class="nav-sub-item">
+                            <a href="{{route('user.master.role')}}" class="nav-sub-link"><i data-feather="loader"></i> Roles</a>
+                        </li>
+                        @endcan
                     </ul>
                 </li>
                 @can('Flying')
