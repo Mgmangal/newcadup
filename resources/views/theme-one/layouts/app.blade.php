@@ -43,6 +43,14 @@
             justify-content: center !important;
             max-width: 100%;
         }
+        .required:after {
+            content: "*";
+            position: relative;
+            font-size: inherit;
+            color: red;
+            padding-left: 0rem!important;
+            font-weight: 600;
+        }
     </style>
 </head>
 
@@ -74,6 +82,16 @@
                         <i data-feather="layers"></i> Masters
                     </a>
                     <ul class="navbar-menu-sub">
+                        {{-- @can('Aircraft Type View') --}}
+                        <li class="nav-sub-item">
+                            <a href="{{route('user.master.aircraft_type')}}" class="nav-sub-link"><i data-feather="loader"></i> Aircraft Type</a>
+                        </li>
+                        {{-- @endcan --}}
+                        {{-- @can('Aircraft Type View') --}}
+                        <li class="nav-sub-item">
+                            <a href="{{route('user.master.amp')}}" class="nav-sub-link"><i data-feather="loader"></i> AMP</a>
+                        </li>
+                        {{-- @endcan --}}
                         @can('Department View')
                         <li class="nav-sub-item">
                             <a href="{{route('user.master.department')}}" class="nav-sub-link"><i data-feather="loader"></i> Department</a>
@@ -89,18 +107,37 @@
                             <a href="{{route('user.master.job_function')}}" class="nav-sub-link"><i data-feather="loader"></i> Job Function</a>
                         </li>
                         @endcan
-                        @can('Section View')
-                        <li class="nav-sub-item">
-                            <a href="{{route('user.master.section')}}" class="nav-sub-link"><i data-feather="loader"></i> Section</a>
-                        </li>
-                        @endcan
                         @can('Role View')
                         <li class="nav-sub-item">
                             <a href="{{route('user.master.role')}}" class="nav-sub-link"><i data-feather="loader"></i> Roles</a>
                         </li>
                         @endcan
+                        @can('Section View')
+                        <li class="nav-sub-item">
+                            <a href="{{route('user.master.section')}}" class="nav-sub-link"><i data-feather="loader"></i> Section</a>
+                        </li>
+                        @endcan
                     </ul>
                 </li>
+                {{-- @can('Contract') --}}
+                <li class="nav-item with-sub">
+                    <a href="" class="nav-link">
+                        <i data-feather="layers"></i> ATA
+                    </a>
+                    <ul class="navbar-menu-sub">
+                        {{-- @can('Contract') --}}
+                        <li class="nav-sub-item">
+                            <a href="{{route('user.ata')}}" class="nav-sub-link"><i data-feather="archive"></i>ATA</a>
+                        </li>
+                        {{-- @endcan --}}
+                        {{-- @can('Contract') --}}
+                        <li class="nav-sub-item">
+                            <a href="{{route('user.ata.category')}}" class="nav-sub-link"><i data-feather="archive"></i>ATA Category</a>
+                        </li>
+                        {{-- @endcan --}}
+                    </ul>
+                </li>
+                {{-- @endcan --}}
                 @can('Flying')
                 <li class="nav-item with-sub">
                     <a href="" class="nav-link">

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ThemeOne\AaiController;
+use App\Http\Controllers\ThemeOne\AtaController;
 use App\Http\Controllers\ThemeOne\SFAController;
 use App\Http\Controllers\ThemeOne\FDTLController;
 use App\Http\Controllers\ThemeOne\HomeController;
@@ -173,6 +174,19 @@ Route::group(['prefix' => 'aircrafts'], function () {
 });
 
 Route::group(['prefix' => 'masters'], function () {
+    Route::get('aircraft-type', [MasterController::class, 'aircraft_type'])->name('user.master.aircraft_type');
+    Route::post('aircraft-type-list', [MasterController::class, 'aircraft_type_list'])->name('user.master.aircraft_type_list');
+    Route::post('aircraft-type-store', [MasterController::class, 'aircraft_type_store'])->name('user.master.aircraft_type_store');
+    Route::get('aircraft-type-edit/{id}', [MasterController::class, 'aircraft_type_edit'])->name('user.master.aircraft_type_edit');
+    Route::get('aircraft-type-destroy/{id}', [MasterController::class, 'aircraft_type_destroy'])->name('user.master.aircraft_type_destroy');
+
+    Route::get('amp', [MasterController::class, 'amp'])->name('user.master.amp');
+    Route::post('amp-list', [MasterController::class, 'amp_list'])->name('user.master.amp_list');
+    Route::post('amp-store', [MasterController::class, 'amp_store'])->name('user.master.amp_store');
+    Route::get('amp-edit/{id}', [MasterController::class, 'amp_edit'])->name('user.master.amp_edit');
+    Route::post('amp-status', [MasterController::class, 'amp_status'])->name('user.master.amp_status');
+    Route::get('amp-destroy/{id}', [MasterController::class, 'amp_destroy'])->name('user.master.amp_destroy');
+
     Route::get('job-functions', [MasterController::class, 'job_function'])->name('user.master.job_function');
     Route::post('job-function-list', [MasterController::class, 'job_function_list'])->name('user.master.job_function_list');
     Route::post('job-function-store', [MasterController::class, 'job_function_store'])->name('user.master.job_function_store');
@@ -209,4 +223,24 @@ Route::group(['prefix' => 'masters'], function () {
 
 });
 
+Route::group(['prefix' => 'ata'], function () {
+    Route::get('/', [AtaController::class, 'ata'])->name('user.ata');
+    Route::post('ata-list', [AtaController::class, 'ata_list'])->name('user.ata.ata_list');
+    Route::get('ata-create', [AtaController::class, 'ata_create'])->name('user.ata.ata_create');
+    Route::post('ata-store', [AtaController::class, 'ata_store'])->name('user.ata.ata_store');
+    Route::get('ata-edit/{id}', [AtaController::class, 'ata_edit'])->name('user.ata.ata_edit');
+    Route::put('ata-update/{id}', [AtaController::class, 'ata_update'])->name('user.ata.ata_update');
+    Route::post('ata-status', [AtaController::class, 'ata_status'])->name('user.ata.ata_status');
+    Route::get('ata-destroy/{id}', [AtaController::class, 'ata_destroy'])->name('user.ata.ata_destroy');
+
+    Route::get('category', [AtaController::class, 'category'])->name('user.ata.category');
+    Route::post('category-list', [AtaController::class, 'category_list'])->name('user.ata.category_list');
+    Route::get('category-create', [AtaController::class, 'category_create'])->name('user.ata.category_create');
+    Route::post('category-store', [AtaController::class, 'category_store'])->name('user.ata.category_store');
+    Route::get('category-edit/{id}', [AtaController::class, 'category_edit'])->name('user.ata.category_edit');
+    Route::put('category-update/{id}', [AtaController::class, 'category_update'])->name('user.ata.category_update');
+    Route::post('category-status', [AtaController::class, 'category_status'])->name('user.ata.category_status');
+    Route::get('category-destroy/{id}', [AtaController::class, 'category_destroy'])->name('user.ata.category_destroy');
+
+});
 
