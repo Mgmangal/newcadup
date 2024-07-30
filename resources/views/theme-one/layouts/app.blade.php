@@ -82,16 +82,16 @@
                         <i data-feather="layers"></i> Masters
                     </a>
                     <ul class="navbar-menu-sub">
-                        {{-- @can('Aircraft Type View') --}}
+                        @can('Aircraft Type View')
                         <li class="nav-sub-item">
                             <a href="{{route('user.master.aircraft_type')}}" class="nav-sub-link"><i data-feather="loader"></i> Aircraft Type</a>
                         </li>
-                        {{-- @endcan --}}
-                        {{-- @can('Aircraft Type View') --}}
+                        @endcan
+                        @can('AMP View')
                         <li class="nav-sub-item">
                             <a href="{{route('user.master.amp')}}" class="nav-sub-link"><i data-feather="loader"></i> AMP</a>
                         </li>
-                        {{-- @endcan --}}
+                        @endcan
                         @can('Department View')
                         <li class="nav-sub-item">
                             <a href="{{route('user.master.department')}}" class="nav-sub-link"><i data-feather="loader"></i> Department</a>
@@ -119,25 +119,25 @@
                         @endcan
                     </ul>
                 </li>
-                {{-- @can('Contract') --}}
+                @can('ATA View')
                 <li class="nav-item with-sub">
                     <a href="" class="nav-link">
                         <i data-feather="layers"></i> ATA
                     </a>
                     <ul class="navbar-menu-sub">
-                        {{-- @can('Contract') --}}
+                        @can('ATA View')
                         <li class="nav-sub-item">
                             <a href="{{route('user.ata')}}" class="nav-sub-link"><i data-feather="archive"></i>ATA</a>
                         </li>
-                        {{-- @endcan --}}
-                        {{-- @can('Contract') --}}
+                        @endcan
+                        @can('ATA Category View')
                         <li class="nav-sub-item">
                             <a href="{{route('user.ata.category')}}" class="nav-sub-link"><i data-feather="archive"></i>ATA Category</a>
                         </li>
-                        {{-- @endcan --}}
+                        @endcan
                     </ul>
                 </li>
-                {{-- @endcan --}}
+                @endcan
                 @can('Flying')
                 <li class="nav-item with-sub">
                     <a href="" class="nav-link">
@@ -254,6 +254,7 @@
                     </ul>
                 </li>
                 @endcan
+                @can('Certificate View')
                 <li class="nav-item with-sub">
                     <a href="" class="nav-link">
                         <i data-feather="layers"></i> Certificate
@@ -321,6 +322,8 @@
                         @endcan
                     </ul>
                 </li>
+                @endcan
+                @can('Curency View')
                 <li class="nav-item with-sub">
                     <a href="" class="nav-link">
                         <i data-feather="layers"></i> Curency
@@ -332,6 +335,8 @@
                         </li>
                     </ul>
                 </li>
+                @endcan
+                @can('Reports View')
                 <li class="nav-item with-sub">
                     <a href="" class="nav-link">
                         <i data-feather="layers"></i> Reports
@@ -405,16 +410,22 @@
                         @endcan
                     </ul>
                 </li>
-
+                @endcan
+                @can('Fuel View')
                 <li class="nav-item">
                     <a href="javascript:void(0);" class="nav-link"><i data-feather="box"></i> Fuel</a>
                 </li>
+                @endcan
+                @can('Incidence View')
                 <li class="nav-item">
                     <a href="javascript:void(0);" class="nav-link"><i data-feather="archive"></i> Incidence</a>
                 </li>
+                @endcan
+                @can('Leave View')
                 <li class="nav-item">
                     <a href="{{route('user.my.leave')}}" class="nav-link"><i data-feather="archive"></i> Leave</a>
                 </li>
+                @endcan
                 @can('Load & Trim')
                 <li class="nav-item">
                     <a href="{{route('user.loadTrim')}}" class="nav-link"><i data-feather="archive"></i> Load & Trim</a>
@@ -425,7 +436,7 @@
                     <a href="{{route('user.users')}}" class="nav-link"><i data-feather="archive"></i> Employees</a>
                 </li>
                 @endcan
-                @can('Aircraft Type View')
+                @can('Aircraft View')
                 <li class="nav-item">
                     <a href="{{route('user.aircrafts')}}" class="nav-link"><i data-feather="archive"></i> Aircrafts</a>
                 </li>

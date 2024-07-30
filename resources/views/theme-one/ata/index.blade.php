@@ -10,9 +10,9 @@
     <div class="card-header d-flex justify-content-between">
         <h3 class="card-title">ATA {{ $sub_title }} </h3>
         <div>
-            {{-- @can('AMP Add') --}}
+            @can('ATA Add')
             <a href="javascript:void(0);" class="btn btn-primary" onclick="addNew();">Add New</a>
-            {{-- @endcan --}}
+            @endcan
         </div>
     </div>
     <div class="card-body">

@@ -10,9 +10,9 @@
     <div class="card-header d-flex justify-content-between">
         <h3 class="card-title">{{ $sub_title }} </h3>
         <div>
-            {{-- @can('AMP Add') --}}
-            <a href="javascript:void(0);" class="btn btn-primary" onclick="addNew();">Add New</a>
-            {{-- @endcan --}}
+            @can('AMP Add')
+                <a href="javascript:void(0);" class="btn btn-primary" onclick="addNew();">Add New</a>
+            @endcan
         </div>
     </div>
     <div class="card-body">

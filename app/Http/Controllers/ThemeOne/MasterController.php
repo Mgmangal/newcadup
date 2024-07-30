@@ -5,8 +5,8 @@ namespace App\Http\Controllers\ThemeOne;
 use App\Models\Master;
 use App\Models\AirCraft;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Validator;
 
@@ -19,6 +19,9 @@ class MasterController extends Controller
         $this->middleware(['permission:Job Function Add|Job Function Edit|Job Function Delete|Job Function View']);
         $this->middleware(['permission:Section Add|Section Edit|Section Delete|Section View']);
         $this->middleware(['permission:Role Add|Role Edit|Role Delete|Role View']);
+        $this->middleware(['permission:AMP Add|AMP Edit|AMP Delete|AMP View']);
+        $this->middleware(['permission:Aircraft Type Add|Aircraft Type Edit|Aircraft Type Delete|Aircraft Type View']);
+
     }
 
     public function aircraft_type()
@@ -93,11 +96,14 @@ class MasterController extends Controller
         foreach ($result as $key => $value) {
 
             $action = '';
-            $action = '<a href="javascript:void(0);" onclick="editRole(`' . route('user.master.aircraft_type_edit', $value->id) . '`);" class="btn btn-warning btn-sm m-1">Edit</a>';
+            if (auth()->user()->can('Aircraft Type Edit')) {
+                $action = '<a href="javascript:void(0);" onclick="editRole(`' . route('user.master.aircraft_type_edit', $value->id) . '`);" class="btn btn-warning btn-sm m-1">Edit</a>';
+            }
             //$action .= '<a href="javascript:void(0);" onclick="license(`' . $value->id . '`);" class="btn btn-success btn-sm m-1">License</a>';
             // $action = '<a href="javascript:void(0);" onclick="editRole(`'.route('app.settings.designations.edit', $value->id).'`);" class="btn btn-warning btn-sm m-1">Edit</a>';
-            $action .= '<a href="javascript:void(0);" onclick="deleted(`' . route('user.master.aircraft_type_destroy', $value->id) . '`);" class="btn btn-danger btn-sm m-1">Delete</a>';
-
+            if (auth()->user()->can('Aircraft Type Delete')) {
+                $action .= '<a href="javascript:void(0);" onclick="deleted(`' . route('user.master.aircraft_type_destroy', $value->id) . '`);" class="btn btn-danger btn-sm m-1">Delete</a>';
+            }
             $sub_array = array();
             $sub_array[] = ++$key;
             $sub_array[] = $value->name;
@@ -222,12 +228,12 @@ class MasterController extends Controller
         foreach ($result as $key => $value) {
 
             $action = '';
-            // if (auth()->user()->can('Job Function Edit')) {
+            if (auth()->user()->can('AMP Edit')) {
                 $action .= '<a href="javascript:void(0);" onclick="editRole(`' . route('user.master.amp_edit', $value->id) . '`);" class="btn btn-warning btn-sm m-1 text-white">Edit</a>';
-            // }
-            // if (auth()->user()->can('Job Function Delete')) {
+            }
+            if (auth()->user()->can('AMP Delete')) {
                 $action .= '<a href="javascript:void(0);" onclick="deleted(`' . route('user.master.amp_destroy', $value->id) . '`);" class="btn btn-danger btn-sm m-1">Delete</a>';
-            // }
+            }
             $status = '<select class="form-control" onchange="changeStatus(' . $value->id . ',this.value);">';
             $status .= '<option ' . ($value->status == 'active' ? 'selected' : '') . ' value="active">Active</option>';
             $status .= '<option ' . ($value->status == 'inactive' ? 'selected' : '') . ' value="inactive">Inactive</option>';
@@ -842,9 +848,9 @@ class MasterController extends Controller
     {
         $role = Role::with('permissions')->find($id);
         if ($role->parent_id != 0) {
-            $permissions = Role::with('permissions')->find($role->parent_id)->permissions()->get();
+            $permissions = Role::with('permissions')->find($role->parent_id)->permissions()->orderBy('name', 'asc')->get();
         } else {
-            $permissions = Permission::all();
+            $permissions = Permission::orderBy('name', 'asc')->get();
         }
         $sub_title = 'Permission List';
         return view('theme-one.masters.permission', compact('sub_title','role', 'permissions'));

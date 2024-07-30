@@ -5,12 +5,19 @@ namespace App\Http\Controllers\ThemeOne;
 
 use App\Models\Ata;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
 class AtaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['permission:ATA Add|ATA Edit|ATA Delete|ATA View']);
+        $this->middleware(['permission:ATA Category Add|ATA Category Edit|ATA Category Delete|ATA Category View']);
+    }
     public function category()
     {
         $sub_title = 'Ata Category List';
@@ -91,8 +98,12 @@ class AtaController extends Controller
         foreach ($result as $key => $value) {
 
             $action = '';
-            $action = '<a href="javascript:void(0);" onclick="editRole(`' . route('user.ata.category_edit', $value->id) . '`);" class="btn btn-warning btn-sm m-1">Edit</a>';
-            $action .= '<a href="javascript:void(0);" onclick="deleted(`' . route('user.ata.category_destroy', $value->id) . '`);" class="btn btn-danger btn-sm m-1">Delete</a>';
+            if (auth()->user()->can('ATA Category Edit')) {
+                $action = '<a href="javascript:void(0);" onclick="editRole(`' . route('user.ata.category_edit', $value->id) . '`);" class="btn btn-warning btn-sm m-1">Edit</a>';
+            }
+            if (auth()->user()->can('ATA Category Delete')) {
+                $action .= '<a href="javascript:void(0);" onclick="deleted(`' . route('user.ata.category_destroy', $value->id) . '`);" class="btn btn-danger btn-sm m-1">Delete</a>';
+            }
             $status = '<select class="form-control" onchange="changeStatus(' . $value->id . ',this.value);">';
             $status .= '<option ' . ($value->status == 'active' ? 'selected' : '') . ' value="active">Active</option>';
             $status .= '<option ' . ($value->status == 'inactive' ? 'selected' : '') . ' value="inactive">Inactive</option>';
@@ -222,12 +233,12 @@ class AtaController extends Controller
         foreach ($result as $key => $value) {
 
             $action = '';
-            // if (auth()->user()->can('Job Function Edit')) {
+            if (auth()->user()->can('ATA Edit')) {
                 $action .= '<a href="javascript:void(0);" onclick="editRole(`' . route('user.ata.ata_edit', $value->id) . '`);" class="btn btn-warning btn-sm m-1 text-white">Edit</a>';
-            // }
-            // if (auth()->user()->can('Job Function Delete')) {
+            }
+            if (auth()->user()->can('ATA Delete')) {
                 $action .= '<a href="javascript:void(0);" onclick="deleted(`' . route('user.ata.ata_destroy', $value->id) . '`);" class="btn btn-danger btn-sm m-1">Delete</a>';
-            // }
+            }
             $status = '<select class="form-control" onchange="changeStatus(' . $value->id . ',this.value);">';
             $status .= '<option ' . ($value->status == 'active' ? 'selected' : '') . ' value="active">Active</option>';
             $status .= '<option ' . ($value->status == 'inactive' ? 'selected' : '') . ' value="inactive">Inactive</option>';
