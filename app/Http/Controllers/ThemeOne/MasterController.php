@@ -3,21 +3,286 @@
 namespace App\Http\Controllers\ThemeOne;
 
 use App\Models\Master;
+use App\Models\AirCraft;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
 class MasterController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['permission:Department Add|Department Edit|Department Delete|Department View']);
-        $this->middleware(['permission:Designation Add|Designation Edit|Designation Delete|Designation View']);
-        $this->middleware(['permission:Job Function Add|Job Function Edit|Job Function Delete|Job Function View']);
-        $this->middleware(['permission:Section Add|Section Edit|Section Delete|Section View']);
-        $this->middleware(['permission:Role Add|Role Edit|Role Delete|Role View']);
+        $this->middleware(['permission:Aircraft Type Add|Aircraft Type Edit|Aircraft Type Delete|Aircraft Type View|AMP Add|AMP Edit|AMP Delete|AMP View|Role Add|Role Edit|Role Delete|Role View|Department Add|Department Edit|Department Delete|Department View|Designation Add|Designation Edit|Designation Delete|Designation View|Job Function Add|Job Function Edit|Job Function Delete|Job Function View|Section Add|Section Edit|Section Delete|Section View']);
+
+    }
+
+    public function aircraft_type()
+    {
+        $sub_title = 'Aircraft Type List';
+        return view('theme-one.masters.aircraft_type', compact('sub_title'));
+    }
+
+    public function aircraft_type_store(Request $request)
+    {
+        $validation = Validator::make($request->all(), [
+            'name' => 'required',
+            'aircraft_cateogry' => 'required',
+        ]);
+        if ($validation->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validation->errors()
+            ]);
+        }
+        $name = $request->name;
+        $aircraft_cateogry = $request->aircraft_cateogry;
+        $id = $request->edit_id;
+        try {
+            if (!empty($id)) {
+                $master = Master::find($id);
+                $master->name = $name;
+                $master->more_data = $aircraft_cateogry;
+                $master->save();
+            } else {
+                $master = new Master();
+                $master->name = $name;
+                $master->more_data = $aircraft_cateogry;
+                $master->type = 'aircraft_type';
+                $master->status = 'active';
+                $master->is_delete = '0';
+                $master->save();
+            }
+            return response()->json([
+                'success' => true,
+                'message' => 'Aircraft Type Added Successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function aircraft_type_list(Request $request)
+    {
+        $column = ['id', 'name','more_data', 'created_at', 'id'];
+        $masters = Master::where('type', '=', 'aircraft_type')->where('is_delete','0');
+
+        $total_row = $masters->count();
+        if (isset($_POST['search'])) {
+            $masters->where('name', 'LIKE', '%' . $_POST['search']['value'] . '%');
+        }
+
+        if (isset($_POST['order'])) {
+            $masters->orderBy($column[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
+        } else {
+            $masters->orderBy('id', 'desc');
+        }
+        $filter_row = $masters->count();
+        if (isset($_POST["length"]) && $_POST["length"] != -1) {
+            $masters->skip($_POST["start"])->take($_POST["length"]);
+        }
+        $result = $masters->get();
+        $data = array();
+        foreach ($result as $key => $value) {
+
+            $action = '';
+            if (auth()->user()->can('Aircraft Type Edit')) {
+                $action = '<a href="javascript:void(0);" onclick="editRole(`' . route('user.master.aircraft_type_edit', $value->id) . '`);" class="btn btn-warning btn-sm m-1">Edit</a>';
+            }
+            //$action .= '<a href="javascript:void(0);" onclick="license(`' . $value->id . '`);" class="btn btn-success btn-sm m-1">License</a>';
+            // $action = '<a href="javascript:void(0);" onclick="editRole(`'.route('app.settings.designations.edit', $value->id).'`);" class="btn btn-warning btn-sm m-1">Edit</a>';
+            if (auth()->user()->can('Aircraft Type Delete')) {
+                $action .= '<a href="javascript:void(0);" onclick="deleted(`' . route('user.master.aircraft_type_destroy', $value->id) . '`);" class="btn btn-danger btn-sm m-1">Delete</a>';
+            }
+            $sub_array = array();
+            $sub_array[] = ++$key;
+            $sub_array[] = $value->name;
+            $sub_array[] = $value->more_data;
+            $sub_array[] = date('d-m-Y', strtotime($value->created_at));
+            $sub_array[] =  $action;
+            $data[] = $sub_array;
+        }
+        $output = array(
+            "draw"       =>  intval($_POST["draw"]),
+            "recordsTotal"   =>  $total_row,
+            "recordsFiltered"  =>  $filter_row,
+            "data"       =>  $data
+        );
+
+        echo json_encode($output);
+    }
+
+    public function aircraft_type_edit($id)
+    {
+        $role = Master::find($id);
+        return response()->json([
+            'success' => true,
+            'data' => $role
+        ]);
+    }
+
+    public function aircraft_type_destroy($id)
+    {
+        $data = Master::find($id);
+        $data->is_delete='1';
+        $data->status='inactive';
+        $data->save();
+        return response()->json([
+            'success' => true,
+            'message' => 'Aircraft Type Deleted Successfully'
+        ]);
+    }
+
+    public function amp()
+    {
+        $sub_title = 'AMP List';
+        $aircrafts = AirCraft::where('status', 'active')->get();
+        // dd($aircrafts);
+        return view('theme-one.masters.amp', compact('sub_title','aircrafts'));
+    }
+    public function amp_store(Request $request)
+    {
+        $validation = Validator::make($request->all(), [
+            'aircraft_id' => 'required',
+            'name' => 'required',
+            'other_data' => 'required',
+            'status' => 'required',
+        ],[
+            'aircraft_id.required' => 'Please Select Aircraft',
+            'name.required' => 'Please Enter Name',
+            'other_data.required' => 'Please Enter Description',
+            'status.required' => 'Please Select Status',
+        ]);
+        if ($validation->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validation->errors()
+            ]);
+        }
+        $name = $request->name;
+        $aircraft_id = $request->aircraft_id;
+        $other_data = $request->other_data;
+        $status = $request->status;
+        $id = $request->edit_id;
+        try {
+            if (!empty($id)) {
+                $master = Master::find($id);
+                $master->name = $name;
+                $master->parent_id = $aircraft_id;
+                $master->other_data = $other_data;
+                $master->status = $status;
+                $master->save();
+                $massage = 'AMP Updated Successfully';
+            } else {
+                $master = new Master();
+                $master->name = $name;
+                $master->type = 'amp';
+                $master->parent_id = $aircraft_id;
+                $master->other_data = $other_data;
+                $master->status = $status;
+                $master->save();
+                $massage = 'AMP Added Successfully';
+            }
+            return response()->json([
+                'success' => true,
+                'message' => $massage
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+    public function amp_list(Request $request)
+    {
+        $column = ['id', 'parent_id', 'name','other_data', 'created_at','status', 'id'];
+        $masters = Master::where('type', '=', 'amp')->where('is_delete','0');
+
+        $total_row = $masters->count();
+        if (isset($_POST['search'])) {
+            $masters->where('name', 'LIKE', '%' . $_POST['search']['value'] . '%');
+        }
+
+        if (isset($_POST['order'])) {
+            $masters->orderBy($column[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
+        } else {
+            $masters->orderBy('id', 'desc');
+        }
+        $filter_row = $masters->count();
+        if (isset($_POST["length"]) && $_POST["length"] != -1) {
+            $masters->skip($_POST["start"])->take($_POST["length"]);
+        }
+        $result = $masters->get();
+        $data = array();
+        foreach ($result as $key => $value) {
+
+            $action = '';
+            if (auth()->user()->can('AMP Edit')) {
+                $action .= '<a href="javascript:void(0);" onclick="editRole(`' . route('user.master.amp_edit', $value->id) . '`);" class="btn btn-warning btn-sm m-1 text-white">Edit</a>';
+            }
+            if (auth()->user()->can('AMP Delete')) {
+                $action .= '<a href="javascript:void(0);" onclick="deleted(`' . route('user.master.amp_destroy', $value->id) . '`);" class="btn btn-danger btn-sm m-1">Delete</a>';
+            }
+            $status = '<select class="form-control" onchange="changeStatus(' . $value->id . ',this.value);">';
+            $status .= '<option ' . ($value->status == 'active' ? 'selected' : '') . ' value="active">Active</option>';
+            $status .= '<option ' . ($value->status == 'inactive' ? 'selected' : '') . ' value="inactive">Inactive</option>';
+            $status .= '</select>';
+
+            $sub_array = array();
+            $sub_array[] = ++$key;
+            $sub_array[] = $value->name;
+            $sub_array[] = getValueByColumn('air_crafts','call_sign',$value->parent_id);
+            $sub_array[] = $value->other_data;
+            $sub_array[] = date('d-m-Y', strtotime($value->created_at));
+            $sub_array[] = $status;
+            $sub_array[] =  $action;
+            $data[] = $sub_array;
+        }
+        $output = array(
+            "draw"       =>  intval($_POST["draw"]),
+            "recordsTotal"   =>  $total_row,
+            "recordsFiltered"  =>  $filter_row,
+            "data"       =>  $data
+        );
+
+        echo json_encode($output);
+    }
+    public function amp_edit($id)
+    {
+        $role = Master::find($id);
+        return response()->json([
+            'success' => true,
+            'data' => $role
+        ]);
+    }
+    public function amp_status(Request $request)
+    {
+        try {
+            $id = $request->id;
+            $status = $request->status;
+            $user = Master::find($id);
+            $user->status = $status;
+            $user->save();
+            return response()->json(['success' => true, 'message' => 'Status updated successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
+    public function amp_destroy($id)
+    {
+        $data = Master::find($id);
+        $data->is_delete='1';
+        $data->status='inactive';
+        $data->save();
+        return response()->json([
+            'success' => true,
+            'message' => 'AMP Deleted Successfully'
+        ]);
     }
 
     public function department()
@@ -577,9 +842,9 @@ class MasterController extends Controller
     {
         $role = Role::with('permissions')->find($id);
         if ($role->parent_id != 0) {
-            $permissions = Role::with('permissions')->find($role->parent_id)->permissions()->get();
+            $permissions = Role::with('permissions')->find($role->parent_id)->permissions()->orderBy('name', 'asc')->get();
         } else {
-            $permissions = Permission::all();
+            $permissions = Permission::orderBy('name', 'asc')->get();
         }
         $sub_title = 'Permission List';
         return view('theme-one.masters.permission', compact('sub_title','role', 'permissions'));
@@ -595,6 +860,8 @@ class MasterController extends Controller
             'message' => 'Permissions Updated Successfully'
         ]);
     }
+
+
 
 
 

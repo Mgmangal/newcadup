@@ -34,6 +34,20 @@ if(!function_exists('clearCache'))
     }
 }
 
+if(!function_exists('getValueByColumn'))
+{
+    function getValueByColumn($table, $columm, $id) {
+        $query = DB::table($table);
+        $query->where('id', $id);
+        $rows = $query->first();
+        if (!empty($rows)) {
+            return $rows->$columm;
+        } else {
+            return '';
+        }
+    }
+}
+
 if(!function_exists('getUserType'))
 {
     function getUserType()

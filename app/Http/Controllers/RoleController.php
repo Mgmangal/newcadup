@@ -129,11 +129,13 @@ class RoleController extends Controller
     public function permissions($id)
     {
         $role = Role::with('permissions')->find($id);
+
         if ($role->parent_id != 0) {
-            $permissions = Role::with('permissions')->find($role->parent_id)->permissions()->get();
+            $permissions = Role::with('permissions')->find($role->parent_id)->permissions()->orderBy('name', 'asc')->get();
         } else {
-            $permissions = Permission::all();
+            $permissions = Permission::orderBy('name', 'asc')->get();
         }
+
         return view('settings.roles.permissions', compact('role', 'permissions'));
     }
 

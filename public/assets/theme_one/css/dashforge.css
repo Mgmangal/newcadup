@@ -3884,7 +3884,7 @@ textarea.form-control-lg {
   flex-direction: column;
   align-items: flex-start;
   justify-content: center; }
-  
+
   .btn-group-vertical > .btn,
   .ui-datepicker-buttonpane .btn-group-vertical > button,
   .sp-container .btn-group-vertical > button,
@@ -7479,7 +7479,7 @@ textarea.form-control-lg {
 
 .text-danger {
   --bs-text-opacity: 1;
-  color: rgba(var(--bs-danger-rgb), var(--bs-text-opacity)) !important; }
+  color: red !important; }
 
 .text-light {
   --bs-text-opacity: 1;
