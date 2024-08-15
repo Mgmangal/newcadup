@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ThemeOne\AaiController;
 use App\Http\Controllers\ThemeOne\AtaController;
 use App\Http\Controllers\ThemeOne\SFAController;
+use App\Http\Controllers\ThemeOne\TboController;
 use App\Http\Controllers\ThemeOne\FDTLController;
 use App\Http\Controllers\ThemeOne\HomeController;
 use App\Http\Controllers\ThemeOne\UserController;
@@ -221,6 +222,7 @@ Route::group(['prefix' => 'masters'], function () {
 
     // Route::get('subroles/{id}', [RoleController::class, 'subroles'])->name('app.settings.subroles');
 
+
 });
 
 Route::group(['prefix' => 'ata'], function () {
@@ -244,3 +246,14 @@ Route::group(['prefix' => 'ata'], function () {
 
 });
 
+Route::group(['prefix' => 'tbo'], function () {
+    Route::get('/', [TboController::class, 'index'])->name('user.tbo');
+    Route::get('add', [TboController::class, 'add'])->name('user.tbo.add');
+    Route::post('list', [TboController::class, 'list'])->name('user.tbo.list');
+    Route::post('store', [TboController::class, 'store'])->name('user.tbo.store');
+    Route::get('edit/{id}', [TboController::class, 'edit'])->name('user.tbo.edit');
+    Route::post('update/{id}', [TboController::class, 'update'])->name('user.tbo.update');
+    Route::post('status', [TboController::class, 'status'])->name('user.tbo.status');
+    Route::get('destroy/{id}', [TboController::class, 'destroy'])->name('user.tbo.destroy');
+
+});

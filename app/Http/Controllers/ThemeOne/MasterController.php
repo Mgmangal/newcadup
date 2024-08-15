@@ -14,13 +14,7 @@ class MasterController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['permission:Department Add|Department Edit|Department Delete|Department View']);
-        $this->middleware(['permission:Designation Add|Designation Edit|Designation Delete|Designation View']);
-        $this->middleware(['permission:Job Function Add|Job Function Edit|Job Function Delete|Job Function View']);
-        $this->middleware(['permission:Section Add|Section Edit|Section Delete|Section View']);
-        $this->middleware(['permission:Role Add|Role Edit|Role Delete|Role View']);
-        $this->middleware(['permission:AMP Add|AMP Edit|AMP Delete|AMP View']);
-        $this->middleware(['permission:Aircraft Type Add|Aircraft Type Edit|Aircraft Type Delete|Aircraft Type View']);
+        $this->middleware(['permission:Aircraft Type Add|Aircraft Type Edit|Aircraft Type Delete|Aircraft Type View|AMP Add|AMP Edit|AMP Delete|AMP View|Role Add|Role Edit|Role Delete|Role View|Department Add|Department Edit|Department Delete|Department View|Designation Add|Designation Edit|Designation Delete|Designation View|Job Function Add|Job Function Edit|Job Function Delete|Job Function View|Section Add|Section Edit|Section Delete|Section View']);
 
     }
 
@@ -866,6 +860,8 @@ class MasterController extends Controller
             'message' => 'Permissions Updated Successfully'
         ]);
     }
+
+
 
 
 

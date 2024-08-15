@@ -39,6 +39,15 @@
     <!-- <link rel="stylesheet" href="{{asset('assets/theme_one/css/dashforge.dashboard.css')}}"> -->
     @yield('css')
     <style>
+        body {
+            background: #f4f5f8;
+        }
+        .container-fluid {
+            padding-right: 35px;
+            padding-left: 35px;
+        }
+    </style>
+    <style>
         .navbar-menu {
             justify-content: center !important;
             max-width: 100%;
@@ -117,6 +126,7 @@
                             <a href="{{route('user.master.section')}}" class="nav-sub-link"><i data-feather="loader"></i> Section</a>
                         </li>
                         @endcan
+
                     </ul>
                 </li>
                 @can('ATA View')
@@ -138,6 +148,11 @@
                     </ul>
                 </li>
                 @endcan
+                {{-- @can('TBO View') --}}
+                <li class="nav-item">
+                    <a href="{{route('user.tbo')}}" class="nav-link"><i data-feather="archive"></i> TBO</a>
+                </li>
+                {{-- @endcan --}}
                 @can('Flying')
                 <li class="nav-item with-sub">
                     <a href="" class="nav-link">
@@ -441,6 +456,23 @@
                     <a href="{{route('user.aircrafts')}}" class="nav-link"><i data-feather="archive"></i> Aircrafts</a>
                 </li>
                 @endcan
+                {{-- <li class="nav-item with-sub">
+                    <a href="" class="nav-link">
+                        <i data-feather="layers"></i> Aircraft
+                    </a>
+                    <ul class="navbar-menu-sub">
+                        @can('Aircraft Type View')
+                        <li class="nav-sub-item">
+                            <a href="{{route('user.aircrafts')}}" class="nav-sub-link"><i data-feather="loader"></i> Aircraft Profile</a>
+                        </li>
+                        @endcan
+                        @can('AMP View')
+                        <li class="nav-sub-item">
+                            <a href="{{route('user.master.amp')}}" class="nav-sub-link"><i data-feather="loader"></i> Aircraft Parts</a>
+                        </li>
+                        @endcan
+                    </ul>
+                </li> --}}
             </ul>
         </div><!-- navbar-menu-wrapper -->
         <div class="navbar-right">
