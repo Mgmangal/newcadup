@@ -6,7 +6,6 @@ namespace App\Http\Controllers\ThemeOne;
 use App\Models\User;
 use App\Models\Master;
 use App\Models\AirCraft;
-use App\Models\MasterAssign;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;

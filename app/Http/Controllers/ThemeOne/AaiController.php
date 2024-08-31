@@ -21,14 +21,7 @@ class AaiController extends Controller
         $pilot_roles = Master::where('type', 'pilot_role')->where('status', 'active')->get();
         $passengers = Master::where('type', 'passenger')->where('status', 'active')->get();
         $pilot_role = Master::where('type', 'pilot_role')->where('status', 'active')->get();
-        if(getUserType()=='admin')
-        {
-            return view('aai_reports.flying-logs', compact('pilots', 'aircrafts','flying_types','pilot_roles','passengers'));
-        }else{
-            return view('theme-one.flying_logs.index', compact('pilots', 'aircrafts','flying_types','pilot_roles','passengers','pilot_role'));
-
-        }
-
+        return view('theme-one.flying_logs.index', compact('pilots', 'aircrafts','flying_types','pilot_roles','passengers','pilot_role'));
     }
 
     public function flyingLogList(Request $request)
@@ -109,10 +102,10 @@ class AaiController extends Controller
             $aai_report_exist = AaiReport::where('flying_log_id', $value->id)->first();
             if($aai_report_exist){
                 $action  .= '<a href="javascript:void(0);" class="btn btn-success btn-sm m-1">Generated</a>';
-                $action .= '<a href="'.route('app.aai_report.edit', $aai_report_exist->id).'" class="btn btn-primary btn-sm m-1">Edit</a>';
-                $action .= '<a href="javascript:void(0);" onclick="deleted(`' . route('app.aai_report.destroy', $aai_report_exist->id).'`);" class="btn btn-danger btn-sm m-1">Delete</a>';
+                $action .= '<a href="'.route('user.aai_report.edit', $aai_report_exist->id).'" class="btn btn-primary btn-sm m-1">Edit</a>';
+                $action .= '<a href="javascript:void(0);" onclick="deleted(`' . route('user.aai_report.destroy', $aai_report_exist->id).'`);" class="btn btn-danger btn-sm m-1">Delete</a>';
             } else {
-                $action  .='<a href="'.route('app.aai_report.generate', $value->id).'" class="btn btn-warning btn-sm m-1 text-white">Generate AAI Report</a>';
+                $action  .='<a href="'.route('user.aai_report.generate', $value->id).'" class="btn btn-warning btn-sm m-1 text-white">Generate AAI Report</a>';
             }
 
             $times[] = is_time_defrence($value->departure_time, $value->arrival_time);
@@ -137,15 +130,13 @@ class AaiController extends Controller
             "data"       =>  $data,
             "totalTime"       =>  $totalTime,
         );
-
         echo json_encode($output);
     }
 
     public function generate($id)
     {
         $data = FlyingLog::with('aircraft')->find($id);
-        // return $data;
-        return view('aai_reports.generate', compact('data'));
+        return view('theme-one.aai_reports.generate', compact('data'));
     }
 
     public function store(Request $request)
@@ -290,7 +281,7 @@ class AaiController extends Controller
     {
         $data = AaiReport::find($id);
         // return $data;
-        return view('aai_reports.edit', compact('data'));
+        return view('theme-one.aai_reports.edit', compact('data'));
     }
 
     public function destroy($id)

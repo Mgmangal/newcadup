@@ -11,6 +11,7 @@ use App\Models\MasterAssign;
 use App\Models\PilotLicense;
 use App\Models\PilotMedical;
 use App\Models\UserDocument;
+use App\Models\UserCertificate;
 use Illuminate\Http\Request;
 use App\Models\PilotTraining;
 use Spatie\Permission\Models\Role;
@@ -341,22 +342,27 @@ class PilotController extends Controller
     public function licenses($id)
     {
         $user = User::find($id);
-        $designation[]=$user->designation??'0';
-        $section=$user->section??[];
-        $jobfunction=$user->jobfunction??[];
-        $a=AirCraft::whereJsonContains('pilots',$id)->pluck('id')->toArray();
-        $d=array_merge($designation,$section,$jobfunction);
-        $license1=MasterAssign::whereIn('master_id',$d)->where('is_for','user')->pluck('certificate_id')->toArray();
-        $license2=MasterAssign::whereIn('master_id',$a)->where('is_for','aircraft')->pluck('certificate_id')->toArray();
-        $license=array_merge($license1,$license2);
-        $licenses=Master::whereIn('id',$license)->where('type','certificate')->where('sub_type','license')->where('is_delete','0')->get();
-        $trainings=Master::whereIn('id',$license)->where('type','certificate')->where('sub_type','training')->where('is_delete','0')->get();
-        $medicals=Master::whereIn('id',$license)->where('type','certificate')->where('sub_type','medical')->where('is_delete','0')->get();
-        $qualifications=Master::whereIn('id',$license)->where('type','certificate')->where('sub_type','qualification')->where('is_delete','0')->get();
-        $groundtrainings=Master::whereIn('id',$license)->where('type','certificate')->where('sub_type','ground_training')->where('is_delete','0')->get();
+        
+        $certificates=UserCertificate::with('licenses')->where('user_id',$id)->groupBy('certificate_type')->get();
+        //dd($certificates);
+        //print_r($certificates);die;
+        // $designation[]=$user->designation??'0';
+        // $section=$user->section??[];
+        // $jobfunction=$user->jobfunction??[];
+        // $a=AirCraft::whereJsonContains('pilots',$id)->pluck('id')->toArray();
+        // $d=array_merge($designation,$section,$jobfunction);
+        // $license1=MasterAssign::whereIn('master_id',$d)->where('is_for','user')->pluck('certificate_id')->toArray();
+        // $license2=MasterAssign::whereIn('master_id',$a)->where('is_for','aircraft')->pluck('certificate_id')->toArray();
+        // $license=array_merge($license1,$license2);
+        // $licenses=Master::whereIn('id',$license)->where('type','certificate')->where('sub_type','license')->where('is_delete','0')->get();
+        // $trainings=Master::whereIn('id',$license)->where('type','certificate')->where('sub_type','training')->where('is_delete','0')->get();
+        // $medicals=Master::whereIn('id',$license)->where('type','certificate')->where('sub_type','medical')->where('is_delete','0')->get();
+        // $qualifications=Master::whereIn('id',$license)->where('type','certificate')->where('sub_type','qualification')->where('is_delete','0')->get();
+        // $groundtrainings=Master::whereIn('id',$license)->where('type','certificate')->where('sub_type','ground_training')->where('is_delete','0')->get();
+        //dd($certificates);
         $ac_types=Master::where('type','aircraft_type')->where('is_delete','0')->get();
-
-        return view('pilot.licenses',compact('user','licenses','trainings','medicals','qualifications','groundtrainings','ac_types'));
+        
+        return view('pilot.licenses',compact('user','ac_types','certificates'));
     }
 
     public function licensesStore(Request $request)
@@ -1252,9 +1258,14 @@ class PilotController extends Controller
             }
 
             $sub_array[] = $availability;
-            $sub_array[] = checkCrewTrainings($value->id, getCetificateIds($value->id, 'training'), $from_date);
-            $sub_array[] = checkCrewLicenses($value->id, getCetificateIds($value->id, 'license'), $from_date);
-            $sub_array[] = checkCrewMedicals($value->id, getCetificateIds($value->id, 'medical'), $from_date);
+           
+            $sub_array[] = checkUserLapsedCertificate($value->id,'training');//checkCrewTrainings($value->id,getCetificateIds($value->id,'training'));
+            $sub_array[] = checkUserLapsedCertificate($value->id,'license');//checkCrewLicenses($value->id,getCetificateIds($value->id,'license'));
+            $sub_array[] = checkUserLapsedCertificate($value->id,'medical');//checkCrewMedicals($value->id,getCetificateIds($value->id,'medical'));
+            
+            // $sub_array[] = checkCrewTrainings($value->id, getCetificateIds($value->id, 'training'), $from_date);
+            // $sub_array[] = checkCrewLicenses($value->id, getCetificateIds($value->id, 'license'), $from_date);
+            // $sub_array[] = checkCrewMedicals($value->id, getCetificateIds($value->id, 'medical'), $from_date);
             $sub_array[] = checkCrewLeaveStatus($value->id, $from_date);
             $sub_array[] = $status;
             $data[] = $sub_array;
@@ -1311,9 +1322,13 @@ class PilotController extends Controller
             $sub_array[] = $value->salutation.' '.$value->name;
             $sub_array[] = '';
             $sub_array[] = '';
-            $sub_array[] = checkCrewTrainings($value->id,getCetificateIds($value->id,'training'),$from_date);
-            $sub_array[] = checkCrewLicenses($value->id,getCetificateIds($value->id,'license'),$from_date);
-            $sub_array[] = checkCrewMedicals($value->id,getCetificateIds($value->id,'medical'),$from_date);
+            $sub_array[] = checkUserLapsedCertificate($value->id,'training');//checkCrewTrainings($value->id,getCetificateIds($value->id,'training'));
+            $sub_array[] = checkUserLapsedCertificate($value->id,'license');//checkCrewLicenses($value->id,getCetificateIds($value->id,'license'));
+            $sub_array[] = checkUserLapsedCertificate($value->id,'medical');//checkCrewMedicals($value->id,getCetificateIds($value->id,'medical'));
+            
+            // $sub_array[] = checkCrewTrainings($value->id,getCetificateIds($value->id,'training'),$from_date);
+            // $sub_array[] = checkCrewLicenses($value->id,getCetificateIds($value->id,'license'),$from_date);
+            // $sub_array[] = checkCrewMedicals($value->id,getCetificateIds($value->id,'medical'),$from_date);
             $sub_array[] = '';
             $sub_array[] = $status;
             $data[] = $sub_array;

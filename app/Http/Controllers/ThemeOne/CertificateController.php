@@ -13,7 +13,6 @@ use App\Models\PilotQualification;
 use Illuminate\Support\Facades\DB;
 use App\Models\PilotGroundTraining;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
 
 class CertificateController extends Controller
 {

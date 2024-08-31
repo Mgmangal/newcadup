@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ThemeOne\AaiController;
 use App\Http\Controllers\ThemeOne\AtaController;
+use App\Http\Controllers\ThemeOne\AdtController;
 use App\Http\Controllers\ThemeOne\SFAController;
 use App\Http\Controllers\ThemeOne\TboController;
 use App\Http\Controllers\ThemeOne\FDTLController;
@@ -18,8 +19,8 @@ use App\Http\Controllers\ThemeOne\LoadTrimController;
 use App\Http\Controllers\ThemeOne\CertificateController;
 
 
-Route::get('home', [HomeController::class, 'userIndex'])->name('user.home');
-Route::get('dashboard',[HomeController::class, 'userIndex'])->name('admin.dashboard');
+Route::get('home', [HomeController::class, 'index'])->name('user.home');
+Route::get('dashboard',[HomeController::class, 'index'])->name('admin.dashboard');
 Route::get('profile',[UserController::class, 'profile'])->name('user.profile');
 Route::get('password', [UserController::class, 'password'])->name('user.password');
 
@@ -222,7 +223,6 @@ Route::group(['prefix' => 'masters'], function () {
 
     // Route::get('subroles/{id}', [RoleController::class, 'subroles'])->name('app.settings.subroles');
 
-
 });
 
 Route::group(['prefix' => 'ata'], function () {
@@ -256,4 +256,16 @@ Route::group(['prefix' => 'tbo'], function () {
     Route::post('status', [TboController::class, 'status'])->name('user.tbo.status');
     Route::get('destroy/{id}', [TboController::class, 'destroy'])->name('user.tbo.destroy');
 
+});
+Route::group(['prefix' => 'adt'], function () {
+    Route::get('staff', [AdtController::class, 'index'])->name('user.adt.staff');
+    Route::post('staff/list', [AdtController::class, 'list'])->name('user.adt.staff.list');
+    Route::get('report', [AdtController::class, 'report'])->name('user.adt.report');
+    Route::post('report/list', [AdtController::class, 'reportList'])->name('user.adt.report.list');
+    Route::get('report/download/staff/list/{id}/1', [AdtController::class, 'downloadStaffList'])->name('user.adt.staff.download');
+    Route::get('report/download/test/list/{id}', [AdtController::class, 'downloadTestList'])->name('user.adt.test.download');
+    Route::post('report/upload', [AdtController::class, 'upload'])->name('user.adt.report.upload');
+    Route::get('report/generate', [AdtController::class, 'generate'])->name('user.adt.report.generate');
+    Route::post('report/store', [AdtController::class, 'generateReport'])->name('user.adt.report.store');
+    Route::post('report/all/list', [AdtController::class, 'reportAllList'])->name('user.adt.report.all.list');
 });

@@ -6,16 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\AirCraft;
 use App\Models\FlyingLog;
 use App\Models\AaiReport;
-use App\Models\PilotFlyingLog;
-use App\Models\ExternalFlyingLog;
 use App\Models\User;
 use App\Models\Master;
-use App\Models\PilotViolation;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-use App\Models\FlightDocAssign;
-use App\Models\PilotLog;
-use Carbon\Carbon;
 class AaiController extends Controller
 {
     public function flyingLogs()
@@ -26,14 +19,9 @@ class AaiController extends Controller
         $pilot_roles = Master::where('type', 'pilot_role')->where('status', 'active')->get();
         $passengers = Master::where('type', 'passenger')->where('status', 'active')->get();
         $pilot_role = Master::where('type', 'pilot_role')->where('status', 'active')->get();
-        if(getUserType()=='admin')
-        {
-            return view('aai_reports.flying-logs', compact('pilots', 'aircrafts','flying_types','pilot_roles','passengers'));
-        }else{
-            return view('theme-one.flying_logs.index', compact('pilots', 'aircrafts','flying_types','pilot_roles','passengers','pilot_role'));
-
-        }
-
+        
+        return view('aai_reports.flying-logs', compact('pilots', 'aircrafts','flying_types','pilot_roles','passengers'));
+        
     }
 
     public function flyingLogList(Request $request)

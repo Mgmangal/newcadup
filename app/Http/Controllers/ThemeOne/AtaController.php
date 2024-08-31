@@ -5,9 +5,6 @@ namespace App\Http\Controllers\ThemeOne;
 
 use App\Models\Ata;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
@@ -15,8 +12,7 @@ class AtaController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['permission:ATA Add|ATA Edit|ATA Delete|ATA View']);
-        $this->middleware(['permission:ATA Category Add|ATA Category Edit|ATA Category Delete|ATA Category View']);
+        
     }
     public function category()
     {

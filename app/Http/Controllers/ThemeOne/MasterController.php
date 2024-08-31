@@ -14,7 +14,6 @@ class MasterController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['permission:Aircraft Type Add|Aircraft Type Edit|Aircraft Type Delete|Aircraft Type View|AMP Add|AMP Edit|AMP Delete|AMP View|Role Add|Role Edit|Role Delete|Role View|Department Add|Department Edit|Department Delete|Department View|Designation Add|Designation Edit|Designation Delete|Designation View|Job Function Add|Job Function Edit|Job Function Delete|Job Function View|Section Add|Section Edit|Section Delete|Section View']);
 
     }
 
@@ -415,6 +414,7 @@ class MasterController extends Controller
                 $master = new Master();
                 $master->name = $name;
                 $master->type = 'designation';
+                $master->status = 'active';
                 $master->save();
             }
             return response()->json([
@@ -528,6 +528,7 @@ class MasterController extends Controller
                 $master->name = $name;
                 $master->type = 'job_function';
                 $master->parent_id = $section_id;
+                $master->status='active';
                 $master->save();
             }
             return response()->json([
@@ -642,6 +643,7 @@ class MasterController extends Controller
                 $master->name = $name;
                 $master->type = 'section';
                 $master->parent_id = $department_id;
+                $master->status='active';
                 $master->save();
             }
             return response()->json([
@@ -860,8 +862,6 @@ class MasterController extends Controller
             'message' => 'Permissions Updated Successfully'
         ]);
     }
-
-
 
 
 

@@ -68,7 +68,7 @@ Route::get('/sectors/autocomplete', [HomeController::class, 'getSector'])->name(
 
 Route::post('change/timezone', [HomeController::class,'changeTimezone'])->name('home.change_timezone');
 
-Route::group(['prefix'=>'admin', 'middleware' => ['auth', 'verified','timezone']], function () {
+Route::group(['prefix'=>'admin', 'middleware' => ['auth','role:admin','verified','timezone']], function () {
     Route::get('/dashboard', function () {
         return view('app.dashboard');
     })->name('admin.dashboard');
@@ -101,6 +101,7 @@ Route::group(['prefix'=>'admin', 'middleware' => ['auth', 'verified','timezone']
         Route::post('/get-job-function', [UserController::class, 'getJobFunction'])->name('app.users.getJobFunction');
         Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
         Route::get('/licenses/{id}', [UserController::class, 'licenses'])->name('app.users.licenses');
+        Route::post('/licenses/{id}/store', [UserController::class,'licensesStore'])->name('app.users.licenses.store');
 
         Route::put('/profile/update', [UserController::class, 'profileUpdate'])->name('user.profile.update');
 
@@ -108,7 +109,6 @@ Route::group(['prefix'=>'admin', 'middleware' => ['auth', 'verified','timezone']
         Route::put('/password/update', [UserController::class, 'passwordUpdate'])->name('user.password.update');
 
         Route::post('get-user-by-section', [UserController::class,'getUserBySection'])->name('user.getUserBySection');
-
     });
 
     Route::group(['prefix' => 'pilot'], function () {
@@ -596,6 +596,6 @@ Route::group(['prefix'=>'admin', 'middleware' => ['auth', 'verified','timezone']
 
 
 
-Route::group(['prefix' => 'user','middleware' => ['auth','timezone']], function () {
+Route::group(['prefix' => 'user','middleware' => ['auth','role:user','timezone']], function () {
     require __DIR__ . '/user.php';
 });

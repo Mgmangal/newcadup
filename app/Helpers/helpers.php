@@ -1,6 +1,5 @@
 <?php
 
-// use App\Models\Role;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Leave;
@@ -21,6 +20,7 @@ use App\Models\PilotQualification;
 use Illuminate\Support\Facades\DB;
 use App\Models\PilotGroundTraining;
 use App\Models\ReceiptBillFlyingLog;
+use App\Models\UserCertificate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Artisan;
 if(!function_exists('clearCache'))
@@ -56,6 +56,7 @@ if(!function_exists('getUserType'))
         return $user;
     }
 }
+
 if(!function_exists('getMasterType'))
 {
     function getMasterType($type)
@@ -64,6 +65,7 @@ if(!function_exists('getMasterType'))
         return $master;
     }
 }
+
 if(!function_exists('getEmpId'))
 {
     function getEmpId($user_id)
@@ -72,6 +74,7 @@ if(!function_exists('getEmpId'))
         return !empty($user)?$user->emp_id:'';
     }
 }
+
 if(!function_exists('getEmpName'))
 {
     function getEmpName($user_id)
@@ -80,6 +83,7 @@ if(!function_exists('getEmpName'))
         return !empty($user)?$user->name:'';
     }
 }
+
 if(!function_exists('getAirCraft'))
 {
     function getAirCraft($user_id)
@@ -88,6 +92,7 @@ if(!function_exists('getAirCraft'))
         return !empty($user)?$user:'';
     }
 }
+
 if(!function_exists('getEmpFullName'))
 {
     function getEmpFullName($user_id)
@@ -96,6 +101,7 @@ if(!function_exists('getEmpFullName'))
         return !empty($user)?($user->salutation.' '.$user->name):'';
     }
 }
+
 if(!function_exists('changeSpaceInUnderscore'))
 {
     function changeSpaceInUnderscore($value)
@@ -110,6 +116,7 @@ if(!function_exists('changeSpaceInUnderscore'))
         return strtolower($string);
     }
 }
+
 if(!function_exists('getMasterName'))
 {
     function getMasterName($id)
@@ -118,6 +125,7 @@ if(!function_exists('getMasterName'))
         return !empty($data)?$data->name:'';
     }
 }
+
 if(!function_exists('getMaster'))
 {
     function getMaster($id)
@@ -126,6 +134,7 @@ if(!function_exists('getMaster'))
         return !empty($data)?$data:'';
     }
 }
+
 if (!function_exists('getStateName')) {
     function getStateName($id)
     {
@@ -140,6 +149,7 @@ if (!function_exists('is_setting')) {
         return Setting::select($field)->first()->toArray()[$field];
     }
 }
+
 if (!function_exists('minutes')) {
     function minutes($time){
         $time = explode(':', $time);
@@ -617,6 +627,53 @@ if (!function_exists('get_Break')) {
     }
 }
 
+if(!function_exists('checkUserCertificate')){
+    function checkUserCertificate($user_id, $certificate_id,$type)
+    {
+        $result='';
+        if($type=='training'){
+            $result = PilotTraining::where('user_id', $user_id)->where('training_id', $certificate_id)->orderBy('id', 'desc')->first();
+        }
+        if($type=='ground_training'){
+            $result = PilotGroundTraining::where('user_id', $user_id)->where('training_id', $certificate_id)->orderBy('id', 'desc')->first();
+        }
+        if($type=='medical'){
+            $result = PilotMedical::where('user_id', $user_id)->where('medical_id', $certificate_id)->orderBy('id', 'desc')->first();
+        }
+        if($type=='license'){
+            $result=PilotLicense::where('user_id', $user_id)->where('license_id', $certificate_id)->orderBy('id', 'desc')->first();
+        }
+        return $result;
+    }
+}
+
+if(!function_exists('checkUserLapsedCertificate'))
+{
+    function checkUserLapsedCertificate($user_id,$type,$currentDate = null)
+    {
+        $ids=getCetificateIds($user_id,$type);
+        $currentDate = empty($currentDate) ? date('Y-m-d') : $currentDate;
+        $result = '<span class="btn btn-sm btn-success">Valid</span>';
+        foreach ($ids as $value) {
+            $check =UserCertificate::where('user_id',$user_id)->where('master_id',$value)->first('is_mandatory');
+            if (!empty($check) && $check->is_mandatory=='yes'){
+                $data = Master::find($value);
+                if ($data && $check->is_lifetime != 'yes') {
+                    $licenseData = checkUserCertificate($user_id, $value,$type);
+                    if(empty($licenseData))
+                    {
+                        return '<span class="btn btn-sm btn-danger">Lapsed</span>';
+                    }
+                    elseif ((!empty($licenseData->next_due)&&!empty($currentDate)&& strtotime($licenseData->next_due) < strtotime($currentDate))) {
+                        return '<span class="btn btn-sm btn-danger">Lapsed</span>';
+                    }
+                }
+            }
+        }
+        return $result;
+    }
+}
+
 if (!function_exists('checkLicense')) {
     function checkLicense($user_id, $license_id)
     {
@@ -713,15 +770,12 @@ if (!function_exists('checkCrewLicenses')) {
     {
         $currentDate = empty($currentDate) ? date('Y-m-d') : $currentDate;
         $result = '<span class="btn btn-sm btn-success">Valid</span>';
-
         foreach ($ids as $value) {
-            $check = MasterAssign::whereIn('certificate_id', [$value])->pluck('is_mendatory')->toArray();
-
-            if (!empty($check) && in_array('yes', $check)) {
+            $check =UserCertificate::where('user_id',$user_id)->where('master_id',$value)->first('is_mandatory');
+            if (!empty($check) && $check->is_mandatory=='yes'){
                 $data = Master::find($value);
-
-                if ($data && $data->more_data != 'lifetime') {
-                    $licenseData = checkLicense($user_id, $value);
+                if ($data && $check->is_lifetime != 'yes') {
+                    $licenseData = checkUserCertificate($user_id, $value,'license');
                     if(empty($licenseData))
                     {
                         return '<span class="btn btn-sm btn-danger">Lapsed</span>';
@@ -741,24 +795,18 @@ if (!function_exists('checkCrewTrainings')) {
     {
         $currentDate = empty($currentDate) ? date('Y-m-d') : $currentDate;
         $result = '<span class="btn btn-sm btn-success">Valid</span>';
-
         foreach ($ids as $value) {
-            $check = MasterAssign::whereIn('certificate_id', [$value])->pluck('is_mendatory')->toArray();
-
-            if (!empty($check) && in_array('yes', $check)) {
+            $check =UserCertificate::where('user_id',$user_id)->where('master_id',$value)->first('is_mandatory');
+            if (!empty($check) && $check->is_mandatory=='yes') {
                 $data = Master::find($value);
-
-                if (!empty($data) && $data->more_data != 'lifetime') {
-                    $trainingData = checkTraining($user_id, $value);
-
+                if (!empty($data) &&  $check->is_lifetime != 'yes') {
+                    $trainingData = checkUserCertificate($user_id, $value,'training');
                     if (empty($trainingData) || strtotime($trainingData->next_due) < strtotime($currentDate)) {
-                        //return $data->id;
                          return '<span class="btn btn-sm btn-danger">Lapsed</span>';
                     }
                 }
             }
         }
-
         return $result;
     }
 }
@@ -769,11 +817,11 @@ if (!function_exists('checkCrewMedicals')) {
         $currentDate = empty($currentDate) ? date('Y-m-d') : $currentDate;
         $result = '<span class="btn btn-sm btn-success">Valid</span>';
         foreach ($ids as $value) {
-            $check = MasterAssign::whereIn('certificate_id', [$value])->pluck('is_mendatory')->toArray();
-            if (!empty($check) && in_array('yes', $check)) {
+             $check =UserCertificate::where('user_id',$user_id)->where('master_id',$value)->first('is_mandatory');
+            if (!empty($check) && $check->is_mandatory=='yes') {
                 $data = Master::find($value);
-                if ($data && $data->more_data != 'lifetime') {
-                    $medicalData = checkMedical($user_id, $value);
+                if ($data && $check->is_mandatory=='yes') {
+                    $medicalData = checkUserCertificate($user_id, $value,'medical');
                     if (empty($medicalData) || strtotime($medicalData->next_due) < strtotime($currentDate)) {
                         return '<span class="btn btn-sm btn-danger">Lapsed</span>';
                     }
@@ -784,6 +832,8 @@ if (!function_exists('checkCrewMedicals')) {
     }
 
 }
+
+
 
 if (!function_exists('checkCrewLeaveStatus')) {
     function checkCrewLeaveStatus($user_id, $date)
@@ -799,63 +849,46 @@ if (!function_exists('checkCrewLeaveStatus')) {
 if (!function_exists('getCetificateIds')) {
     function getCetificateIds($user_id, $type)
     {
-        $user = User::find($user_id);
-        $designation[] = $user->designation ?? '0';
-        $section = $user->section ?? [];
-        $jobfunction = $user->jobfunction ?? [];
-        $a = AirCraft::whereJsonContains('pilots', $user_id)->pluck('id')->toArray();
-        $d = array_merge($designation, $section, $jobfunction);
-        $license1 = MasterAssign::whereIn('master_id', $d)->where('is_for', 'user')->pluck('certificate_id')->toArray();
-        $license2 = MasterAssign::whereIn('master_id', $a)->where('is_for', 'aircraft')->pluck('certificate_id')->toArray();
-        $license = array_merge($license1, $license2);
-
-        $licenses = Master::whereIn('id', $license)->where('type', 'certificate')->where('sub_type', 'license')->pluck('id');
-        $trainings = Master::whereIn('id', $license)->where('type', 'certificate')->where('sub_type', 'training')->pluck('id');
-        $medicals = Master::whereIn('id', $license)->where('type', 'certificate')->where('sub_type', 'medical')->pluck('id');
-        if ($type == 'license') {
-            return $licenses;
-        }
-        if ($type == 'training') {
-            return $trainings;
-        }
-        if ($type == 'medical') {
-            return $medicals;
-        }
+        $licenses = UserCertificate::where('user_id',$user_id)->where('certificate_type',$type)->pluck('master_id');
+        return $licenses;
     }
 }
 
-function getLastSixMonth($user_id, $role)
-{
-    $date = date('Y-m-d', strtotime('-6 months'));
-    $data = FlyingLog::where(function ($q) use ($user_id, $role) {
-        $q->where('pilot1_id', $user_id)->where('pilot1_role', $role)->orWhere('pilot2_id', $user_id)->where('pilot2_role', $role);
-    })->where('date', '<=', $date)->orderBy('id', 'desc')->get();
-    $times = [];
-    foreach ($data as $k => $data) {
-        $date_start = $data->departure_time;
-        $date_end = $data->arrival_time;
-        $times[] = is_time_defrence($date_start, $date_end);
+if (!function_exists('getLastSixMonth')) {
+    function getLastSixMonth($user_id, $role)
+    {
+        $date = date('Y-m-d', strtotime('-6 months'));
+        $data = FlyingLog::where(function ($q) use ($user_id, $role) {
+            $q->where('pilot1_id', $user_id)->where('pilot1_role', $role)->orWhere('pilot2_id', $user_id)->where('pilot2_role', $role);
+        })->where('date', '<=', $date)->orderBy('id', 'desc')->get();
+        $times = [];
+        foreach ($data as $k => $data) {
+            $date_start = $data->departure_time;
+            $date_end = $data->arrival_time;
+            $times[] = is_time_defrence($date_start, $date_end);
+        }
+        $totalTime = AddPlayTime($times);
+        return $totalTime;
     }
-    $totalTime = AddPlayTime($times);
-    return $totalTime;
 }
 
-function getLast30Days($user_id, $role)
-{
-    $date = date('Y-m-d', strtotime('-30 days'));
-    $data = FlyingLog::where(function ($q) use ($user_id, $role) {
-        $q->where('pilot1_id', $user_id)->where('pilot1_role', $role)->orWhere('pilot2_id', $user_id)->where('pilot2_role', $role);
-    })->where('date', '<=', $date)->orderBy('id', 'desc')->get();
-    $times = [];
-    foreach ($data as $k => $data) {
-        $date_start = $data->departure_time;
-        $date_end = $data->arrival_time;
-        $times[] = is_time_defrence($date_start, $date_end);
+if (!function_exists('getLast30Days')) {
+    function getLast30Days($user_id, $role)
+    {
+        $date = date('Y-m-d', strtotime('-30 days'));
+        $data = FlyingLog::where(function ($q) use ($user_id, $role) {
+            $q->where('pilot1_id', $user_id)->where('pilot1_role', $role)->orWhere('pilot2_id', $user_id)->where('pilot2_role', $role);
+        })->where('date', '<=', $date)->orderBy('id', 'desc')->get();
+        $times = [];
+        foreach ($data as $k => $data) {
+            $date_start = $data->departure_time;
+            $date_end = $data->arrival_time;
+            $times[] = is_time_defrence($date_start, $date_end);
+        }
+        $totalTime = AddPlayTime($times);
+        return $totalTime;
     }
-    $totalTime = AddPlayTime($times);
-    return $totalTime;
 }
-
 if (!function_exists('get_month_list')) {
     function get_month_list($from_date, $to_date)
     {
@@ -973,216 +1006,234 @@ if (!function_exists('get_call_Sign')) {
     }
 }
 
+if (!function_exists('getPilotRoleHours')) {
+    function getPilotRoleHours($from, $to, $user_id, $role)
+    {
 
-function getPilotRoleHours($from, $to, $user_id, $role)
-{
+        $data = FlyingLog::where(function ($q) use ($user_id, $role) {
+            $q->where('pilot1_id', $user_id)->where('pilot1_role', $role)->orWhere('pilot2_id', $user_id)->where('pilot2_role', $role);
+        })->whereBetween('date', [$from, $to])->orderBy('id', 'desc')->get();
 
-    $data = FlyingLog::where(function ($q) use ($user_id, $role) {
-        $q->where('pilot1_id', $user_id)->where('pilot1_role', $role)->orWhere('pilot2_id', $user_id)->where('pilot2_role', $role);
-    })->whereBetween('date', [$from, $to])->orderBy('id', 'desc')->get();
-
-    $times = [];
-    foreach ($data as $datas) {
-        $date_start = $datas->departure_time;
-        $date_end = $datas->arrival_time;
-        $times[] = is_time_defrence($date_start, $date_end);
+        $times = [];
+        foreach ($data as $datas) {
+            $date_start = $datas->departure_time;
+            $date_end = $datas->arrival_time;
+            $times[] = is_time_defrence($date_start, $date_end);
+        }
+        $totalTime = AddPlayTime($times);
+        return $totalTime;
     }
-    $totalTime = AddPlayTime($times);
-    return $totalTime;
 }
 
-function PilotsAircraftWiseFlyingSummary($user_id,$role,$aircraft,$from,$to)
-{
-    if($role=='579')
-    {  //p2
-        // $data = FlyingLog::where(function ($q) use ($user_id, $role) {
-        //     $q->where('pilot1_id', $user_id)->where('pilot1_role', $role)->orWhere('pilot2_id', $user_id)->where('pilot2_role', $role);
-        // })->where('aircraft_id',$aircroft)->whereBetween('date', [$from, $to])->orderBy('id', 'desc')->get();
+if (!function_exists('PilotsAircraftWiseFlyingSummary')) {
+    function PilotsAircraftWiseFlyingSummary($user_id,$role,$aircraft,$from,$to)
+    {
+        if($role=='579')
+        {  //p2
+            // $data = FlyingLog::where(function ($q) use ($user_id, $role) {
+            //     $q->where('pilot1_id', $user_id)->where('pilot1_role', $role)->orWhere('pilot2_id', $user_id)->where('pilot2_role', $role);
+            // })->where('aircraft_id',$aircroft)->whereBetween('date', [$from, $to])->orderBy('id', 'desc')->get();
 
-        $data = FlyingLog::where(function ($q) use ($user_id, $role) {
-            $q->where(function ($q1) use ($user_id, $role) {
-                    $q1->where('pilot1_id', $user_id)
-                       ->where('pilot1_role', $role);
-                })
-                ->orWhere(function ($q2) use ($user_id, $role) {
-                    $q2->where('pilot2_id', $user_id)
-                       ->where('pilot2_role', $role);
-                });
-        })
-        ->where('aircraft_id', $aircraft)
-        ->whereBetween('date', [$from, $to])
-        ->orderBy('id', 'desc')
-        ->get();
-
-    }else{
-         //p1 pilot1_id && pilot1_role='578','580', '581', '582' || pilot2_id && pilot2_role='578','580', '581', '582'
-
-        // $data = FlyingLog::where(function ($q) use ($user_id, $role) {
-        //     $q->where('pilot1_id', $user_id)->where('pilot1_role', $role)->orWhere('pilot2_id', $user_id)->where(function($q) use($role){
-        //         $q->where('pilot2_role', $role)->orWhere('pilot2_role','580')->orWhere('pilot2_role','581')->orWhere('pilot2_role', '582')->orWhere('pilot2_role', '583');
-        //     });
-        // })->where('aircraft_id',$aircroft)->whereBetween('date', [$from, $to])->orderBy('id', 'desc')->get();
-
-        $data = FlyingLog::where(function ($q) use ($user_id, $role) {
-            $q->where(function ($q) use ($user_id, $role) {
-                $q->where('pilot1_id', $user_id)
-                  ->whereIn('pilot1_role', ['578', '580', '581', '582']);
+            $data = FlyingLog::where(function ($q) use ($user_id, $role) {
+                $q->where(function ($q1) use ($user_id, $role) {
+                        $q1->where('pilot1_id', $user_id)
+                        ->where('pilot1_role', $role);
+                    })
+                    ->orWhere(function ($q2) use ($user_id, $role) {
+                        $q2->where('pilot2_id', $user_id)
+                        ->where('pilot2_role', $role);
+                    });
             })
-            ->orWhere(function ($q) use ($user_id, $role) {
-                $q->where('pilot2_id', $user_id)
-                  ->where(function ($q) use ($role) {
-                      $q->where('pilot2_role', $role)
-                        ->orWhereIn('pilot2_role', ['578', '580', '581', '582']);
-                  });
-            });
-        })
-        ->where('aircraft_id', $aircraft)
-        ->whereBetween('date', [$from, $to])
-        ->orderBy('id', 'desc')
-        ->get();
+            ->where('aircraft_id', $aircraft)
+            ->whereBetween('date', [$from, $to])
+            ->orderBy('id', 'desc')
+            ->get();
 
-    }
-    $times = [];
-    foreach ($data as $k => $data) {
-        $date_start = $data->departure_time;
-        $date_end = $data->arrival_time;
-        $times[] = is_time_defrence($date_start, $date_end);
-    }
+        }else{
+            //p1 pilot1_id && pilot1_role='578','580', '581', '582' || pilot2_id && pilot2_role='578','580', '581', '582'
 
-    $totalTime = AddPlayTime($times);
-    return $totalTime;
+            // $data = FlyingLog::where(function ($q) use ($user_id, $role) {
+            //     $q->where('pilot1_id', $user_id)->where('pilot1_role', $role)->orWhere('pilot2_id', $user_id)->where(function($q) use($role){
+            //         $q->where('pilot2_role', $role)->orWhere('pilot2_role','580')->orWhere('pilot2_role','581')->orWhere('pilot2_role', '582')->orWhere('pilot2_role', '583');
+            //     });
+            // })->where('aircraft_id',$aircroft)->whereBetween('date', [$from, $to])->orderBy('id', 'desc')->get();
+
+            $data = FlyingLog::where(function ($q) use ($user_id, $role) {
+                $q->where(function ($q) use ($user_id, $role) {
+                    $q->where('pilot1_id', $user_id)
+                    ->whereIn('pilot1_role', ['578', '580', '581', '582']);
+                })
+                ->orWhere(function ($q) use ($user_id, $role) {
+                    $q->where('pilot2_id', $user_id)
+                    ->where(function ($q) use ($role) {
+                        $q->where('pilot2_role', $role)
+                            ->orWhereIn('pilot2_role', ['578', '580', '581', '582']);
+                    });
+                });
+            })
+            ->where('aircraft_id', $aircraft)
+            ->whereBetween('date', [$from, $to])
+            ->orderBy('id', 'desc')
+            ->get();
+
+        }
+        $times = [];
+        foreach ($data as $k => $data) {
+            $date_start = $data->departure_time;
+            $date_end = $data->arrival_time;
+            $times[] = is_time_defrence($date_start, $date_end);
+        }
+
+        $totalTime = AddPlayTime($times);
+        return $totalTime;
+    }
 }
 
-function getBlockTimePilotDateWise($user_id,$date)
-{
-    $data = FlyingLog::where(function ($q) use ($user_id) {
-            $q->where('pilot1_id', $user_id)->where(function($q){
-                $q->where('pilot1_role', '578')->orWhere('pilot1_role','580')->orWhere('pilot1_role','581')->orWhere('pilot1_role', '582')->orWhere('pilot1_role', '583');
-            })->orWhere('pilot2_id', $user_id)->where(function($q){
-                $q->where('pilot2_role', '578')->orWhere('pilot2_role','580')->orWhere('pilot2_role','581')->orWhere('pilot2_role', '582')->orWhere('pilot2_role', '583');
-            });
-        })->where('date', $date)->orderBy('id', 'desc')->get();
-    $times = [];
-    foreach ($data as $k => $data) {
-        $date_start = $data->departure_time;
-        $date_end = $data->arrival_time;
-        $times[] = is_time_defrence($date_start, $date_end);
+if (!function_exists('getBlockTimePilotDateWise')) {
+    function getBlockTimePilotDateWise($user_id,$date)
+    {
+        $data = FlyingLog::where(function ($q) use ($user_id) {
+                $q->where('pilot1_id', $user_id)->where(function($q){
+                    $q->where('pilot1_role', '578')->orWhere('pilot1_role','580')->orWhere('pilot1_role','581')->orWhere('pilot1_role', '582')->orWhere('pilot1_role', '583');
+                })->orWhere('pilot2_id', $user_id)->where(function($q){
+                    $q->where('pilot2_role', '578')->orWhere('pilot2_role','580')->orWhere('pilot2_role','581')->orWhere('pilot2_role', '582')->orWhere('pilot2_role', '583');
+                });
+            })->where('date', $date)->orderBy('id', 'desc')->get();
+        $times = [];
+        foreach ($data as $k => $data) {
+            $date_start = $data->departure_time;
+            $date_end = $data->arrival_time;
+            $times[] = is_time_defrence($date_start, $date_end);
+        }
+
+        $totalTime = AddPlayTime($times);
+        return $totalTime;
     }
-
-    $totalTime = AddPlayTime($times);
-    return $totalTime;
 }
 
-function getRequiredBlockTimePilotDateWise($user_id,$from,$to)
-{
-    $data = FlyingLog::where(function ($q) use ($user_id) {
-            $q->where('pilot1_id', $user_id)->where(function($q){
-                $q->where('pilot1_role', '578')->orWhere('pilot1_role','580')->orWhere('pilot1_role','581')->orWhere('pilot1_role', '582')->orWhere('pilot1_role', '583');
-            })->orWhere('pilot2_id', $user_id)->where(function($q){
-                $q->where('pilot2_role', '578')->orWhere('pilot2_role','580')->orWhere('pilot2_role','581')->orWhere('pilot2_role', '582')->orWhere('pilot2_role', '583');
-            });
-        })->whereBetween('date', [$from, $to])->orderBy('id', 'desc')->get();
-    $times = [];
-    foreach ($data as $k => $data) {
-        $date_start = $data->departure_time;
-        $date_end = $data->arrival_time;
-        $times[] = is_time_defrence($date_start, $date_end);
+if (!function_exists('getRequiredBlockTimePilotDateWise')) {
+    function getRequiredBlockTimePilotDateWise($user_id,$from,$to)
+    {
+        $data = FlyingLog::where(function ($q) use ($user_id) {
+                $q->where('pilot1_id', $user_id)->where(function($q){
+                    $q->where('pilot1_role', '578')->orWhere('pilot1_role','580')->orWhere('pilot1_role','581')->orWhere('pilot1_role', '582')->orWhere('pilot1_role', '583');
+                })->orWhere('pilot2_id', $user_id)->where(function($q){
+                    $q->where('pilot2_role', '578')->orWhere('pilot2_role','580')->orWhere('pilot2_role','581')->orWhere('pilot2_role', '582')->orWhere('pilot2_role', '583');
+                });
+            })->whereBetween('date', [$from, $to])->orderBy('id', 'desc')->get();
+        $times = [];
+        foreach ($data as $k => $data) {
+            $date_start = $data->departure_time;
+            $date_end = $data->arrival_time;
+            $times[] = is_time_defrence($date_start, $date_end);
+        }
+        //print_r($times);
+        $totalTime = AddPlayTime($times);
+        return $totalTime;
     }
-    //print_r($times);
-    $totalTime = AddPlayTime($times);
-    return $totalTime;
 }
 
+if (!function_exists('getVipRecencyLast30Days')) {
+    function getVipRecencyLast30Days($user_id, $date)
+    {
+        $role = '578';
+        $dateto = date('Y-m-d', strtotime($date));
+        $dateLimit = date('Y-m-d', strtotime('-30 days', strtotime($dateto)));
 
-function getVipRecencyLast30Days($user_id, $date)
-{
-    $role = '578';
-    $dateto = date('Y-m-d', strtotime($date));
-    $dateLimit = date('Y-m-d', strtotime('-30 days', strtotime($dateto)));
+        $data = FlyingLog::where('pilot1_id', $user_id)
+            ->where('pilot1_role', $role)
+            ->whereBetween('date', [$dateLimit, $dateto])
+            ->orderBy('id', 'desc')
+            ->get();
 
-    $data = FlyingLog::where('pilot1_id', $user_id)
-        ->where('pilot1_role', $role)
-        ->whereBetween('date', [$dateLimit, $dateto])
-        ->orderBy('id', 'desc')
-        ->get();
+        $dateWiseTimes = [];
 
-    $dateWiseTimes = [];
+        foreach ($data as $log) {
+            $flightTimeInSeconds = is_time_defrence($log->departure_time, $log->arrival_time);
+            // Perform any necessary error handling or validation here
+            $dateWiseTimes[$log->date][$log->pilot1_id] = $flightTimeInSeconds;
+        }
 
-    foreach ($data as $log) {
-        $flightTimeInSeconds = is_time_defrence($log->departure_time, $log->arrival_time);
-        // Perform any necessary error handling or validation here
-        $dateWiseTimes[$log->date][$log->pilot1_id] = $flightTimeInSeconds;
+        return $dateWiseTimes;
     }
-
-    return $dateWiseTimes;
 }
 
-function getPilotFlyingLog($user_id,$date)
-{
-   return PilotFlyingLog::where('user_id', $user_id)->orderBy('arrival_time', 'desc')->first();
-}
-
-function getPilotLog($user_id,$date)
-{
-   return DB::table('pilot_logs')->select('*')->where('user_id',$user_id)->where('arrival_time','<=',date('Y-m-d H:i',strtotime($date)))->orderBy('arrival_time', 'desc')->first();
-}
-
-function getPoiletSameDayFirstEntry($user_id,$data)
-{
-   return FlyingLog::where(function ($q) use ($user_id) {
-            $q->where('pilot1_id', $user_id)->orWhere('pilot2_id', $user_id);
-        })->whereDate('date', date('Y-m-d',strtotime($data)))->first();
-}
-
-function checkFDTLViolation($user_id,$from,$to)
-{
-    $data = FlyingLog::where(function ($q) use ($user_id) {
-            $q->where('pilot1_id', $user_id)->where(function($q){
-                $q->where('pilot1_role', '578')->orWhere('pilot1_role','580')->orWhere('pilot1_role','581')->orWhere('pilot1_role', '582')->orWhere('pilot1_role', '583');
-            })->orWhere('pilot2_id', $user_id)->where(function($q){
-                $q->where('pilot2_role', '578')->orWhere('pilot2_role','580')->orWhere('pilot2_role','581')->orWhere('pilot2_role', '582')->orWhere('pilot2_role', '583');
-            });
-        })->whereBetween('date', [$from, $to])->orderBy('id', 'desc')->get();
-    $times = [];
-    foreach ($data as $k => $data) {
-        $date_start = $data->departure_time;
-        $date_end = $data->arrival_time;
-        $times[] = is_time_defrence($date_start, $date_end);
+if (!function_exists('getPilotFlyingLog')) {
+    function getPilotFlyingLog($user_id,$date)
+    {
+    return PilotFlyingLog::where('user_id', $user_id)->orderBy('arrival_time', 'desc')->first();
     }
-
-    $totalTime = AddPlayTime($times);
-    return $totalTime;
 }
 
-function calculateNumberOfNights($startDateTime, $endDateTime) {
-    // Convert string date times to DateTime objects
-    $startDate = new DateTime($startDateTime);
-    $endDate = new DateTime($endDateTime);
-
-    // Calculate the interval between the dates
-    $interval = $startDate->diff($endDate);
-
-    // Get the number of days and nights
-    $days = $interval->days;
-    $nights = $days;
-
-    // Adjust days and nights based on day and night hours
-    $dayStart = 8;
-    $dayEnd = 22;
-
-    // Check if the start time is within day hours
-    if ($startDate->format('H') >= $dayStart && $startDate->format('H') < $dayEnd) {
-        $nights--;
+if (!function_exists('getPilotLog')) {
+    function getPilotLog($user_id,$date)
+    {
+    return DB::table('pilot_logs')->select('*')->where('user_id',$user_id)->where('arrival_time','<=',date('Y-m-d H:i',strtotime($date)))->orderBy('arrival_time', 'desc')->first();
     }
+}
 
-    // Check if the end time is within day hours
-    if ($endDate->format('H') >= $dayStart && $endDate->format('H') < $dayEnd) {
-        $nights--;
+if (!function_exists('getPoiletSameDayFirstEntry')) {
+    function getPoiletSameDayFirstEntry($user_id,$data)
+    {
+    return FlyingLog::where(function ($q) use ($user_id) {
+                $q->where('pilot1_id', $user_id)->orWhere('pilot2_id', $user_id);
+            })->whereDate('date', date('Y-m-d',strtotime($data)))->first();
     }
+}
 
-    // Display the result
-    // echo "Days: $days, Nights: $nights";
-    return array('days' => $days, 'nights' => $nights);
+if (!function_exists('checkFDTLViolation')) {
+    function checkFDTLViolation($user_id,$from,$to)
+    {
+        $data = FlyingLog::where(function ($q) use ($user_id) {
+                $q->where('pilot1_id', $user_id)->where(function($q){
+                    $q->where('pilot1_role', '578')->orWhere('pilot1_role','580')->orWhere('pilot1_role','581')->orWhere('pilot1_role', '582')->orWhere('pilot1_role', '583');
+                })->orWhere('pilot2_id', $user_id)->where(function($q){
+                    $q->where('pilot2_role', '578')->orWhere('pilot2_role','580')->orWhere('pilot2_role','581')->orWhere('pilot2_role', '582')->orWhere('pilot2_role', '583');
+                });
+            })->whereBetween('date', [$from, $to])->orderBy('id', 'desc')->get();
+        $times = [];
+        foreach ($data as $k => $data) {
+            $date_start = $data->departure_time;
+            $date_end = $data->arrival_time;
+            $times[] = is_time_defrence($date_start, $date_end);
+        }
+
+        $totalTime = AddPlayTime($times);
+        return $totalTime;
+    }
+}
+
+if (!function_exists('calculateNumberOfNights')) {
+    function calculateNumberOfNights($startDateTime, $endDateTime) {
+        // Convert string date times to DateTime objects
+        $startDate = new DateTime($startDateTime);
+        $endDate = new DateTime($endDateTime);
+
+        // Calculate the interval between the dates
+        $interval = $startDate->diff($endDate);
+
+        // Get the number of days and nights
+        $days = $interval->days;
+        $nights = $days;
+
+        // Adjust days and nights based on day and night hours
+        $dayStart = 8;
+        $dayEnd = 22;
+
+        // Check if the start time is within day hours
+        if ($startDate->format('H') >= $dayStart && $startDate->format('H') < $dayEnd) {
+            $nights--;
+        }
+
+        // Check if the end time is within day hours
+        if ($endDate->format('H') >= $dayStart && $endDate->format('H') < $dayEnd) {
+            $nights--;
+        }
+
+        // Display the result
+        // echo "Days: $days, Nights: $nights";
+        return array('days' => $days, 'nights' => $nights);
+    }
 }
 
 //new create by surendra
