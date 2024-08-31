@@ -9,7 +9,6 @@
   z-index: 99;
 }
 /*CADUP*/
-
 .container {
   max-width: 1200px;
 }
@@ -4938,7 +4937,7 @@ ul.team-group li a:not(.btn) {
   -webkit-border-radius: 8px;
   -moz-border-radius: 8px;
   border-radius: 8px;
-
+	
 }
 .login-screen .login-logo {
   margin: 0px 0 20px 0;
@@ -8151,8 +8150,8 @@ ul.list-unstyled > li:last-child {
   .login-fancy h3 {
     text-align: center;
   }
-
-
+	
+	
 	.login-fancy {
   padding: 2rem 1.5rem;
     padding-bottom: 1rem;
@@ -8165,8 +8164,8 @@ ul.list-unstyled > li:last-child {
     height: auto;
     width: 100%;
 }
-
-
+	
+	
 	.login-fancy h2 {
     color: #484747;
     padding-bottom: 10px;

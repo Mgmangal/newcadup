@@ -109,11 +109,11 @@
 
 
     <x-slot name="js">
-        @php
+        @php 
         $viewData=array();
         $viewDate=array();
         foreach($chartData as $key => $value){
-
+         
             $viewData[] = $value->views;
             $viewDate[] = is_get_date_format($value->date);
         }
@@ -157,9 +157,9 @@
 
             var chart = new ApexCharts(document.querySelector("#chart"), options);
             chart.render();
-
+        
         </script>
-
+        
         <!-- <script src="{{asset('assets/js/demo/dashboard.demo.js')}}" type="text/javascript"></script> -->
     </x-slot>
 </x-app-layout>

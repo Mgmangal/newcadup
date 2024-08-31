@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\ThemeOne;
 use App\Http\Controllers\Controller;
 use App\Models\LoadTrim;
-use App\Models\File;
 use App\Models\AirCraft;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 class LoadTrimController extends Controller
 {

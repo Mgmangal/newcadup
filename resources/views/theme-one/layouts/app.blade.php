@@ -46,8 +46,6 @@
             padding-right: 35px;
             padding-left: 35px;
         }
-    </style>
-    <style>
         .navbar-menu {
             justify-content: center !important;
             max-width: 100%;
@@ -77,7 +75,7 @@
                 <a href="{{route('user.home')}}" class="df-logo">
                 <img src="{{asset('front/img/Erp-Cadup-logo.png')}}" class="w-70" alt="logo">
                 </a>
-                <a id="mainMenuClose" href=""><i data-feather="x"></i></a>
+                <a id="mainMenuClose" href="javascript:void(0);" ><i data-feather="x"></i></a>
             </div><!-- navbar-menu-header -->
             <ul class="nav navbar-menu">
                 <li class="nav-label pd-l-20 pd-lg-l-25 d-lg-none">Main Navigation</li>
@@ -86,134 +84,138 @@
                         Home
                     </a>
                 </li>
+                @canAny(['role-view', 'aircraft-type-view','department-view','designation-view','section-view','job-function-view','amp-view'])
                 <li class="nav-item with-sub">
-                    <a href="" class="nav-link">
+                    <a href="javascript:void(0);" class="nav-link">
                         <i data-feather="layers"></i> Masters
                     </a>
                     <ul class="navbar-menu-sub">
-                        @can('Aircraft Type View')
+                        @can('role-view')
+                            <li class="nav-sub-item">
+                                <a href="{{route('user.master.role')}}" class="nav-sub-link"><i data-feather="loader"></i> Roles</a>
+                            </li>
+                        @endcan
+                        @can('aircraft-type-view')
                         <li class="nav-sub-item">
                             <a href="{{route('user.master.aircraft_type')}}" class="nav-sub-link"><i data-feather="loader"></i> Aircraft Type</a>
                         </li>
                         @endcan
-                        @can('AMP View')
-                        <li class="nav-sub-item">
-                            <a href="{{route('user.master.amp')}}" class="nav-sub-link"><i data-feather="loader"></i> AMP</a>
-                        </li>
-                        @endcan
-                        @can('Department View')
+                        @can('department-view')
                         <li class="nav-sub-item">
                             <a href="{{route('user.master.department')}}" class="nav-sub-link"><i data-feather="loader"></i> Department</a>
                         </li>
                         @endcan
-                        @can('Designation View')
+                        @can('designation-view')
                         <li class="nav-sub-item">
                             <a href="{{route('user.master.designation')}}" class="nav-sub-link"><i data-feather="loader"></i> Designation</a>
                         </li>
                         @endcan
-                        @can('Job Function View')
-                        <li class="nav-sub-item">
-                            <a href="{{route('user.master.job_function')}}" class="nav-sub-link"><i data-feather="loader"></i> Job Function</a>
-                        </li>
-                        @endcan
-                        @can('Role View')
-                        <li class="nav-sub-item">
-                            <a href="{{route('user.master.role')}}" class="nav-sub-link"><i data-feather="loader"></i> Roles</a>
-                        </li>
-                        @endcan
-                        @can('Section View')
+                        @can('section-view')
                         <li class="nav-sub-item">
                             <a href="{{route('user.master.section')}}" class="nav-sub-link"><i data-feather="loader"></i> Section</a>
                         </li>
                         @endcan
-
+                        @can('job-function-view')
+                        <li class="nav-sub-item">
+                            <a href="{{route('user.master.job_function')}}" class="nav-sub-link"><i data-feather="loader"></i> Job Function</a>
+                        </li>
+                        @endcan
+                        @can('amp-view')
+                        <li class="nav-sub-item">
+                            <a href="{{route('user.master.amp')}}" class="nav-sub-link"><i data-feather="loader"></i> AMP</a>
+                        </li>
+                        @endcan
                     </ul>
                 </li>
-                @can('ATA View')
+                @endcanAny
+
+                @canAny(['ata-view','ata-category-view'])
                 <li class="nav-item with-sub">
-                    <a href="" class="nav-link">
+                    <a href="javascript:void(0);" class="nav-link">
                         <i data-feather="layers"></i> ATA
                     </a>
                     <ul class="navbar-menu-sub">
-                        @can('ATA View')
+                        @can('ata-view')
                         <li class="nav-sub-item">
                             <a href="{{route('user.ata')}}" class="nav-sub-link"><i data-feather="archive"></i>ATA</a>
                         </li>
                         @endcan
-                        @can('ATA Category View')
+                        @can('ata-category-view')
                         <li class="nav-sub-item">
                             <a href="{{route('user.ata.category')}}" class="nav-sub-link"><i data-feather="archive"></i>ATA Category</a>
                         </li>
                         @endcan
                     </ul>
                 </li>
-                @endcan
-                {{-- @can('TBO View') --}}
+                @endcanAny
+
+                @can('tbo-view')
                 <li class="nav-item">
                     <a href="{{route('user.tbo')}}" class="nav-link"><i data-feather="archive"></i> TBO</a>
                 </li>
-                {{-- @endcan --}}
-                @can('Flying')
+                @endcan 
+
+                @canAny(['sortie', 'my-sortie', 'flying', 'my-flying', 'fdtl', 'my-fdtl', 'statistic', 'my-statistic', 'voilations', 'my-voilations'])
                 <li class="nav-item with-sub">
-                    <a href="" class="nav-link">
+                    <a href="javascript:void(0);" class="nav-link">
                         <i data-feather="package"></i> Flying
                     </a>
                     <ul class="navbar-menu-sub">
-                        @can('Sortie')
+                        @can('sortie')
                         <li class="nav-sub-item">
                             <a href="{{route('user.flying.shortie')}}" class="nav-sub-link">
                                 <i data-feather="calendar"></i>Sortie</a>
                         </li>
                         @endcan
-                        @can('My Sortie')
+                        @can('my-sortie')
                         <li class="nav-sub-item">
                             <a href="{{route('user.flying.myShortie')}}" class="nav-sub-link">
                                 <i data-feather="calendar"></i>My Sortie</a>
                         </li>
                         @endcan
-                        @can('Flying')
+                        @can('flying')
                         <li class="nav-sub-item">
                             <a href="{{route('user.flying.index')}}" class="nav-sub-link">
                                 <i data-feather="message-square"></i>Flying</a>
                         </li>
                         @endcan
-                        @can('My Flying')
+                        @can('my-flying')
                         <li class="nav-sub-item">
                             <a href="{{route('user.flying.myFlying')}}" class="nav-sub-link">
                                 <i data-feather="message-square"></i>My Flying</a>
                         </li>
                         @endcan
-                        @can('FDTL')
+                        @can('fdtl')
                         <li class="nav-sub-item">
                             <a href="{{route('user.fdtl.index')}}" class="nav-sub-link">
                                 <i data-feather="message-square"></i>FDTL</a>
-                        </li>
+                        </li> 
                         @endcan
-                        @can('My FDTL')
+                        @can('my-fdtl')
                         <li class="nav-sub-item">
                             <a href="{{ route('user.fdtl.myFdtlReport') }}" class="nav-sub-link">
                                 <i data-feather="message-square"></i>My FDTL</a>
                         </li>
                         @endcan
-                        @can('Statistic')
+                        @can('statistic')
                         <li class="nav-sub-item">
                             <a href="{{route('user.flying.statistics')}}" class="nav-sub-link">
                                 <i data-feather="message-square"></i>Statistic</a>
                         </li>
                         @endcan
-                        @can('My Statistic')
+                        @can('my-statistic')
                         <li class="nav-sub-item">
                             <a href="{{route('user.flying.myStatistics')}}" class="nav-sub-link">
                                 <i data-feather="message-square"></i>My Statistic</a>
                         </li>
                         @endcan
-                        @can('Voilations')
+                        @can('voilations')
                         <li class="nav-sub-item">
                             <a href="{{route('user.fdtl.voilations')}}" class="nav-sub-link">
                                 <i data-feather="message-square"></i>Voilations</a>
                         </li>
                         @endcan
-                        @can('My Voilations')
+                        @can('my-voilations')
                         <li class="nav-sub-item">
                             <a href="{{route('user.fdtl.MyVoilations')}}" class="nav-sub-link">
                                 <i data-feather="message-square"></i>My Voilations</a>
@@ -221,32 +223,33 @@
                         @endcan
                     </ul>
                 </li>
-                @endcan
-                @can('SFA List')
+                @endcanAny
+
+                @canAny(['sfa-generate', 'my-sfa-generate', 'sfa-list', 'my-sfa-list'])
                 <li class="nav-item with-sub">
-                    <a href="" class="nav-link">
+                    <a href="javascript:void(0);" class="nav-link">
                         <i data-feather="layers"></i> SFA
                     </a>
                     <ul class="navbar-menu-sub">
-                        @can('SFA Generate')
+                        @can('sfa-generate')
                         <li class="nav-sub-item">
                             <a href="{{route('user.sfa.sfaGenerate')}}" class="nav-sub-link">
                                 <i data-feather="calendar"></i>SFA Generate</a>
                         </li>
                         @endcan
-                        @can('My SFA Generate')
+                        @can('my-sfa-generate')
                         <li class="nav-sub-item">
                             <a href="{{route('user.sfa.mySfaGenerate')}}" class="nav-sub-link">
                                 <i data-feather="calendar"></i>My SFA Generate</a>
                         </li>
                         @endcan
-                        @can('SFA List')
+                        @can('sfa-list')
                         <li class="nav-sub-item">
                             <a href="{{route('user.sfa.sfaList')}}" class="nav-sub-link">
                                 <i data-feather="message-square"></i>SFA List</a>
                         </li>
                         @endcan
-                        @can('My SFA List')
+                        @can('my-sfa-list')
                         <li class="nav-sub-item">
                             <a href="{{route('user.sfa.mySfaList')}}" class="nav-sub-link">
                                 <i data-feather="message-square"></i>My SFA List</a>
@@ -254,14 +257,15 @@
                         @endcan
                     </ul>
                 </li>
-                @endcan
-                @can('Contract')
+                @endcanAny
+
+                @can('contract')
                 <li class="nav-item with-sub">
-                    <a href="" class="nav-link">
+                    <a href="javascript:void(0);" class="nav-link">
                         <i data-feather="layers"></i> Contract
                     </a>
                     <ul class="navbar-menu-sub">
-                        @can('Contract')
+                        @can('contract')
                         <li class="nav-sub-item">
                             <a href="{{route('user.contract')}}" class="nav-sub-link"><i data-feather="archive"></i> Contract</a>
                         </li>
@@ -269,67 +273,68 @@
                     </ul>
                 </li>
                 @endcan
-                @can('Certificate View')
+
+                @canAny(['licence', 'my-licence', 'training', 'my-training', 'medical', 'my-medical', 'qualification', 'my-qualification', 'ground-training', 'my-ground-training'])
                 <li class="nav-item with-sub">
-                    <a href="" class="nav-link">
+                    <a href="javascript:void(0);" class="nav-link">
                         <i data-feather="layers"></i> Certificate
                     </a>
                     <ul class="navbar-menu-sub">
-                        @can('Licence')
+                        @can('licence')
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.licence')}}" class="nav-sub-link">
                                 <i data-feather="shield"></i>Licence</a>
                         </li>
                         @endcan
-                        @can('My Licence')
+                        @can('my-licence')
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.myLicence')}}" class="nav-sub-link">
                                 <i data-feather="shield"></i>My Licence</a>
                         </li>
                         @endcan
-                        @can('Training')
+                        @can('training')
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.trainings')}}" class="nav-sub-link">
                                 <i data-feather="shield"></i>Training</a>
                         </li>
                         @endcan
-                        @can('My Training')
+                        @can('my-training')
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.myTrainings')}}" class="nav-sub-link">
                                 <i data-feather="shield"></i>My Training</a>
                         </li>
                         @endcan
-                        @can('Medical')
+                        @can('medical')
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.medicals')}}" class="nav-sub-link">
                                 <i data-feather="shield"></i>Medical</a>
                         </li>
                         @endcan
-                        @can('My Medical')
+                        @can('my-medical')
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.myMedicals')}}" class="nav-sub-link">
                                 <i data-feather="shield"></i>My Medical</a>
                         </li>
                         @endcan
-                        @can('Qualification')
+                        @can('qualification')
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.qualifications')}}" class="nav-sub-link">
                                 <i data-feather="shield"></i>Qualification</a>
                         </li>
                         @endcan
-                        @can('My Qualification')
+                        @can('my-qualification')
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.myQualifications')}}" class="nav-sub-link">
                                 <i data-feather="shield"></i>My Qualification</a>
                         </li>
                         @endcan
-                        @can('Ground Training')
+                        @can('ground-training')
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.groundTrainings')}}" class="nav-sub-link">
                                 <i data-feather="shield"></i>Ground Training</a>
                         </li>
                         @endcan
-                        @can('My Ground Training')
+                        @can('my-ground-training')
                         <li class="nav-sub-item">
                             <a href="{{route('user.certificate.myGroundTrainings')}}" class="nav-sub-link">
                                 <i data-feather="shield"></i>My Ground Training</a>
@@ -337,11 +342,12 @@
                         @endcan
                     </ul>
                 </li>
-                @endcan
-                @can('Curency View')
+                @endcanAny
+
+                @can('curency-view')
                 <li class="nav-item with-sub">
-                    <a href="" class="nav-link">
-                        <i data-feather="layers"></i> Curency
+                    <a href="javascript:void(0);" class="nav-link">
+                        <i data-feather="layers"></i> Currency
                     </a>
                     <ul class="navbar-menu-sub">
                         <li class="nav-sub-item">
@@ -351,73 +357,74 @@
                     </ul>
                 </li>
                 @endcan
-                @can('Reports View')
+
+                @canAny(['external-flying', 'pilot-flying-hours', 'pilot-ground-training', 'vip-recency', 'flight-statistics', 'pilot-flying-currency', 'sfa-report', 'fdtl-report', 'violations-summary', 'violations-report', 'aai-reports'])
                 <li class="nav-item with-sub">
-                    <a href="" class="nav-link">
+                    <a href="javascript:void(0);" class="nav-link">
                         <i data-feather="layers"></i> Reports
                     </a>
                     <ul class="navbar-menu-sub">
-                        @can('External Flying')
+                        @can('external-flying')
                         <li class="nav-sub-item">
                             <a href="{{ route('user.reports.externalFlying') }}" class="nav-sub-link">
                                 <i data-feather="file-text"></i>External Flying</a>
                         </li>
                         @endcan
-                        @can('Pilot Flying Hours')
+                        @can('pilot-flying-hours')
                         <li class="nav-sub-item">
                             <a href="{{ route('user.reports.pilotFlyingHours') }}" class="nav-sub-link">
                                 <i data-feather="file-text"></i>Pilot Flying Hours</a>
                         </li>
                         @endcan
-                        @can('Pilot Ground Training')
+                        @can('pilot-ground-training')
                         <li class="nav-sub-item">
                             <a href="{{ route('user.reports.pilotGroundTraining') }}" class="nav-sub-link">
                                 <i data-feather="file-text"></i>Pilot Ground Training</a>
                         </li>
                         @endcan
-                        @can('VIP Recency')
+                        @can('vip-recency')
                         <li class="nav-sub-item">
                             <a href="{{ route('user.reports.vipRecency') }}" class="nav-sub-link">
                                 <i data-feather="file-text"></i>VIP Recency</a>
                         </li>
                         @endcan
-                        @can('Flight Statistics')
+                        @can('flight-statistics')
                         <li class="nav-sub-item">
                             <a href="{{ route('user.flying.statistics') }}" class="nav-sub-link">
                                 <i data-feather="file-text"></i>Flight Statistics</a>
                         </li>
                         @endcan
-                        @can('Pilot Flying Currency')
+                        @can('pilot-flying-currency')
                         <li class="nav-sub-item">
                             <a href="{{ route('user.reports.pilotFlyingCurrency') }}" class="nav-sub-link">
                                 <i data-feather="file-text"></i>Pilot Flying Currency</a>
                         </li>
                         @endcan
-                        @can('SFA Report')
+                        @can('sfa-report')
                         <li class="nav-sub-item">
                             <a href="{{ route('user.sfa.sfaList') }}" class="nav-sub-link">
                                 <i data-feather="file-text"></i>SFA Report</a>
                         </li>
                         @endcan
-                        @can('FDTL Report')
+                        @can('fdtl-report')
                         <li class="nav-sub-item">
                             <a href="{{ route('user.fdtl.index') }}" class="nav-sub-link">
                                 <i data-feather="file-text"></i>FDTL Report</a>
                         </li>
                         @endcan
-                        @can('Violations Summary')
+                        @can('violations-summary')
                         <li class="nav-sub-item">
                             <a href="{{ route('user.fdtl.voilations') }}" class="nav-sub-link">
                                 <i data-feather="file-text"></i>Violations Summary</a>
                         </li>
                         @endcan
-                        @can('Violations Report')
+                        @can('violations-report')
                         <li class="nav-sub-item">
                             <a href="{{ route('user.fdtl.voilations.report') }}" class="nav-sub-link">
                                 <i data-feather="file-text"></i>Violations Report</a>
                         </li>
                         @endcan
-                        @can('AAI Reports')
+                        @can('aai-reports')
                         <li class="nav-sub-item">
                             <a href="{{ route('user.reports.aaiReports') }}" class="nav-sub-link">
                                 <i data-feather="file-text"></i>AAI Reports</a>
@@ -425,54 +432,43 @@
                         @endcan
                     </ul>
                 </li>
-                @endcan
-                @can('Fuel View')
+                @endcanAny
+
+                @can('fuel-view')
                 <li class="nav-item">
                     <a href="javascript:void(0);" class="nav-link"><i data-feather="box"></i> Fuel</a>
                 </li>
                 @endcan
-                @can('Incidence View')
+
+                @can('incidence-view')
                 <li class="nav-item">
                     <a href="javascript:void(0);" class="nav-link"><i data-feather="archive"></i> Incidence</a>
                 </li>
                 @endcan
-                @can('Leave View')
+
+                @can('leave-view')
                 <li class="nav-item">
                     <a href="{{route('user.my.leave')}}" class="nav-link"><i data-feather="archive"></i> Leave</a>
                 </li>
                 @endcan
-                @can('Load & Trim')
+
+                @can('load-trim')
                 <li class="nav-item">
                     <a href="{{route('user.loadTrim')}}" class="nav-link"><i data-feather="archive"></i> Load & Trim</a>
                 </li>
                 @endcan
-                @can('Employee View')
+
+                @can('employee-view')
                 <li class="nav-item">
                     <a href="{{route('user.users')}}" class="nav-link"><i data-feather="archive"></i> Employees</a>
                 </li>
                 @endcan
-                @can('Aircraft View')
+                
+                @can('aircraft-view')
                 <li class="nav-item">
                     <a href="{{route('user.aircrafts')}}" class="nav-link"><i data-feather="archive"></i> Aircrafts</a>
                 </li>
                 @endcan
-                {{-- <li class="nav-item with-sub">
-                    <a href="" class="nav-link">
-                        <i data-feather="layers"></i> Aircraft
-                    </a>
-                    <ul class="navbar-menu-sub">
-                        @can('Aircraft Type View')
-                        <li class="nav-sub-item">
-                            <a href="{{route('user.aircrafts')}}" class="nav-sub-link"><i data-feather="loader"></i> Aircraft Profile</a>
-                        </li>
-                        @endcan
-                        @can('AMP View')
-                        <li class="nav-sub-item">
-                            <a href="{{route('user.master.amp')}}" class="nav-sub-link"><i data-feather="loader"></i> Aircraft Parts</a>
-                        </li>
-                        @endcan
-                    </ul>
-                </li> --}}
             </ul>
         </div><!-- navbar-menu-wrapper -->
         <div class="navbar-right">

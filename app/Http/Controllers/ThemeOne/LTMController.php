@@ -4,21 +4,9 @@ namespace App\Http\Controllers\ThemeOne;
 
 use App\Http\Controllers\Controller;
 
-use App\Models\AirCraft;
-use App\Models\Master;
-use App\Models\MasterAssign;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\PilotLicense;
-use App\Models\PilotMedical;
-use App\Models\PilotTraining;
-use App\Models\PilotQualification;
-use App\Models\PilotGroundTraining;
-use App\Models\Leave;
-use Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-
 
 class LTMController extends Controller
 {
@@ -28,7 +16,7 @@ class LTMController extends Controller
     }
     public function index()
     {
-        return view('ltm.index');
+        return view('theme-one.ltm.index');
     }
 
 
@@ -65,7 +53,7 @@ class LTMController extends Controller
         $data = array();
 		foreach($result as $key => $value) {
 
-            $action  = '<a href="'.route('app.pilot.licenses', $value->id).'" class="btn btn-primary btn-sm m-1">View</a>';
+            $action  = '<a href="'.route('user.pilot.licenses', $value->id).'" class="btn btn-primary btn-sm m-1">View</a>';
             //$action .= '<a href="'.route('app.pilot.licenses', $value->id).'" class="btn btn-success btn-sm m-1">License Traning & Medical</a>';
 
             $status='<select class="form-control" onchange="changeStatus('.$value->id.',this.value);">';
@@ -93,13 +81,13 @@ class LTMController extends Controller
 
     public function monitoring()
     {
-        return view('ltm.monitoring');
+        return view('theme-one.ltm.monitoring');
     }
 
 
     public function history()
     {
-        return view('ltm.history');
+        return view('theme-one.ltm.history');
     }
 
     public function historyLicenseList(Request $request)
@@ -132,7 +120,7 @@ class LTMController extends Controller
         $data = array();
 		foreach($result as $key => $value) {
 
-            $action  = '<a href="'.route('app.pilot.licenses', $value->id).'" class="btn btn-primary btn-sm m-1">View</a>';
+            $action  = '<a href="'.route('user.pilot.licenses', $value->id).'" class="btn btn-primary btn-sm m-1">View</a>';
 
             $sub_array = array();
 			$sub_array[] = ++$key;
@@ -188,7 +176,7 @@ class LTMController extends Controller
         $data = array();
 		foreach($result as $key => $value) {
 
-            $action  = '<a href="'.route('app.pilot.licenses', $value->id).'" class="btn btn-primary btn-sm m-1">View</a>';
+            $action  = '<a href="'.route('user.pilot.licenses', $value->id).'" class="btn btn-primary btn-sm m-1">View</a>';
             //$action .= '<a href="'.route('app.pilot.licenses', $value->id).'" class="btn btn-success btn-sm m-1">License Traning & Medical</a>';
 
             $status='<select class="form-control" style="width: auto;" onchange="changeStatus('.$value->id.',this.value);">';
@@ -245,7 +233,7 @@ class LTMController extends Controller
         $data = array();
 		foreach($result as $key => $value) {
 
-            $action  = '<a href="'.route('app.pilot.licenses', $value->id).'" class="btn btn-primary btn-sm m-1">View</a>';
+            $action  = '<a href="'.route('user.pilot.licenses', $value->id).'" class="btn btn-primary btn-sm m-1">View</a>';
             //$action .= '<a href="'.route('app.pilot.licenses', $value->id).'" class="btn btn-success btn-sm m-1">License Traning & Medical</a>';
 
             $status='<select class="form-control" onchange="changeStatus('.$value->id.',this.value);">';

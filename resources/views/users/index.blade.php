@@ -21,9 +21,9 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">Employees List</h3>
-            @if(auth()->user()->can('Employee Add'))
+            
             <a href="{{route('app.users.create')}}" class="btn btn-primary btn-sm p-2">Add Employees</a>
-            @endif
+             
         </div>
         <div class="card-body">
             <div class="row mb-3 justify-content-evenly">

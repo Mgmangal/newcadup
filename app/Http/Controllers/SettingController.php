@@ -11,7 +11,7 @@ class SettingController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['permission:Setting Edit']);
+        //$this->middleware(['permission:Setting Edit']);
     }
 
     public function index(){
@@ -1202,7 +1202,7 @@ class SettingController extends Controller
     }
 
     public function certificate()
-    {
+    { 
         return view('settings.certificate.index');
     }
 
@@ -1221,22 +1221,21 @@ class SettingController extends Controller
         $sub_type=$request->sub_type;
         $short_name=$request->short_name;
         $id=$request->edit_id;
-        $lifetime=$request->is_valid??null;
         try{
             if(!empty($id)){
                 $master=Master::find($id);
                 $master->name=$name;
                 $master->other_data=$short_name;
                 $master->sub_type=$sub_type;
-                $master->more_data=$lifetime;
                 $master->save();
             }else{
                 $master=new Master();
                 $master->name=$name;
                 $master->other_data=$short_name;
                 $master->sub_type=$sub_type;
-                $master->more_data=$lifetime;
                 $master->type='certificate';
+                $master->status='active';
+                $master->is_delete='0';
                 $master->save();
             }
             return response()->json([
@@ -1281,18 +1280,18 @@ class SettingController extends Controller
         $data = array();
 		foreach ($result as $key => $value) {
             $action = '';
-            if(auth()->user()->can('Certificate Edit')){
+            // if(auth()->user()->can('Certificate Edit')){
             $action .= '<a href="javascript:void(0);" onclick="editRole(`'.route('app.settings.certificates.edit', $value->id).'`);" class="btn btn-warning btn-sm m-1">Edit</a>';
-            }
-            if(auth()->user()->can('Certificate Delete')){
+            // }
+            // if(auth()->user()->can('Certificate Delete')){
             $action .= '<a href="javascript:void(0);" onclick="deleted(`'.route('app.settings.certificates.destroy', $value->id).'`);" class="btn btn-danger btn-sm m-1">Delete</a>';
-            }
+            // }
             $sub_array = array();
 			$sub_array[] = ++$key;
             $sub_array[] = $value->other_data;
             $sub_array[] = $value->name;
             $sub_array[] = ucwords(str_replace('_', ' ', $value->sub_type));
-            $sub_array[] = $value->more_data;
+            //$sub_array[] = $value->more_data;
             $sub_array[] = date('d-m-Y',strtotime($value->created_at));
             $sub_array[] =  $action;
             $data[] = $sub_array;

@@ -99,13 +99,8 @@ class FlyingController extends Controller
             $action  ='';
             if($value->is_process=='no')
             {
-                if(getUserType()=='user')
-                {
-                    $action  .='<a href="'.route('user.flying.verify',encrypter('encrypt', $value->id)).'" class="btn btn-warning btn-sm m-1">Verify</a>';
-                }else{
-                    $action  .= '<a href="'.route('app.flying-details.edit', $value->id).'" class="btn btn-warning btn-sm m-1">Edit</a>';
-                    $action .= '<a href="javascript:void(0);" onclick="deleted(`' . route('app.flying-details.destroy', $value->id).'`);" class="btn btn-danger btn-sm m-1">Delete</a>';
-                }
+                $action  .='<a href="'.route('user.flying.verify',encrypter('encrypt', $value->id)).'" class="btn btn-warning btn-sm m-1">Verify</a>';
+                
             }else{
                 $action  .='<a href="javascript:void(0);" class="btn btn-success btn-sm m-1">Verified</a>';
             }
@@ -225,13 +220,8 @@ class FlyingController extends Controller
             $action  ='';
             if($value->is_process=='no')
             {
-                if(getUserType()=='user')
-                {
-                    $action  .='<a href="'.route('user.flying.verify',encrypter('encrypt', $value->id)).'" class="btn btn-warning btn-sm m-1">Verify</a>';
-                }else{
-                    $action  .= '<a href="'.route('app.flying-details.edit', $value->id).'" class="btn btn-warning btn-sm m-1">Edit</a>';
-                    $action .= '<a href="javascript:void(0);" onclick="deleted(`' . route('app.flying-details.destroy', $value->id).'`);" class="btn btn-danger btn-sm m-1">Delete</a>';
-                }
+                $action  .='<a href="'.route('user.flying.verify',encrypter('encrypt', $value->id)).'" class="btn btn-warning btn-sm m-1">Verify</a>';
+              
             }else{
                 $action  .='<a href="javascript:void(0);" class="btn btn-success btn-sm m-1">Verified</a>';
             }
@@ -352,13 +342,8 @@ class FlyingController extends Controller
             $action  ='';
             if($value->is_process=='no')
             {
-                if(getUserType()=='user')
-                {
-                    $action  .='<a href="'.route('user.flying.verify',encrypter('encrypt', $value->id)).'" class="btn btn-warning btn-sm m-1">Verify</a>';
-                }else{
-                    $action  .= '<a href="'.route('app.flying-details.edit', $value->id).'" class="btn btn-warning btn-sm m-1">Edit</a>';
-                    $action .= '<a href="javascript:void(0);" onclick="deleted(`' . route('app.flying-details.destroy', $value->id).'`);" class="btn btn-danger btn-sm m-1">Delete</a>';
-                }
+                $action  .='<a href="'.route('user.flying.verify',encrypter('encrypt', $value->id)).'" class="btn btn-warning btn-sm m-1">Verify</a>';
+                
             }else{
                 $action  .='<a href="javascript:void(0);" class="btn btn-success btn-sm m-1">Verified</a>';
             }
@@ -480,13 +465,8 @@ class FlyingController extends Controller
             $action  ='';
             if($value->is_process=='no')
             {
-                if(getUserType()=='user')
-                {
-                    $action  .='<a href="'.route('user.flying.verify',encrypter('encrypt', $value->id)).'" class="btn btn-warning btn-sm m-1">Verify</a>';
-                }else{
-                    $action  .= '<a href="'.route('app.flying-details.edit', $value->id).'" class="btn btn-warning btn-sm m-1">Edit</a>';
-                    $action .= '<a href="javascript:void(0);" onclick="deleted(`' . route('app.flying-details.destroy', $value->id).'`);" class="btn btn-danger btn-sm m-1">Delete</a>';
-                }
+                $action  .='<a href="'.route('user.flying.verify',encrypter('encrypt', $value->id)).'" class="btn btn-warning btn-sm m-1">Verify</a>';
+               
             }else{
                 $action  .='<a href="javascript:void(0);" class="btn btn-success btn-sm m-1">Verified</a>';
             }
@@ -615,13 +595,8 @@ class FlyingController extends Controller
             $action  ='';
             if($value->is_process=='no')
             {
-                if(getUserType()=='user')
-                {
-                    $action  .='<a href="'.route('user.flying.verify',encrypter('encrypt', $value->id)).'" class="btn btn-warning btn-sm m-1">Verify</a>';
-                }else{
-                    $action  .= '<a href="'.route('app.flying-details.edit', $value->id).'" class="btn btn-warning btn-sm m-1">Edit</a>';
-                    $action .= '<a href="javascript:void(0);" onclick="deleted(`' . route('app.flying-details.destroy', $value->id).'`);" class="btn btn-danger btn-sm m-1">Delete</a>';
-                }
+                $action  .='<a href="'.route('user.flying.verify',encrypter('encrypt', $value->id)).'" class="btn btn-warning btn-sm m-1">Verify</a>';
+                
             }else{
                 $action  .='<a href="javascript:void(0);" class="btn btn-success btn-sm m-1">Verified</a>';
             }
@@ -629,7 +604,7 @@ class FlyingController extends Controller
             if($aai_report_exist){
                 $action  .= '<a href="javascript:void(0);" class="btn btn-success btn-sm m-1">Generated</a>';
             } else {
-                $action  .='<a href="'.route('app.aai_report.generate', $value->id).'" class="btn btn-warning btn-sm m-1 text-white">Generate AAI Report</a>';
+                $action  .='<a href="'.route('user.aai_report.generate', $value->id).'" class="btn btn-warning btn-sm m-1 text-white">Generate AAI Report</a>';
             }
 
             $times[] = is_time_defrence($value->departure_time, $value->arrival_time);
