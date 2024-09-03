@@ -226,6 +226,12 @@ Route::group(['prefix' => 'masters'], function () {
 
     // Route::get('subroles/{id}', [RoleController::class, 'subroles'])->name('app.settings.subroles');
 
+    Route::get('resource-type', [MasterController::class, 'resource_type'])->name('user.master.resource_type');
+    Route::post('resource-type-list', [MasterController::class, 'resource_type_list'])->name('user.master.resource_type_list');
+    Route::post('resource-type-store', [MasterController::class, 'resource_type_store'])->name('user.master.resource_type_store');
+    Route::get('resource-type-edit/{id}', [MasterController::class, 'resource_type_edit'])->name('user.master.resource_type_edit');
+    Route::get('resource-type-delete/{id}', [MasterController::class, 'resource_type_delete'])->name('user.master.resource_type_delete');
+
 });
 
 Route::group(['prefix' => 'ata'], function () {
