@@ -125,6 +125,11 @@
                             <a href="{{route('user.master.amp')}}" class="nav-sub-link"><i data-feather="loader"></i> AMP</a>
                         </li>
                         @endcan
+                        {{-- @can('resource-type-view') --}}
+                        <li class="nav-sub-item">
+                            <a href="{{route('user.master.resource_type')}}" class="nav-sub-link"><i data-feather="loader"></i> Resource Type</a>
+                        </li>
+                        {{-- @endcan --}}
                     </ul>
                 </li>
                 @endcanAny
@@ -153,7 +158,7 @@
                 <li class="nav-item">
                     <a href="{{route('user.tbo')}}" class="nav-link"><i data-feather="archive"></i> TBO</a>
                 </li>
-                @endcan 
+                @endcan
 
                 @canAny(['sortie', 'my-sortie', 'flying', 'my-flying', 'fdtl', 'my-fdtl', 'statistic', 'my-statistic', 'voilations', 'my-voilations'])
                 <li class="nav-item with-sub">
@@ -189,7 +194,7 @@
                         <li class="nav-sub-item">
                             <a href="{{route('user.fdtl.index')}}" class="nav-sub-link">
                                 <i data-feather="message-square"></i>FDTL</a>
-                        </li> 
+                        </li>
                         @endcan
                         @can('my-fdtl')
                         <li class="nav-sub-item">
@@ -508,7 +513,7 @@
                     </ul>
                 </li>
                 {{-- @endcanAny --}}
-                
+
 
                 @can('fuel-view')
                 <li class="nav-item">
@@ -539,7 +544,7 @@
                     <a href="{{route('user.users')}}" class="nav-link"><i data-feather="archive"></i> Employees</a>
                 </li>
                 @endcan
-                
+
                 @can('aircraft-view')
                 <li class="nav-item">
                     <a href="{{route('user.aircrafts')}}" class="nav-link"><i data-feather="archive"></i> Aircrafts</a>
@@ -689,6 +694,7 @@
             @elseif(Session::has('error'))
                 error("{{ Session::get('error') }}");
             @endif
+
         });
         function success(message) {
             swal({
@@ -753,6 +759,13 @@
         }
     </script>
     @yield('js')
+
+    <script>
+        function clearError(form) {
+            form.find('.is-invalid').removeClass('is-invalid');
+            form.find('.invalid-feedback').remove();
+        }
+    </script>
 </body>
 
 </html>

@@ -8,11 +8,9 @@
 @section('content')
 <div class="card">
     <div class="card-header d-flex justify-content-between">
-        <h3 class="card-title">{{ $sub_title }} </h3>
+        <h3 class="card-title">{{ $sub_title }} List </h3>
         <div>
-            {{-- @can('AMP Add') --}}
-                <a href="javascript:void(0);" class="btn btn-primary" onclick="addNew();">Add New</a>
-            {{-- @endcan --}}
+            <a href="javascript:void(0);" class="btn btn-primary btn-sm p-2" onclick="addNew();">Add New</a>
         </div>
     </div>
     <div class="card-body">
@@ -21,11 +19,8 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>AMP Name</th>
-                        <th>Aircraft</th>
-                        <th>Description</th>
+                        <th>Resource Type</th>
                         <th>Created On</th>
-                        <th>Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -37,42 +32,28 @@
     </div>
 </div>
 
-<div class="modal fade" id="manageModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+<div class="modal fade" id="leaveModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalLabel">Manage AMP</h5>
+                <h5 class="modal-title" id="modalLabel">Modal Title</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{route('user.master.amp_store')}}" method="POST" id="manageForm" class="">
+            <form action="{{route('user.master.resource_type_store')}}" method="POST" id="manageForm" class="">
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label required" for="aircraft_id">Aircraft </label>
                         <input type="hidden" name="edit_id" id="edit_id" />
-                        <select name="aircraft_id" id="aircraft_id" class="form-control">
-                            <option value="">Select Aircraft </option>
-                            @foreach($aircrafts as $aircraft)
-                            <option value="{{$aircraft->id}}">{{$aircraft->call_sign}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label required" for="name">Name</label>
+                        <label class="form-label required" for="name">Resource Type</label>
                         <input type="text" class="form-control" name="name" placeholder="Enter Name" />
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label required" for="other_data">Description</label>
-                        <textarea class="form-control" name="other_data" placeholder="Enter Description"> </textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label required" for="status">Status</label>
-                        <select name="status" id="status" class="form-control">
-                            <option value="">Select Status </option>
+                    {{-- <div class="mb-3">
+                        <label class="form-label" for="status">Status</label>
+                        <select class="form-select" name="status" id="status">
                             <option value="active">Active</option>
                             <option value="inactive">Inactive</option>
                         </select>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -82,7 +63,6 @@
         </div>
     </div>
 </div>
-
 @endsection
 
 @section('js')
@@ -114,7 +94,7 @@
                 }
             ],
             ajax: {
-                url: "{{route('user.master.amp_list')}}",
+                url: "{{route('user.master.resource_type_list')}}",
                 type: 'POST',
                 data: {
                     "_token": "{{ csrf_token() }}"
@@ -127,16 +107,16 @@
     }
     dataList();
 
-
     function addNew() {
-        $('#manageForm').find('.is-invalid').removeClass('is-invalid');
-        $('#manageForm').find('.invalid-feedback').hide();
+        clearError($('#manageForm'));
         $('#manageForm')[0].reset();
-        $('#manageModal').modal('show')
+        $('#edit_id').val('');
+        $('.modal-title').html('Add New Resource Type');
+        $('#leaveModal').modal('show');
     }
     $('#manageForm').submit(function(e) {
         e.preventDefault();
-        $('#manageForm').find('.invalid-feedback').hide();
+        clearError($('#manageForm'));
         $.ajax({
             url: $(this).attr('action'),
             method: $(this).attr('method'),
@@ -145,7 +125,7 @@
             success: function(response) {
                 if (response.success) {
                     $('#manageForm')[0].reset();
-                    $('#manageModal').modal('hide');
+                    $('#leaveModal').modal('hide');
                     dataList();
                 } else {
                     $.each(response.message, function(fieldName, field) {
@@ -158,39 +138,24 @@
         })
     })
 
-    function editRole(url) {
+    function edit(url) {
         $.ajax({
             url: url,
             method: 'GET',
             dataType: 'json',
             success: function(response) {
                 if (response.success) {
-                    $('#manageForm').find('[name=aircraft_id]').val(response.data.parent_id);
+                    console.log(response.data.name);
                     $('#manageForm').find('[name=name]').val(response.data.name);
-                    $('#manageForm').find('[name=other_data]').val(response.data.other_data);
+                    $('#manageForm').find('[name=more_data]').val(response.data.more_data);
                     $('#manageForm').find('[name=status]').val(response.data.status);
                     $('#manageForm').find('[name=edit_id]').val(response.data.id);
-                    $('#manageModal').modal('show');
+                    $('.modal-title').text('Edit Resource Type');
+                    $('#leaveModal').modal('show');
                 }
             }
         });
     }
-    function changeStatus(id,status)
-    {
-        $.ajax({
-            url: "{{route('user.master.amp_status')}}",
-            type: 'post',
-            data: {id,status,'_token':'{{csrf_token()}}'},
-            dataType: 'json',
-            success: function(data) {
-                if (data.success) {
-                    swal("Success!", data.message, "success");
-                } else {
-                    swal("Error!", data.message, "error");
-                }
-                dataList();
-            }
-        });
-    }
+
 </script>
 @endsection
