@@ -99,7 +99,8 @@ class FlyingController extends Controller
             $action  ='';
             if($value->is_process=='no')
             {
-                $action  .='<a href="'.route('user.flying.verify',encrypter('encrypt', $value->id)).'" class="btn btn-warning btn-sm m-1">Verify</a>';
+                //$action  .='<a href="'.route('user.flying.verify',encrypter('encrypt', $value->id)).'" class="btn btn-warning btn-sm m-1">Verify</a>';
+                $action  .='<a href="javascript:void(0);" class="btn btn-warning btn-sm m-1">Not Verified</a>';
                 
             }else{
                 $action  .='<a href="javascript:void(0);" class="btn btn-success btn-sm m-1">Verified</a>';
@@ -108,7 +109,8 @@ class FlyingController extends Controller
             if($aai_report_exist){
                 $action  .= '<a href="javascript:void(0);" class="btn btn-success btn-sm m-1">Generated</a>';
             } else {
-                $action  .='<a href="'.route('app.aai_report.generate', $value->id).'" class="btn btn-warning btn-sm m-1 text-white">Generate AAI Report</a>';
+                //$action  .='<a href="'.route('user.aai_report.generate', $value->id).'" class="btn btn-warning btn-sm m-1 text-white">Generate AAI Report</a>';
+                $action  .= '<a href="javascript:void(0);" class="btn btn-warning btn-sm m-1">Not Generated</a>';
             }
 
             $times[] = is_time_defrence($value->departure_time, $value->arrival_time);
@@ -220,7 +222,8 @@ class FlyingController extends Controller
             $action  ='';
             if($value->is_process=='no')
             {
-                $action  .='<a href="'.route('user.flying.verify',encrypter('encrypt', $value->id)).'" class="btn btn-warning btn-sm m-1">Verify</a>';
+                //$action  .='<a href="'.route('user.flying.verify',encrypter('encrypt', $value->id)).'" class="btn btn-warning btn-sm m-1">Verify</a>';
+                $action  .='<a href="javascript:void(0);" class="btn btn-warning btn-sm m-1">Not Verified</a>';
               
             }else{
                 $action  .='<a href="javascript:void(0);" class="btn btn-success btn-sm m-1">Verified</a>';
@@ -229,7 +232,8 @@ class FlyingController extends Controller
             if($aai_report_exist){
                 $action  .= '<a href="javascript:void(0);" class="btn btn-success btn-sm m-1">Generated</a>';
             } else {
-                $action  .='<a href="'.route('app.aai_report.generate', $value->id).'" class="btn btn-warning btn-sm m-1 text-white">Generate AAI Report</a>';
+                //$action  .='<a href="'.route('user.aai_report.generate', $value->id).'" class="btn btn-warning btn-sm m-1 text-white">Generate AAI Report</a>';
+                $action  .= '<a href="javascript:void(0);" class="btn btn-warning btn-sm m-1">Not Generated</a>';
             }
 
             $times[] = is_time_defrence($value->departure_time, $value->arrival_time);
@@ -342,7 +346,8 @@ class FlyingController extends Controller
             $action  ='';
             if($value->is_process=='no')
             {
-                $action  .='<a href="'.route('user.flying.verify',encrypter('encrypt', $value->id)).'" class="btn btn-warning btn-sm m-1">Verify</a>';
+                //$action  .='<a href="'.route('user.flying.verify',encrypter('encrypt', $value->id)).'" class="btn btn-warning btn-sm m-1">Verify</a>';
+                $action  .='<a href="javascript:void(0);" class="btn btn-warning btn-sm m-1">Not Verified</a>';
                 
             }else{
                 $action  .='<a href="javascript:void(0);" class="btn btn-success btn-sm m-1">Verified</a>';
@@ -351,7 +356,8 @@ class FlyingController extends Controller
             if($aai_report_exist){
                 $action  .= '<a href="javascript:void(0);" class="btn btn-success btn-sm m-1">Generated</a>';
             } else {
-                $action  .='<a href="'.route('app.aai_report.generate', $value->id).'" class="btn btn-warning btn-sm m-1 text-white">Generate AAI Report</a>';
+                $action  .= '<a href="javascript:void(0);" class="btn btn-warning btn-sm m-1">Not Generated</a>';
+                //$action  .='<a href="'.route('user.aai_report.generate', $value->id).'" class="btn btn-warning btn-sm m-1 text-white">Generate AAI Report</a>';
             }
 
             $times[] = is_time_defrence($value->departure_time, $value->arrival_time);
@@ -465,7 +471,8 @@ class FlyingController extends Controller
             $action  ='';
             if($value->is_process=='no')
             {
-                $action  .='<a href="'.route('user.flying.verify',encrypter('encrypt', $value->id)).'" class="btn btn-warning btn-sm m-1">Verify</a>';
+                //$action  .='<a href="'.route('user.flying.verify',encrypter('encrypt', $value->id)).'" class="btn btn-warning btn-sm m-1">Verify</a>';
+                $action  .='<a href="javascript:void(0);" class="btn btn-warning btn-sm m-1">Not Verified</a>';
                
             }else{
                 $action  .='<a href="javascript:void(0);" class="btn btn-success btn-sm m-1">Verified</a>';
@@ -474,7 +481,8 @@ class FlyingController extends Controller
             if($aai_report_exist){
                 $action  .= '<a href="javascript:void(0);" class="btn btn-success btn-sm m-1">Generated</a>';
             } else {
-                $action  .='<a href="'.route('app.aai_report.generate', $value->id).'" class="btn btn-warning btn-sm m-1 text-white">Generate AAI Report</a>';
+                //$action  .='<a href="'.route('user.aai_report.generate', $value->id).'" class="btn btn-warning btn-sm m-1 text-white">Generate AAI Report</a>';
+                $action  .= '<a href="javascript:void(0);" class="btn btn-warning btn-sm m-1">Not Generated</a>';
             }
 
             $times[] = is_time_defrence($value->departure_time, $value->arrival_time);
@@ -595,7 +603,8 @@ class FlyingController extends Controller
             $action  ='';
             if($value->is_process=='no')
             {
-                $action  .='<a href="'.route('user.flying.verify',encrypter('encrypt', $value->id)).'" class="btn btn-warning btn-sm m-1">Verify</a>';
+                //$action  .='<a href="'.route('user.flying.verify',encrypter('encrypt', $value->id)).'" class="btn btn-warning btn-sm m-1">Verify</a>';
+                $action  .='<a href="javascript:void(0);" class="btn btn-warning btn-sm m-1">Not Verified</a>';
                 
             }else{
                 $action  .='<a href="javascript:void(0);" class="btn btn-success btn-sm m-1">Verified</a>';
@@ -604,7 +613,8 @@ class FlyingController extends Controller
             if($aai_report_exist){
                 $action  .= '<a href="javascript:void(0);" class="btn btn-success btn-sm m-1">Generated</a>';
             } else {
-                $action  .='<a href="'.route('user.aai_report.generate', $value->id).'" class="btn btn-warning btn-sm m-1 text-white">Generate AAI Report</a>';
+                // $action  .='<a href="'.route('user.aai_report.generate', $value->id).'" class="btn btn-warning btn-sm m-1 text-white">Generate AAI Report</a>';
+                $action  .= '<a href="javascript:void(0);" class="btn btn-warning btn-sm m-1">Not Generated</a>';
             }
 
             $times[] = is_time_defrence($value->departure_time, $value->arrival_time);

@@ -115,7 +115,7 @@
                     </div>
                     <!-- Settings menu -->
                     <div
-                        class="menu-item has-sub {{ request()->routeIs('app.settings.contract.type')||request()->routeIs('app.settings.passenger')||request()->routeIs('app.settings.expenditure')||request()->routeIs('app.settings.postFlightDoc')|| request()->routeIs('app.settings.leaveType')||request()->routeIs('app.settings.expensesType') || request()->routeIs('app.states') || request()->routeIs('app.cities') || request()->routeIs('app.settings.aircraftType')||request()->routeIs('app.settings.sfarate')||request()->routeIs('app.settings.flyingtype')||request()->routeIs('app.settings.pilotrole')||request()->routeIs('app.settings.sectors')||request()->routeIs('app.settings.roles')||request()->routeIs('app.settings.departments')||request()->routeIs('app.settings.designations')||request()->routeIs('app.settings.jobfunctions')||request()->routeIs('app.settings.sections')||request()->routeIs('app.settings.certificates')||request()->routeIs('app.settings') ? 'active' : ''}}">
+                        class="menu-item has-sub {{ request()->routeIs('app.settings.contract.type')||request()->routeIs('app.settings.passenger')||request()->routeIs('app.settings.expenditure')||request()->routeIs('app.settings.postFlightDoc')|| request()->routeIs('app.settings.leaveType')||request()->routeIs('app.settings.expensesType') || request()->routeIs('app.states') || request()->routeIs('app.cities') || request()->routeIs('app.settings.aircraftType')||request()->routeIs('app.settings.sfarate')||request()->routeIs('app.settings.flyingtype')||request()->routeIs('app.settings.pilotrole')||request()->routeIs('app.settings.sectors')||request()->routeIs('app.settings.roles')||request()->routeIs('app.settings.departments')||request()->routeIs('app.settings.designations')||request()->routeIs('app.settings.jobfunctions')||request()->routeIs('app.settings.sections')||request()->routeIs('app.settings.certificates')||request()->routeIs('app.settings.resource_type')||request()->routeIs('app.settings') ? 'active' : ''}}">
                         <a href="javascript:void(0);" class="menu-link">
                             <span class="menu-icon">
                                 <i class="fa fa-cog"></i>
@@ -226,7 +226,11 @@
                                 </a>
                             </div>
                             
-                            
+                            <div class="menu-item {{ request()->routeIs('app.settings.resource_type') ? 'active' : '' }}">
+                                <a href="{{ route('app.settings.resource_type') }}" class="menu-link">
+                                    <span class="menu-text">Resource Type</span>
+                                </a>
+                            </div>
 
                             <div class="menu-item {{ request()->routeIs('app.settings') ? 'active' : ''}}">
                                 <a href="{{route('app.settings')}}" class="menu-link">
@@ -399,6 +403,34 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="menu-item has-sub {{ request()->routeIs(['app.payment.sfa','app.payment.bill','app.payment.history']) ? 'active' : '' }}">
+                        <a href="#" class="menu-link">
+                            <span class="menu-icon">
+                                <i class="fa fa-cog"></i>
+                            </span>
+                            <span class="menu-text">Manage Payment</span>
+                            <span class="menu-caret"><b class="caret"></b></span>
+                        </a>
+                        <div class="menu-submenu">
+                            <div class="menu-item {{ request()->routeIs('app.payment.sfa') ? 'active' : ''}}">
+                                <a href="{{ route('app.payment.sfa') }}" class="menu-link">
+                                    <span class="menu-text">SFA</span>
+                                </a>
+                            </div>
+                            <div class="menu-item {{ request()->routeIs('app.payment.bill') ? 'active' : ''}}">
+                                <a href="{{ route('app.payment.bill') }}" class="menu-link">
+                                    <span class="menu-text">Bill</span>
+                                </a>
+                            </div>
+                            <div class="menu-item {{ request()->routeIs('app.payment.history') ? 'active' : ''}}">
+                                <a href="{{ route('app.payment.history') }}" class="menu-link">
+                                    <span class="menu-text">Payment History</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Manage Airstrips -->
                     <div class="menu-item has-sub ">
                         <a href="#" class="menu-link">
@@ -562,7 +594,7 @@
                     </div>
                     <!-- Manage Library -->
                     <div
-                        class="menu-item has-sub {{ request()->routeIs('app.library.car')||request()->routeIs('app.library.fsdms')||request()->routeIs('app.library.generic') ? 'active' : ''}}">
+                        class="menu-item has-sub {{ request()->routeIs('app.library.hr')||request()->routeIs('app.library.car')||request()->routeIs('app.library.fsdms')||request()->routeIs('app.library.generic') ? 'active' : ''}}">
                         <a href="#" class="menu-link">
                             <span class="menu-icon">
                                 <i class="fa fa-user-md"></i>
@@ -571,18 +603,23 @@
                             <span class="menu-caret"><b class="caret"></b></span>
                         </a>
                         <div class="menu-submenu">
+                            <div class="menu-item {{ request()->routeIs('app.library.hr') ? 'active' : ''}}">
+                                <a href="{{route('app.library.hr')}}" class="menu-link">
+                                    <span class="menu-text">HR Library</span>
+                                </a>
+                            </div>
                             <div class="menu-item {{ request()->routeIs('app.library.car') ? 'active' : ''}}">
-                                <a href="#" class="menu-link">
+                                <a href="{{route('app.library.car')}}" class="menu-link">
                                     <span class="menu-text">CAR Library</span>
                                 </a>
                             </div>
                             <div class="menu-item {{ request()->routeIs('app.library.fsdms') ? 'active' : ''}}">
-                                <a href="#" class="menu-link">
+                                <a href="{{route('app.library.fsdms')}}" class="menu-link">
                                     <span class="menu-text">FSDMS Library</span>
                                 </a>
                             </div>
                             <div class="menu-item {{ request()->routeIs('app.library.generic') ? 'active' : ''}}">
-                                <a href="#" class="menu-link">
+                                <a href="{{route('app.library.generic')}}" class="menu-link">
                                     <span class="menu-text">Generic Library</span>
                                 </a>
                             </div>

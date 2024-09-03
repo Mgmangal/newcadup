@@ -418,12 +418,24 @@
                                 <i data-feather="file-text"></i>Violations Summary</a>
                         </li>
                         @endcan
+                        {{-- @can('my-violations-summary') --}}
+                        <li class="nav-sub-item">
+                            <a href="{{ route('user.fdtl.MyVoilations') }}" class="nav-sub-link">
+                                <i data-feather="file-text"></i>My Violations Summary</a>
+                        </li>
+                        {{-- @endcan --}}
                         @can('violations-report')
                         <li class="nav-sub-item">
                             <a href="{{ route('user.fdtl.voilations.report') }}" class="nav-sub-link">
                                 <i data-feather="file-text"></i>Violations Report</a>
                         </li>
                         @endcan
+                        {{-- @can('my-violations-report') --}}
+                        <li class="nav-sub-item">
+                            <a href="{{ route('user.fdtl.myVoilations.report') }}" class="nav-sub-link">
+                                <i data-feather="file-text"></i>My Violations Report</a>
+                        </li>
+                        {{-- @endcan --}}
                         @can('aai-reports')
                         <li class="nav-sub-item">
                             <a href="{{ route('user.reports.aaiReports') }}" class="nav-sub-link">
@@ -433,6 +445,70 @@
                     </ul>
                 </li>
                 @endcanAny
+
+                {{-- @canAny(['external-flying', 'pilot-flying-hours', 'pilot-ground-training', 'vip-recency', 'flight-statistics', 'pilot-flying-currency', 'sfa-report', 'fdtl-report', 'violations-summary', 'violations-report', 'aai-reports']) --}}
+                <li class="nav-item with-sub">
+                    <a href="javascript:void(0);" class="nav-link">
+                        <i data-feather="layers"></i> Manage Library
+                    </a>
+                    <ul class="navbar-menu-sub">
+                        {{-- @can('external-flying') --}}
+                        <li class="nav-sub-item">
+                            <a href="{{ route('user.library.hr') }}" class="nav-sub-link">
+                                <i data-feather="file-text"></i>HR Library</a>
+                        </li>
+                        {{-- @endcan --}}
+                        {{-- @can('pilot-flying-hours') --}}
+                        <li class="nav-sub-item">
+                            <a href="{{ route('user.library.car') }}" class="nav-sub-link">
+                                <i data-feather="file-text"></i>CAR Library</a>
+                        </li>
+                        {{-- @endcan --}}
+                        {{-- @can('pilot-ground-training') --}}
+                        <li class="nav-sub-item">
+                            <a href="{{ route('user.library.fsdms') }}" class="nav-sub-link">
+                                <i data-feather="file-text"></i>FSDMS Library</a>
+                        </li>
+                        {{-- @endcan --}}
+                        {{-- @can('vip-recency') --}}
+                        <li class="nav-sub-item">
+                            <a href="{{ route('user.library.generic') }}" class="nav-sub-link">
+                                <i data-feather="file-text"></i>Generic Library</a>
+                        </li>
+                        {{-- @endcan --}}
+                    </ul>
+                </li>
+                {{-- @endcanAny --}}
+
+                {{-- @canAny(['external-flying', 'pilot-flying-hours', 'pilot-ground-training', 'vip-recency', 'flight-statistics', 'pilot-flying-currency', 'sfa-report', 'fdtl-report', 'violations-summary', 'violations-report', 'aai-reports']) --}}
+                <li class="nav-item with-sub">
+                    <a href="javascript:void(0);" class="nav-link">
+                        <i data-feather="layers"></i> Manage Payment
+                    </a>
+                    <ul class="navbar-menu-sub">
+                        {{-- @can('external-flying') --}}
+                        <li class="nav-sub-item">
+                            <a href="{{ route('user.payment.sfa') }}" class="nav-sub-link">
+                                <i data-feather="file-text"></i>SFA</a>
+                        </li>
+                        {{-- @endcan --}}
+                        {{-- @can('pilot-flying-hours') --}}
+                        <li class="nav-sub-item">
+                            <a href="{{ route('user.payment.bill') }}" class="nav-sub-link">
+                                <i data-feather="file-text"></i>Bill</a>
+                        </li>
+                        {{-- @endcan --}}
+                        {{-- @can('pilot-ground-training') --}}
+                        <li class="nav-sub-item">
+                            <a href="{{ route('user.payment.history') }}" class="nav-sub-link">
+                                <i data-feather="file-text"></i>Payment History</a>
+                        </li>
+                        {{-- @endcan --}}
+
+                    </ul>
+                </li>
+                {{-- @endcanAny --}}
+                
 
                 @can('fuel-view')
                 <li class="nav-item">

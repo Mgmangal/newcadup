@@ -11,7 +11,7 @@
                 <div class="card">
                     <div class="card-body p-2">
                         <div class="row">
-                            <div class="col-7">
+                            <div class="col-8">
                                 <div class="p-2">
                                     <h6 class="tx-uppercase tx-14 tx-spacing-1 tx-color-02 tx-semibold m-0">Total Flight
                                     </h6>
@@ -22,8 +22,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-5 ">
-                                <img src="{{asset('images/img1.jpeg')}}" class="img-fluid w-50 p-1 border rounded"
+                            <div class="col-4">
+                                <img src="{{asset('images/img1.jpeg')}}" class="img-fluid w-100 p-1 border rounded"
                                     alt="">
                             </div>
                         </div>
@@ -34,7 +34,7 @@
                 <div class="card">
                     <div class="card-body p-2">
                         <div class="row">
-                            <div class="col-7">
+                            <div class="col-8">
                                 <div class="p-2">
                                     <h6 class="tx-uppercase tx-14 tx-spacing-1 tx-color-02 tx-semibold m-0">Total Flying
                                         Hours
@@ -46,8 +46,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-5 ">
-                                <img src="{{asset('images/img2.jpeg')}}" class="img-fluid w-50 p-1 border rounded"
+                            <div class="col-4">
+                                <img src="{{asset('images/img2.jpeg')}}" class="img-fluid w-100 p-1 border rounded"
                                     alt="">
                             </div>
                         </div>
@@ -249,11 +249,11 @@
     </div>
     <div class="col-md-3 hv-100">
         <div class="card">
-            <div class="card-header p-1">
+            <div class="card-header p-2">
                 <h6 class="card-title">Aircraft Status</h6>
             </div>
             <div class="card-body p-2">
-                <div class="row">
+                <div class="row=">
                     <div class="col-md-12 d-flex p-1 m-1">
                         <i class="fas fa-plane fa-2x border p-3 border-success rounded"></i>
                         <div class="w-100 text-center ">
@@ -364,7 +364,7 @@
             </div>
             <div class="card-body p-2">
                 <div class="row">
-                    @php 
+                    @php
                     $barChartDate=array();
                     $barChartValue=array();
                     foreach($barChartData as $key => $value){
@@ -405,7 +405,7 @@ var myChart = new Chart(ctx, {
                 'rgba(255, 206, 86, 0.7)',
                 'rgba(75, 192, 192, 0.7)',
                 'rgba(153, 102, 255, 0.7)',
-                
+
             ]
         }]
     }
@@ -414,7 +414,7 @@ var ctx = document.getElementById('flotCharts2').getContext('2d');
 var myChart = new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: {!!json_encode($barChartDate)!!}, 
+        labels: {!!json_encode($barChartDate)!!},
         datasets: [{
             label: 'Flying',
             data: '{{json_encode($barChartValue)}}',

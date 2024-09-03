@@ -1432,4 +1432,115 @@ class SettingController extends Controller
             'message' => 'Contract Deleted Successfully'
         ]);
     }
+
+    public function resource_type()
+    {
+        return view('settings.resource-type');
+    }
+
+    public function resource_type_store(Request $request)
+    {
+        $validation = Validator::make($request->all(), [
+            'name' => 'required',
+        ]);
+        if ($validation->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validation->errors()
+            ]);
+        }
+        $name = $request->name;
+        $id = $request->edit_id;
+        try {
+            if (!empty($id)) {
+                $master = Master::find($id);
+                $master->name = $name;
+                $master->save();
+                $message = 'Resource Type Updated Successfully';
+            } else {
+                $master = new Master();
+                $master->name = $name;
+                $master->type = 'resource_type';
+                $master->status = 'active';
+                $master->is_delete = '0';
+                $master->save();
+                $message = 'Resource Type Added Successfully';
+            }
+            return response()->json([
+                'success' => true,
+                'message' => $message
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function resource_type_list(Request $request)
+    {
+        $column = ['id', 'name', 'created_at', 'id'];
+        $masters = Master::where('type', '=', 'resource_type')->where('is_delete','0');
+
+        $total_row = $masters->count();
+        if (isset($_POST['search'])) {
+            $masters->where('name', 'LIKE', '%' . $_POST['search']['value'] . '%');
+        }
+
+        if (isset($_POST['order'])) {
+            $masters->orderBy($column[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
+        } else {
+            $masters->orderBy('id', 'desc');
+        }
+        $filter_row = $masters->count();
+        if (isset($_POST["length"]) && $_POST["length"] != -1) {
+            $masters->skip($_POST["start"])->take($_POST["length"]);
+        }
+        $result = $masters->get();
+        $data = array();
+        foreach ($result as $key => $value) {
+
+            $action = '';
+            $action .= '<a href="javascript:void(0);" onclick="edit(`' . route('app.settings.resource_type_edit', $value->id) . '`);" class="btn btn-warning btn-sm m-1">Edit</a>';
+            $action .= '<a href="javascript:void(0);" onclick="deleted(`' . route('app.settings.resource_type_delete', $value->id) . '`);" class="btn btn-danger btn-sm m-1">Delete</a>';
+
+            $sub_array = array();
+            $sub_array[] = ++$key;
+            $sub_array[] = $value->name;
+            $sub_array[] = date('d-m-Y', strtotime($value->created_at));
+            $sub_array[] =  $action;
+            $data[] = $sub_array;
+        }
+        $output = array(
+            "draw"       =>  intval($_POST["draw"]),
+            "recordsTotal"   =>  $total_row,
+            "recordsFiltered"  =>  $filter_row,
+            "data"       =>  $data
+        );
+
+        echo json_encode($output);
+    }
+
+    public function resource_type_edit($id)
+    {
+        $role = Master::find($id);
+        return response()->json([
+            'success' => true,
+            'data' => $role
+        ]);
+    }
+
+    public function resource_type_delete($id)
+    {
+        $data = Master::find($id);
+        $data->is_delete='1';
+        $data->status='inactive';
+        $data->save();
+        return response()->json([
+            'success' => true,
+            'message' => 'Resource Type Deleted Successfully'
+        ]);
+    }
+
 }

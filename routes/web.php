@@ -16,7 +16,9 @@ use App\Http\Controllers\PilotController;
 use App\Http\Controllers\StateController;
 use App\Http\Controllers\CvrFdrController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\MyLeaveController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\SettingController;
@@ -291,6 +293,13 @@ Route::group(['prefix'=>'admin', 'middleware' => ['auth','role:admin','verified'
         Route::post('expenditure/store', [SettingController::class, 'expenditureStore'])->name('app.settings.expenditureStore');
         Route::get('expenditure/edit/{id}', [SettingController::class, 'expenditureEdit'])->name('app.settings.expenditureEdit');
         Route::get('expenditure/delete/{id}', [SettingController::class, 'expenditureDelete'])->name('app.settings.expenditureDelete');
+
+        Route::get('resource-type', [SettingController::class, 'resource_type'])->name('app.settings.resource_type');
+        Route::post('resource-type-list', [SettingController::class, 'resource_type_list'])->name('app.settings.resource_type_list');
+        Route::post('resource-type-store', [SettingController::class, 'resource_type_store'])->name('app.settings.resource_type_store');
+        Route::get('resource-type-edit/{id}', [SettingController::class, 'resource_type_edit'])->name('app.settings.resource_type_edit');
+        Route::get('resource-type-delete/{id}', [SettingController::class, 'resource_type_delete'])->name('app.settings.resource_type_delete');
+        
     });
 
     Route::group(['prefix' => 'adt'], function () {
@@ -592,6 +601,56 @@ Route::group(['prefix'=>'admin', 'middleware' => ['auth','role:admin','verified'
         Route::get('edit/{id}', [ContractController::class, 'edit'])->name('app.contract.edit');
         Route::get('delete/{id}', [ContractController::class, 'delete'])->name('app.contract.delete');
     });
+    
+    // Manage Library
+    Route::prefix('manage-library')->group(function () {
+
+        Route::get('hr', [LibraryController::class, 'hr'])->name('app.library.hr');
+        Route::post('hr-list', [LibraryController::class, 'hr_list'])->name('app.library.hr_list');
+        Route::get('hr-create', [LibraryController::class, 'hr_create'])->name('app.library.hr_create');
+        Route::post('hr-store', [LibraryController::class, 'hr_store'])->name('app.library.hr_store');
+        Route::get('hr-edit/{id}', [LibraryController::class, 'hr_edit'])->name('app.library.hr_edit');
+        Route::put('hr-update/{id}', [LibraryController::class, 'hr_update'])->name('app.library.hr_update');
+        Route::get('hr-delete/{id?}', [LibraryController::class, 'hr_delete'])->name('app.library.hr_delete');
+        
+        Route::get('car', [LibraryController::class, 'car'])->name('app.library.car');
+        Route::post('car-list', [LibraryController::class, 'car_list'])->name('app.library.car_list');
+        Route::get('car-create', [LibraryController::class, 'car_create'])->name('app.library.car_create');
+        Route::post('car-store', [LibraryController::class, 'car_store'])->name('app.library.car_store');
+        Route::get('car-edit/{id}', [LibraryController::class, 'car_edit'])->name('app.library.car_edit');
+        Route::put('car-update/{id}', [LibraryController::class, 'car_update'])->name('app.library.car_update');
+        Route::get('car-delete/{id?}', [LibraryController::class, 'car_delete'])->name('app.library.car_delete');
+
+        Route::get('fsdms', [LibraryController::class, 'fsdms'])->name('app.library.fsdms');
+        Route::post('fsdms-list', [LibraryController::class, 'fsdms_list'])->name('app.library.fsdms_list');
+        Route::get('fsdms-create', [LibraryController::class, 'fsdms_create'])->name('app.library.fsdms_create');
+        Route::post('fsdms-store', [LibraryController::class, 'fsdms_store'])->name('app.library.fsdms_store');
+        Route::get('fsdms-edit/{id}', [LibraryController::class, 'fsdms_edit'])->name('app.library.fsdms_edit');
+        Route::get('fsdms-delete/{id}', [LibraryController::class, 'fsdms_delete'])->name('app.library.fsdms_delete');
+
+        Route::get('generic', [LibraryController::class, 'generic'])->name('app.library.generic');
+        Route::post('generic-list', [LibraryController::class, 'generic_list'])->name('app.library.generic_list');
+        Route::get('generic-create', [LibraryController::class, 'generic_create'])->name('app.library.generic_create');
+        Route::post('generic-store', [LibraryController::class, 'generic_store'])->name('app.library.generic_store');
+        Route::get('generic-edit/{id}', [LibraryController::class, 'generic_edit'])->name('app.library.generic_edit');
+        Route::get('generic-delete/{id}', [LibraryController::class, 'generic_delete'])->name('app.library.generic_delete');
+
+    });
+
+    // Manage Payment
+    Route::prefix('manage-payment')->group(function () {
+
+        Route::get('sfa', [PaymentController::class, 'sfa'])->name('app.payment.sfa');
+        Route::post('sfa-list', [PaymentController::class, 'sfa_list'])->name('app.payment.sfa_list');
+
+        Route::get('bill', [PaymentController::class, 'bill'])->name('app.payment.bill');
+        Route::post('bill-list', [PaymentController::class, 'bill_list'])->name('app.payment.bill_list');
+
+        Route::get('history', [PaymentController::class, 'history'])->name('app.payment.history');
+        Route::post('history-list', [PaymentController::class, 'history_list'])->name('app.payment.history_list');
+
+    });
+
 });
 
 
