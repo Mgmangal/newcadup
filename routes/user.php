@@ -11,7 +11,9 @@ use App\Http\Controllers\ThemeOne\HomeController;
 use App\Http\Controllers\ThemeOne\UserController;
 use App\Http\Controllers\ThemeOne\FlyingController;
 use App\Http\Controllers\ThemeOne\MasterController;
+use App\Http\Controllers\ThemeOne\LibraryController;
 use App\Http\Controllers\ThemeOne\MyLeaveController;
+use App\Http\Controllers\ThemeOne\PaymentController;
 use App\Http\Controllers\ThemeOne\ReportsController;
 use App\Http\Controllers\ThemeOne\AirCraftController;
 use App\Http\Controllers\ThemeOne\ContractController;
@@ -114,6 +116,7 @@ Route::prefix('reports')->group(function () {
     Route::get('vip-recency-print/{date?}/{aircraft_type?}', [ReportsController::class, 'vipRecencyPrint'])->name('user.reports.vipRecencyPrint');
 
     Route::get('/voilations/report', [FDTLController::class, 'voilationsReport'])->name('user.fdtl.voilations.report');
+    Route::get('my-voilations/report', [FDTLController::class, 'myVoilationsReport'])->name('user.fdtl.myVoilations.report');
     Route::post('/voilations/report/list', [FDTLController::class, 'voilationsReportList'])->name('user.fdtl.voilations.report.list');
 
     Route::post('/voilation-details', [FDTLController::class, 'voilationDetails'])->name('user.fdtl.violation-details');
@@ -269,3 +272,58 @@ Route::group(['prefix' => 'adt'], function () {
     Route::post('report/store', [AdtController::class, 'generateReport'])->name('user.adt.report.store');
     Route::post('report/all/list', [AdtController::class, 'reportAllList'])->name('user.adt.report.all.list');
 });
+
+// Manage Library
+Route::prefix('manage-library')->group(function () {
+
+    Route::get('hr', [LibraryController::class, 'hr'])->name('user.library.hr');
+    Route::post('hr-list', [LibraryController::class, 'hr_list'])->name('user.library.hr_list');
+    Route::get('hr-create', [LibraryController::class, 'hr_create'])->name('user.library.hr_create');
+    Route::post('hr-store', [LibraryController::class, 'hr_store'])->name('user.library.hr_store');
+    Route::get('hr-edit/{id}', [LibraryController::class, 'hr_edit'])->name('user.library.hr_edit');
+    Route::put('hr-update/{id}', [LibraryController::class, 'hr_update'])->name('user.library.hr_update');
+    Route::get('hr-delete/{id?}', [LibraryController::class, 'hr_delete'])->name('user.library.hr_delete');
+
+    Route::get('car', [LibraryController::class, 'car'])->name('user.library.car');
+    Route::post('car-list', [LibraryController::class, 'car_list'])->name('user.library.car_list');
+    Route::get('car-create', [LibraryController::class, 'car_create'])->name('user.library.car_create');
+    Route::post('car-store', [LibraryController::class, 'car_store'])->name('user.library.car_store');
+    Route::get('car-edit/{id}', [LibraryController::class, 'car_edit'])->name('user.library.car_edit');
+    Route::put('car-update/{id}', [LibraryController::class, 'car_update'])->name('user.library.car_update');
+    Route::get('car-delete/{id?}', [LibraryController::class, 'car_delete'])->name('user.library.car_delete');
+
+    Route::get('fsdms', [LibraryController::class, 'fsdms'])->name('user.library.fsdms');
+    Route::post('fsdms-list', [LibraryController::class, 'fsdms_list'])->name('user.library.fsdms_list');
+    Route::get('fsdms-create', [LibraryController::class, 'fsdms_create'])->name('user.library.fsdms_create');
+    Route::post('fsdms-store', [LibraryController::class, 'fsdms_store'])->name('user.library.fsdms_store');
+    Route::get('fsdms-edit/{id}', [LibraryController::class, 'fsdms_edit'])->name('user.library.fsdms_edit');
+    Route::put('fsdms-update/{id}', [LibraryController::class, 'fsdms_update'])->name('user.library.fsdms_update');
+    Route::get('fsdms-delete/{id}', [LibraryController::class, 'fsdms_delete'])->name('user.library.fsdms_delete');
+
+    Route::get('generic', [LibraryController::class, 'generic'])->name('user.library.generic');
+    Route::post('generic-list', [LibraryController::class, 'generic_list'])->name('user.library.generic_list');
+    Route::get('generic-create', [LibraryController::class, 'generic_create'])->name('user.library.generic_create');
+    Route::post('generic-store', [LibraryController::class, 'generic_store'])->name('user.library.generic_store');
+    Route::get('generic-edit/{id}', [LibraryController::class, 'generic_edit'])->name('user.library.generic_edit');
+    Route::put('generic-update/{id}', [LibraryController::class, 'generic_update'])->name('user.library.generic_update');
+    Route::get('generic-delete/{id}', [LibraryController::class, 'generic_delete'])->name('user.library.generic_delete');
+
+    Route::get('{type?}-library/{id?}', [LibraryController::class, 'library_view'])->name('user.library.library_view');
+});
+
+// Manage Payment
+Route::prefix('manage-payment')->group(function () {
+
+    Route::get('sfa', [PaymentController::class, 'sfa'])->name('user.payment.sfa');
+    Route::post('sfa-list', [PaymentController::class, 'sfa_list'])->name('user.payment.sfa_list');
+
+    Route::get('bill', [PaymentController::class, 'bill'])->name('user.payment.bill');
+    Route::post('bill-list', [PaymentController::class, 'bill_list'])->name('user.payment.bill_list');
+
+    Route::get('history', [PaymentController::class, 'history'])->name('user.payment.history');
+    Route::post('history-list', [PaymentController::class, 'history_list'])->name('user.payment.history_list');
+
+});
+
+
+

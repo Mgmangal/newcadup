@@ -8,9 +8,25 @@
 @section('content')
     <div class="card">
         <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">Violation Report</h3>
+            <h3 class="card-title">{{ $title }}</h3>
         </div>
         <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <select name="pilot" id="pilot" class="form-control filters">
+                            @if($pilots->count() == 1 && $pilots->first()->id == Auth::user()->id)
+                                <option value="{{ $pilots->first()->id }}">{{ $pilots->first()->salutation . ' ' . $pilots->first()->name }}</option>
+                            @else
+                                <option value="">Select Poilot</option>
+                                @foreach($pilots as $pilot)
+                                    <option value="{{ $pilot->id }}">{{ $pilot->salutation . ' ' . $pilot->name }}</option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
+                </div>
+            </div>
             <div class="table-responsive">
                 <table id="datatableDefault" class="table text-nowrap w-100">
                     <thead>

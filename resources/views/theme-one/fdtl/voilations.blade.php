@@ -1,4 +1,4 @@
-@extends('theme-one.layouts.app',['title' => $title,'sub_title'=>'LIST'])
+@extends('theme-one.layouts.app',['title' => $title,'sub_title'=>'Summary'])
 @section('css')
 <link href="{{asset('assets/theme_one/lib/datatables.net-dt/css/jquery.dataTables.min.css')}}" rel="stylesheet">
 <link href="{{asset('assets/theme_one/lib/datatables.net-responsive-dt/css/responsive.dataTables.min.css')}}"
@@ -8,7 +8,7 @@
 @section('content')
 <div class="card">
     <div class="card-header d-flex justify-content-between">
-        <h3 class="card-title">{{ $title }} List </h3>
+        <h3 class="card-title">{{ $title }} Summary </h3>
     </div>
     <div class="card-body">
         <div class="row mb-3">

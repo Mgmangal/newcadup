@@ -55,13 +55,13 @@ class FDTLController extends Controller
     }
     public function voilations()
     {
-        $title = "Voilations";
+        $title = "Violations";
         $pilots = User::with('designation')->where('is_delete','0')->where('status','active')->get();
         return view('theme-one.fdtl.voilations',compact('title','pilots'));
     }
     public function MyVoilations()
     {
-        $title = "My Voilations";
+        $title = "My Violations";
         $user = User::with('designation')->where('id', Auth()->user()->id)->where('is_delete', '0')->where('status', 'active')->first();
         $pilots = collect([$user]);
         return view('theme-one.fdtl.voilations',compact('title','pilots'));
@@ -185,10 +185,20 @@ class FDTLController extends Controller
 
 		echo json_encode($output);
     }
+    
     public function voilationsReport()
     {
-        $title = "Voilations Report";
-        return view('theme-one.fdtl.voilations-report',compact('title'));
+        $title = "Violations Report";
+        $pilots = User::with('designation')->where('is_delete','0')->where('status','active')->get();
+        return view('theme-one.fdtl.voilations-report',compact('title','pilots'));
+    }
+    
+    public function MyVoilationsReport()
+    {
+        $title = "My Violations Report";
+        $user = User::with('designation')->where('id', Auth()->user()->id)->where('is_delete', '0')->where('status', 'active')->first();
+        $pilots = collect([$user]);
+        return view('theme-one.fdtl.voilations-report',compact('title','pilots'));
     }
     
     public function voilationsReportList(Request $request)
